@@ -94,7 +94,9 @@
           deckList.appendChild(item);
         });
 
-        result.textContent = "抽選できます";
+        if (!result.dataset.hasResult) {
+          result.textContent = "デッキを選んで「回す」を押してください";
+        }
         status.textContent = `${decks.length}個のデッキが対象です。`;
         spinButton.disabled = false;
       } catch (error) {
@@ -136,8 +138,10 @@
         await new Promise(resolve => setTimeout(resolve, 1900));
         clearInterval(animation);
         result.textContent = data.deck.name;
+        result.dataset.hasResult = "true";
         status.textContent = "結果をNotionに記録しました。";
-        await loadDecks();
+        decks = data.decks || decks;
+        status.textContent = `${decks.length}個のデッキが対象です。`;
       } catch (error) {
         clearInterval(animation);
         result.textContent = "エラー";
