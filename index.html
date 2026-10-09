@@ -139,7 +139,7 @@
         clearInterval(animation);
         result.textContent = data.deck.name;
         result.dataset.hasResult = "true";
-        status.textContent = "結果をNotionに記録しました。";
+        status.textContent = "";
         decks = data.decks || decks;
         status.textContent = `${decks.length}個のデッキが対象です。`;
       } catch (error) {
