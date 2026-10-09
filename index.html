@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DMデッキルーレット</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      text-align: center;
+      background: #f7f7f7;
+      color: #222;
+    }
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 24px 16px;
+      box-shadow: 0 2px 10px #00000012;
+    }
+    h1 { font-size: 25px; }
+    #result {
+      min-height: 72px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+      margin: 20px 0;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 17px;
+      cursor: pointer;
+      background: #222;
+      color: white;
+    }
+    button:disabled { opacity: 0.5; cursor: wait; }
+    #status, #deckList { font-size: 14px; color: #555; }
+    #deckList { text-align: left; line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <h1>DMデッキルーレット</h1>
+  <div class="panel">
+    <p>「ルーレット」がオンのデッキから抽選します。</p>
+    <div id="result">準備中…</div>
+    <button id="spinButton" disabled>回す</button>
+    <p id="status">デッキを読み込んでいます。</p>
+    <hr>
+    <h2>抽選対象</h2>
+    <div id="deckList"></div>
+  </div>
+
+  <script>
+    // Cloudflare Workersを公開した後、実際のURLに置き換えます。
+    const API_BASE = "https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev";
+
+    const result = document.getElementById("result");
+    const status = document.getElementById("status");
+    const deckList = document.getElementById("deckList");
+    const spinButton = document.getElementById("spinButton");
+
+    let decks = [];
+    let spinning = false;
+
+    async function loadDecks() {
+      try {
+        const response = await fetch(`${API_BASE}/decks`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "デッキを取得できませんでした。");
+        }
+
+        decks = data.decks || [];
+        deckList.replaceChildren();
+
+        if (decks.length === 0) {
+          result.textContent = "対象デッキなし";
+          status.textContent =
+            "Notionの「ルーレット」をオンにしてください。";
+          spinButton.disabled = true;
+          return;
+        }
+
+        decks.forEach(deck => {
+          const item = document.createElement("div");
+          item.textContent = `・${deck.name}`;
+          deckList.appendChild(item);
+        });
+
+        result.textContent = "抽選できます";
+        status.textContent = `${decks.length}個のデッキが対象です。`;
+        spinButton.disabled = false;
+      } catch (error) {
+        result.textContent = "読み込みエラー";
+        status.textContent =
+          `${error.message} API_BASEや連携設定を確認してください。`;
+        spinButton.disabled = true;
+      }
+    }
+
+    async function spin() {
+      if (spinning || decks.length === 0) return;
+
+      spinning = true;
+      spinButton.disabled = true;
+      status.textContent = "抽選中…";
+
+      // 画面上で名前を高速に切り替えて、ルーレット風に演出します。
+      let count = 0;
+      const animation = setInterval(() => {
+        const deck = decks[Math.floor(Math.random() * decks.length)];
+        result.textContent = deck.name;
+        count++;
+        if (count >= 18) clearInterval(animation);
+      }, 100);
+
+      try {
+        // 最終結果はサーバー側で抽選します。
+        const response = await fetch(`${API_BASE}/spin`, {
+          method: "POST"
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "抽選に失敗しました。");
+        }
+
+        // アニメーションが終わってから正式な結果を表示します。
+        await new Promise(resolve => setTimeout(resolve, 1900));
+        clearInterval(animation);
+        result.textContent = data.deck.name;
+        status.textContent = "結果をNotionに記録しました。";
+        await loadDecks();
+      } catch (error) {
+        clearInterval(animation);
+        result.textContent = "エラー";
+        status.textContent = error.message;
+      } finally {
+        spinning = false;
+        spinButton.disabled = decks.length === 0;
+      }
+    }
+
+    spinButton.addEventListener("click", spin);
+    loadDecks();
+  </script>
+</body>
+</html>
