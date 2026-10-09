@@ -49,7 +49,7 @@
   <div class="panel">
     <p>「ルーレット」がオンのデッキから抽選します。</p>
     <div id="result">準備中…</div>
-    <button id="spinButton" disabled>回す</button>
+    <button id="spinButton" disabled>抽選開始</button>
     <p id="status">デッキを読み込んでいます。</p>
     <hr>
     <h2>抽選対象</h2>
@@ -95,7 +95,7 @@
         });
 
         if (!result.dataset.hasResult) {
-          result.textContent = "デッキを選んで「回す」を押してください";
+          result.textContent = "「抽選開始」を押してください";
         }
         status.textContent = `${decks.length}個のデッキが対象です。`;
         spinButton.disabled = false;
