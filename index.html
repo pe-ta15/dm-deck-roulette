@@ -69,6 +69,7 @@
   <div class="panel">
     <p>「ルーレット」がオンのデッキから抽選します。</p>
     <div id="result">準備中…</div>
+    <div id="keyCardImages"></div>
     <button id="spinButton" disabled>抽選開始</button>
     <p id="status">デッキを読み込んでいます。</p>
     <hr>
@@ -84,9 +85,42 @@
     const status = document.getElementById("status");
     const deckList = document.getElementById("deckList");
     const spinButton = document.getElementById("spinButton");
+    const keyCardImages = document.getElementById("keyCardImages");
 
     let decks = [];
     let spinning = false;
+    
+    function showKeyCards(deck) {
+      keyCardImages.replaceChildren();
+    
+      const keyCards = deck.keyCards || [];
+    
+      if (keyCards.length === 0) {
+        const message = document.createElement("p");
+        message.textContent = "キーカード画像は登録されていません。";
+        keyCardImages.appendChild(message);
+        return;
+      }
+    
+      keyCards.forEach(card => {
+        const img = document.createElement("img");
+        img.src = card.url;
+        img.alt = card.name || "キーカード";
+        img.loading = "lazy";
+    
+        img.onerror = () => {
+          img.remove();
+    
+          if (keyCardImages.querySelectorAll("img").length === 0) {
+            const message = document.createElement("p");
+            message.textContent = "キーカード画像を読み込めませんでした。";
+            keyCardImages.replaceChildren(message);
+          }
+        };
+    
+        keyCardImages.appendChild(img);
+      });
+    }
 
     async function loadDecks() {
       try {
@@ -159,12 +193,14 @@
         clearInterval(animation);
         result.textContent = data.deck.name;
         result.dataset.hasResult = "true";
+        showKeyCards(data.deck);
         status.textContent = "";
         decks = data.decks || decks;
         status.textContent = `${decks.length}個のデッキが対象です。`;
       } catch (error) {
         clearInterval(animation);
         result.textContent = "エラー";
+        keyCardImages.replaceChildren();
         status.textContent = error.message;
       } finally {
         spinning = false;
