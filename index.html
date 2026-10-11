@@ -62,6 +62,23 @@
       font-size: 14px;
       color: #666;
     }
+    #keyCardImages .drawing-card {
+      width: 180px;
+      aspect-ratio: 2 / 3;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 8px solid #777;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle, #aaa 0%, #777 45%, #333 100%);
+      color: white;
+      filter: grayscale(1);
+      font-size: 26px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px #222;
+    }
   </style>
 </head>
 <body>
@@ -121,6 +138,16 @@
       });
     }
 
+    function showDrawingCard() {
+      keyCardImages.replaceChildren();
+
+      const card = document.createElement("div");
+      card.className = "drawing-card";
+      card.textContent = "抽選中";
+
+      keyCardImages.appendChild(card);
+    }
+
     async function loadDecks() {
       try {
         const response = await fetch(`${API_BASE}/decks`);
@@ -166,6 +193,7 @@
       spinning = true;
       spinButton.disabled = true;
       status.textContent = "抽選中…";
+      showDrawingCard();
 
       // 画面上で名前を高速に切り替えて、ルーレット風に演出します。
       let count = 0;
