@@ -755,17 +755,46 @@
 
     async function requestDraw() {
       const avoidRepeat = avoidRepeatCheckbox.checked;
-
-      const canAvoidRepeat =
-        avoidRepeat &&
-        lastDrawnDeckName &&
-        decks.some(deck =>
-          getDeckName(deck) !== lastDrawnDeckName
-        );
-
-      let selectedDeck = null;
-      const maxAttempts = canAvoidRepeat ? 12 : 1;
-
+    
+      const alternatives = avoidRepeat && lastDrawnDeckName
+        ? decks.filter(
+            deck => getDeckName(deck) !== lastDrawnDeckName
+          )
+        : decks;
+    
+      if (alternatives.length === 0) {
+        throw new Error("抽選対象のデッキがありません。");
+      }
+    
+      // 重複除外が不要なら通常どおり抽選
+      if (!avoidRepeat || !lastDrawnDeckName) {
+        const response = await fetch(`${API_BASE}/spin`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({})
+        });
+    
+        if (!response.ok) {
+          throw new Error(
+            `抽選に失敗しました（HTTP ${response.status}）`
+          );
+        }
+    
+        const data = await response.json();
+        const deck = data.deck ?? data;
+    
+        if (!deck || !getDeckName(deck)) {
+          throw new Error("抽選結果の形式が正しくありません。");
+        }
+    
+        return deck;
+      }
+    
+      // 直前の当選デッキと異なる結果が返るまで再抽選
+      const maxAttempts = 12;
+    
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const response = await fetch(`${API_BASE}/spin`, {
           method: "POST",
@@ -774,48 +803,29 @@
           },
           body: JSON.stringify({})
         });
-
+    
         if (!response.ok) {
           throw new Error(
             `抽選に失敗しました（HTTP ${response.status}）`
           );
         }
-
+    
         const data = await response.json();
         const deck = data.deck ?? data;
-
+    
         if (!deck || !getDeckName(deck)) {
           throw new Error("抽選結果の形式が正しくありません。");
         }
-
-        selectedDeck = deck;
-
-        if (
-          !canAvoidRepeat ||
-          getDeckName(deck) !== lastDrawnDeckName
-        ) {
-          break;
+    
+        if (getDeckName(deck) !== lastDrawnDeckName) {
+          return deck;
         }
       }
-
-      if (
-        canAvoidRepeat &&
-        selectedDeck &&
-        getDeckName(selectedDeck) === lastDrawnDeckName
-      ) {
-        const alternatives = decks.filter(
-          deck => getDeckName(deck) !== lastDrawnDeckName
-        );
-
-        if (alternatives.length > 0) {
-          selectedDeck =
-            alternatives[
-              Math.floor(Math.random() * alternatives.length)
-            ];
-        }
-      }
-
-      return selectedDeck;
+    
+      // 別デッキに置き換えず、抽選失敗として扱う
+      throw new Error(
+        "直前の当選デッキが続けて選ばれました。もう一度抽選してください。"
+      );
     }
 
     async function spin() {
