@@ -79,6 +79,10 @@
       font-weight: bold;
       text-shadow: 0 2px 4px #222;
     }
+    #spinButton.hidden,
+    #status.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -192,6 +196,8 @@
 
       spinning = true;
       spinButton.disabled = true;
+      spinButton.classList.add("hidden");
+      status.classList.add("hidden");
       showDrawingCard();
 
       // 画面上で名前を高速に切り替えて、ルーレット風に演出します。
@@ -231,6 +237,8 @@
       } finally {
         spinning = false;
         spinButton.disabled = decks.length === 0;
+        spinButton.classList.remove("hidden");
+        status.classList.remove("hidden");
       }
     }
 
