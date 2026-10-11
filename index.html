@@ -103,8 +103,13 @@
     }
 
     button:disabled {
-      opacity: 0.55;
+      background: #b8bdc7;
+      color: #ffffff;
+      opacity: 1;
       cursor: wait;
+      box-shadow: none;
+      transform: none;
+      filter: none;
     }
 
     #status {
@@ -498,7 +503,7 @@
       </div>
 
       <!-- 抽選ボタン -->
-      <button type="button" id="spinButton">抽選スタート</button>
+      <button type="button" id="spinButton" disabled>準備中...</button>
 
       <p id="status" role="status" aria-live="polite">
         デッキを読み込み中です。
@@ -700,33 +705,50 @@
       createParticles();
     }
 
+    
     async function loadDecks() {
+      // 読み込み開始時は必ず準備中にする
+      spinButton.disabled = true;
+      spinButton.textContent = "準備中...";
+      statusElement.textContent = "デッキを読み込み中です。";
+    
       try {
         const response = await fetch(`${API_BASE}/decks`);
-
+    
         if (!response.ok) {
           throw new Error(
             `デッキ取得に失敗しました（HTTP ${response.status}）`
           );
         }
-
+    
         const data = await response.json();
         decks = Array.isArray(data) ? data : (data.decks ?? []);
-
+    
         renderDeckList();
-
+    
         if (decks.length === 0) {
           statusElement.textContent =
             "抽選対象のデッキがありません。Notionの設定を確認してください。";
-          spinButton.disabled = true;
-        } else {
-          statusElement.textContent = `抽選対象：${decks.length}デッキ`;
-          spinButton.disabled = false;
+          return;
         }
+    
+        statusElement.textContent = `抽選対象：${decks.length}デッキ`;
+    
+        // デッキ取得完了後に抽選可能にする
+        spinButton.textContent = "抽選スタート";
+        spinButton.disabled = false;
+    
       } catch (error) {
         console.error(error);
+    
+        decks = [];
+        renderDeckList();
+    
         statusElement.textContent =
           "デッキを取得できませんでした。通信設定を確認してください。";
+    
+        // 取得失敗時は準備中のまま無効化する
+        spinButton.textContent = "準備中...";
         spinButton.disabled = true;
       }
     }
