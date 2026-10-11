@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,13 +15,16 @@
       background: #f7f7f7;
       color: #222;
     }
+
     .panel {
       background: white;
       border-radius: 16px;
       padding: 24px 16px;
       box-shadow: 0 2px 10px #00000012;
     }
+
     h1 { font-size: 25px; }
+
     #result {
       min-height: 72px;
       display: grid;
@@ -30,6 +34,11 @@
       overflow-wrap: anywhere;
       margin: 20px 0;
     }
+
+    #result.result-reveal {
+      animation: resultReveal 0.65s ease-out both;
+    }
+
     button {
       border: 0;
       border-radius: 10px;
@@ -38,17 +47,38 @@
       cursor: pointer;
       background: #222;
       color: white;
+      transition: transform 0.15s, background 0.15s;
     }
-    button:disabled { opacity: 0.5; cursor: wait; }
-    #status, #deckList { font-size: 14px; color: #555; }
-    #deckList { text-align: left; line-height: 1.8; }
+
+    button:not(:disabled):hover {
+      background: #444;
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    #status, #deckList {
+      font-size: 14px;
+      color: #555;
+    }
+
+    #deckList {
+      text-align: left;
+      line-height: 1.8;
+    }
+
     #keyCardImages {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 12px;
       margin: 16px 0;
+      perspective: 800px;
     }
+
     #keyCardImages img {
       display: block;
       max-width: 100%;
@@ -58,10 +88,13 @@
       object-fit: contain;
       border-radius: 8px;
     }
+
     #keyCardImages p {
       font-size: 14px;
       color: #666;
     }
+
+    /* 抽選中のカード */
     #keyCardImages .drawing-card {
       width: 180px;
       aspect-ratio: 2 / 3;
@@ -78,28 +111,110 @@
       font-size: 26px;
       font-weight: bold;
       text-shadow: 0 2px 4px #222;
+      box-shadow: 0 5px 16px #00000030;
+      animation: cardPulse 0.8s ease-in-out infinite alternate;
     }
+
+    /* 当選時のキーカード登場 */
+    #keyCardImages.revealing img {
+      animation: cardReveal 0.75s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    #keyCardImages.revealing img:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+
+    #keyCardImages.revealing img:nth-child(3) {
+      animation-delay: 0.24s;
+    }
+
+    #keyCardImages.revealing img:nth-child(n+4) {
+      animation-delay: 0.36s;
+    }
+
+    /* 抽選中は操作エリアを隠す */
     #spinButton.hidden,
     #status.hidden {
       display: none;
+    }
+
+    @keyframes cardPulse {
+      from {
+        transform: scale(0.97);
+        box-shadow: 0 3px 10px #00000020;
+      }
+      to {
+        transform: scale(1.03);
+        box-shadow: 0 0 24px #77777780;
+      }
+    }
+
+    @keyframes cardReveal {
+      0% {
+        opacity: 0;
+        transform: rotateY(90deg) scale(0.7);
+        filter: brightness(2);
+      }
+      60% {
+        opacity: 1;
+        transform: rotateY(-8deg) scale(1.06);
+        filter: brightness(1.25);
+      }
+      100% {
+        opacity: 1;
+        transform: rotateY(0) scale(1);
+        filter: brightness(1);
+      }
+    }
+
+    @keyframes resultReveal {
+      0% {
+        opacity: 0;
+        transform: scale(0.75);
+        text-shadow: 0 0 0 transparent;
+      }
+      65% {
+        opacity: 1;
+        transform: scale(1.08);
+        text-shadow: 0 0 18px #e5b94f;
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 0 transparent;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
   <h1>デッキルーレット</h1>
+
   <div class="panel">
     <div id="result">準備中…</div>
     <div id="keyCardImages"></div>
+
     <button id="spinButton" disabled>抽選開始</button>
     <p id="status">デッキを読み込んでいます。</p>
+
     <hr>
+
     <h2>抽選対象</h2>
     <div id="deckList"></div>
   </div>
 
   <script>
-    // Cloudflare Workersを公開した後、実際のURLに置き換えます。
-    const API_BASE = "https://dm-deck-roulette-api.nabkde16ngh.workers.dev";
+    const API_BASE =
+      "https://dm-deck-roulette-api.nabkde16ngh.workers.dev";
 
     const result = document.getElementById("result");
     const status = document.getElementById("status");
@@ -109,41 +224,52 @@
 
     let decks = [];
     let spinning = false;
-    
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     function showKeyCards(deck) {
       keyCardImages.replaceChildren();
-    
+      keyCardImages.classList.remove("revealing");
+
       const keyCards = deck.keyCards || [];
-    
+
       if (keyCards.length === 0) {
         const message = document.createElement("p");
         message.textContent = "キーカード画像は登録されていません。";
         keyCardImages.appendChild(message);
         return;
       }
-    
+
       keyCards.forEach(card => {
         const img = document.createElement("img");
         img.src = card.url;
         img.alt = card.name || "キーカード";
         img.loading = "lazy";
-    
+
         img.onerror = () => {
           img.remove();
-    
+
           if (keyCardImages.querySelectorAll("img").length === 0) {
             const message = document.createElement("p");
             message.textContent = "キーカード画像を読み込めませんでした。";
             keyCardImages.replaceChildren(message);
+            keyCardImages.classList.remove("revealing");
           }
         };
-    
+
         keyCardImages.appendChild(img);
       });
+
+      // ブラウザに初期状態を反映させてから登場アニメーションを開始
+      void keyCardImages.offsetWidth;
+      keyCardImages.classList.add("revealing");
     }
 
     function showDrawingCard() {
       keyCardImages.replaceChildren();
+      keyCardImages.classList.remove("revealing");
 
       const card = document.createElement("div");
       card.className = "drawing-card";
@@ -158,7 +284,9 @@
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || "デッキを取得できませんでした。");
+          throw new Error(
+            data.error || "デッキを取得できませんでした。"
+          );
         }
 
         decks = data.decks || [];
@@ -181,6 +309,7 @@
         if (!result.dataset.hasResult) {
           result.textContent = "「抽選開始」を押してください";
         }
+
         status.textContent = `${decks.length}個のデッキが対象です。`;
         spinButton.disabled = false;
       } catch (error) {
@@ -191,7 +320,6 @@
       }
     }
 
-    
     async function spin() {
       if (spinning || decks.length === 0) return;
 
@@ -199,58 +327,79 @@
       spinButton.disabled = true;
       spinButton.classList.add("hidden");
       status.classList.add("hidden");
+
+      result.classList.remove("result-reveal");
       showDrawingCard();
 
-      let animation;
+      let animationTimer = null;
 
       try {
-        // 名前を切り替えてルーレット風に演出する
-        let count = 0;
-        animation = setInterval(() => {
-          const deck = decks[Math.floor(Math.random() * decks.length)];
+        // サーバー側の抽選と画面の演出を並行して開始
+        const request = fetch(`${API_BASE}/spin`, {
+          method: "POST"
+        }).then(async response => {
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              data.error || "抽選に失敗しました。"
+            );
+          }
+
+          return data;
+        });
+
+        // 徐々に減速するルーレット
+        const totalSteps = 20;
+
+        for (let i = 0; i < totalSteps; i++) {
+          const deck = decks[
+            Math.floor(Math.random() * decks.length)
+          ];
+
           result.textContent = deck.name;
 
-          count++;
-          if (count >= 18) {
-            clearInterval(animation);
-            animation = null;
-          }
-        }, 100);
+          // 最初は高速、後半ほどゆっくり切り替える
+          const progress = i / (totalSteps - 1);
+          const delay = 45 + 300 * progress * progress;
 
-        // サーバー側で抽選する
-        const response = await fetch(`${API_BASE}/spin`, {
-          method: "POST"
-        });
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "抽選に失敗しました。");
+          await sleep(delay);
         }
 
-        // ルーレット演出が最低1.8秒続くようにする
-        await new Promise(resolve => setTimeout(resolve, 1900));
+        // 演出が終わっても結果が届いていなければ、届くまで待つ
+        const data = await request;
 
+        // 当選デッキ名を表示して、登場アニメーションを再生
         result.textContent = data.deck.name;
         result.dataset.hasResult = "true";
+
         showKeyCards(data.deck);
+
+        result.classList.remove("result-reveal");
+        void result.offsetWidth;
+        result.classList.add("result-reveal");
 
         decks = data.decks || decks;
         status.textContent = `${decks.length}個のデッキが対象です。`;
+
+        // カードの登場演出が見える時間を確保
+        await sleep(750);
       } catch (error) {
         result.textContent = "エラー";
         keyCardImages.replaceChildren();
+        keyCardImages.classList.remove("revealing");
         status.textContent = error.message;
       } finally {
-        if (animation !== null && animation !== undefined) {
-          clearInterval(animation);
+        if (animationTimer !== null) {
+          clearInterval(animationTimer);
         }
+
         spinning = false;
         spinButton.disabled = decks.length === 0;
         spinButton.classList.remove("hidden");
         status.classList.remove("hidden");
       }
     }
-
 
     spinButton.addEventListener("click", spin);
     loadDecks();
