@@ -447,6 +447,36 @@
         scroll-behavior: auto !important;
       }
     }
+    /* 抽選中のカードを画面中央に固定 */
+    #cardStage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      align-items: center;
+      width: 100%;
+    }
+    
+    /* 抽選中カードの中央配置 */
+    #cardStage #drawingCard {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: center;
+      margin: 0 auto;
+    }
+    
+    /* キーカード画像も同じ中央位置を基準に配置 */
+    #cardStage #keyCardImages {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: stretch;
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 0 auto;
+    }
   </style>
 </head>
 
