@@ -7,12 +7,12 @@
 
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #10131c;
-      --panel: #1b2030;
-      --accent: #f5cc69;
-      --text: #f5f6fa;
-      --muted: #aab1c4;
+      color-scheme: light;
+      --bg: #f5f6f8;
+      --panel: #ffffff;
+      --accent: #e9b94f;
+      --text: #252a35;
+      --muted: #6f7787;
     }
 
     * {
@@ -24,7 +24,7 @@
       min-height: 100vh;
       padding: 28px 16px 48px;
       background:
-        radial-gradient(ellipse at top, #29304b 0%, transparent 55%),
+        radial-gradient(ellipse at top, #ffffff 0%, transparent 70%),
         var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -51,10 +51,10 @@
     .panel {
       padding: 22px;
       margin-bottom: 22px;
-      border: 1px solid #343b50;
+      border: 1px solid #e1e4eb;
       border-radius: 18px;
-      background: rgb(27 32 48 / 88%);
-      box-shadow: 0 12px 36px rgb(0 0 0 / 20%);
+      background: rgb(255 255 255 / 95%);
+      box-shadow: 0 8px 28px rgb(35 45 65 / 8%);
     }
 
     .settings {
@@ -68,9 +68,9 @@
       align-items: center;
       gap: 10px;
       padding: 12px 16px;
-      border: 1px solid #414961;
+      border: 1px solid #e1e4eb;
       border-radius: 12px;
-      background: #242b3e;
+      background: #f8f9fb;
       cursor: pointer;
       text-align: left;
     }
@@ -384,9 +384,9 @@
 
     .deck-list li {
       padding: 12px 14px;
-      border: 1px solid #343b50;
+      border: 1px solid #e1e4eb;
       border-radius: 10px;
-      background: #22283a;
+      background: #f8f9fb;
       overflow-wrap: anywhere;
     }
 
@@ -410,11 +410,32 @@
       }
 
       .card-stage {
-        min-height: 210px;
+        position: relative;
+        width: 100%;
+        max-width: 620px;
+        min-height: 250px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        isolation: isolate;
       }
 
       .drawing-card {
-        width: 145px;
+        width: 180px;
+        aspect-ratio: 5 / 7;
+        flex: 0 0 auto;
+        margin-inline: auto;
+        border: 2px solid #aab4cf;
+        border-radius: 13px;
+        background:
+          radial-gradient(circle at center, #e8ecf7 0%, #cbd3e8 48%, #aab6d4 100%);
+        box-shadow: 0 0 24px rgb(109 143 255 / 28%);
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+        animation: cardPulse 1.2s ease-in-out infinite alternate;
       }
 
       #keyCardImages img {
@@ -440,6 +461,24 @@
     <p class="subtitle">次に使用するデッキを抽選します</p>
 
     <section class="panel">
+    
+      <!-- 1. 結果表示エリア -->
+      <div id="result" aria-live="polite">抽選を開始してください</div>
+    
+      <div id="cardStage" class="card-stage">
+        <div id="drawingCard" class="drawing-card hidden">
+          <span class="drawing-label">抽選中</span>
+        </div>
+        <div id="keyCardImages"></div>
+      </div>
+    
+      <!-- 2. 抽選ボタン -->
+      <button type="button" id="spinButton">抽選スタート</button>
+      <p id="status" role="status" aria-live="polite">
+        デッキを読み込み中です。
+      </p>
+    
+      <!-- 3. 重複除外チェックボックス -->
       <div class="settings">
         <div>
           <label class="checkbox-label">
@@ -451,18 +490,7 @@
           </p>
         </div>
       </div>
-
-      <button type="button" id="spinButton">抽選スタート</button>
-      <p id="status" role="status" aria-live="polite">デッキを読み込み中です。</p>
-
-      <div id="result" aria-live="polite">抽選を開始してください</div>
-
-      <div id="cardStage" class="card-stage">
-        <div id="drawingCard" class="drawing-card hidden">
-          <span class="drawing-label">抽選中</span>
-        </div>
-        <div id="keyCardImages"></div>
-      </div>
+    
     </section>
 
     <section class="panel">
