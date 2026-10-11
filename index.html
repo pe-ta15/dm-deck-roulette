@@ -191,6 +191,7 @@
       }
     }
 
+    
     async function spin() {
       if (spinning || decks.length === 0) return;
 
@@ -200,17 +201,23 @@
       status.classList.add("hidden");
       showDrawingCard();
 
-      // 画面上で名前を高速に切り替えて、ルーレット風に演出します。
-      let count = 0;
-      const animation = setInterval(() => {
-        const deck = decks[Math.floor(Math.random() * decks.length)];
-        result.textContent = deck.name;
-        count++;
-        if (count >= 18) clearInterval(animation);
-      }, 100);
+      let animation;
 
       try {
-        // 最終結果はサーバー側で抽選します。
+        // 名前を切り替えてルーレット風に演出する
+        let count = 0;
+        animation = setInterval(() => {
+          const deck = decks[Math.floor(Math.random() * decks.length)];
+          result.textContent = deck.name;
+
+          count++;
+          if (count >= 18) {
+            clearInterval(animation);
+            animation = null;
+          }
+        }, 100);
+
+        // サーバー側で抽選する
         const response = await fetch(`${API_BASE}/spin`, {
           method: "POST"
         });
@@ -220,27 +227,30 @@
           throw new Error(data.error || "抽選に失敗しました。");
         }
 
-        // アニメーションが終わってから正式な結果を表示します。
+        // ルーレット演出が最低1.8秒続くようにする
         await new Promise(resolve => setTimeout(resolve, 1900));
-        clearInterval(animation);
+
         result.textContent = data.deck.name;
         result.dataset.hasResult = "true";
         showKeyCards(data.deck);
-        status.textContent = "";
+
         decks = data.decks || decks;
         status.textContent = `${decks.length}個のデッキが対象です。`;
       } catch (error) {
-        clearInterval(animation);
         result.textContent = "エラー";
         keyCardImages.replaceChildren();
         status.textContent = error.message;
       } finally {
+        if (animation !== null && animation !== undefined) {
+          clearInterval(animation);
+        }
         spinning = false;
         spinButton.disabled = decks.length === 0;
         spinButton.classList.remove("hidden");
         status.classList.remove("hidden");
       }
     }
+
 
     spinButton.addEventListener("click", spin);
     loadDecks();
