@@ -168,7 +168,7 @@
       if (imageUrls.length === 0) {
         const fallback = document.createElement("div");
         fallback.className = "fallback";
-        fallback.textContent = "キーカード画像がありません。Workerから返される画像データを確認してください。";
+        fallback.textContent = "キーカード画像が取得できませんでした。";
         keyCardImages.appendChild(fallback);
       } else {
         imageUrls.forEach((url, index) => {
