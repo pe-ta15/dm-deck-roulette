@@ -68,7 +68,7 @@
       <div id="settings" class="settings">
         <label class="checkbox-label">
           <input type="checkbox" id="avoidRepeat">
-          <span>直前の当選デッキを次の抽選から除外する</span>
+          <span>直近3回の当選デッキを次の抽選から除外する</span>
         </label>
       </div>
     </section>
@@ -92,8 +92,7 @@
     const settingsElement = document.getElementById("settings");
 
     let decks = [];
-    let lastDrawnDeckName = null;
-    let lastDrawnDeckId = null;
+    let recentDrawnDeckIds = [];
     let isSpinning = false;
 
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -111,22 +110,33 @@
       }).filter(url => typeof url === "string" && /^https?:\/\//i.test(url));
     }
 
+    function getExcludedDeckIds() {
+      return avoidRepeatCheckbox.checked
+        ? recentDrawnDeckIds.slice(0, 3)
+        : [];
+    }
+
     function renderDeckList() {
       deckListElement.replaceChildren();
+
       if (decks.length === 0) {
         const item = document.createElement("li");
         item.textContent = "抽選対象のデッキがありません。";
         deckListElement.appendChild(item);
         return;
       }
+
+      const excludedIds = new Set(getExcludedDeckIds());
+
       decks.forEach(deck => {
-        const name = getDeckName(deck);
         const item = document.createElement("li");
-        item.textContent = name;
-        if (avoidRepeatCheckbox.checked && lastDrawnDeckId && deck.id === lastDrawnDeckId) {
+        item.textContent = getDeckName(deck);
+
+        if (excludedIds.has(deck.id)) {
           item.classList.add("excluded");
-          item.title = "次の抽選から除外されます";
+          item.title = "直近3回の当選デッキのため、次の抽選から除外されます";
         }
+
         deckListElement.appendChild(item);
       });
     }
@@ -141,19 +151,24 @@
 
     function createParticles() {
       cardStage.querySelectorAll(".particle").forEach(p => p.remove());
+
       const centerX = cardStage.clientWidth / 2;
       const centerY = cardStage.clientHeight / 2;
+
       for (let i = 0; i < 38; i++) {
         const particle = document.createElement("span");
         particle.className = "particle";
+
         const angle = Math.random() * Math.PI * 2;
         const distance = 65 + Math.random() * 160;
+
         particle.style.left = `${centerX}px`;
         particle.style.top = `${centerY}px`;
         particle.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
         particle.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
         particle.style.setProperty("--size", `${3 + Math.random() * 6}px`);
         particle.style.setProperty("--duration", `${0.65 + Math.random() * 0.65}s`);
+
         cardStage.appendChild(particle);
         particle.addEventListener("animationend", () => particle.remove(), { once: true });
       }
@@ -163,6 +178,7 @@
       drawingCard.classList.add("hidden");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing");
+
       const imageUrls = getKeyCardImageUrls(deck);
 
       if (imageUrls.length === 0) {
@@ -176,10 +192,14 @@
           img.src = url;
           img.alt = `${getDeckName(deck)} のキーカード ${index + 1}`;
           img.loading = "eager";
+
           img.addEventListener("error", () => {
             img.alt = "画像を読み込めませんでした";
             img.style.display = "none";
-            const visibleImages = [...keyCardImages.querySelectorAll("img")].some(image => image.style.display !== "none");
+
+            const visibleImages = [...keyCardImages.querySelectorAll("img")]
+              .some(image => image.style.display !== "none");
+
             if (!visibleImages) {
               const fallback = document.createElement("div");
               fallback.className = "fallback";
@@ -187,11 +207,14 @@
               keyCardImages.appendChild(fallback);
             }
           }, { once: true });
+
           keyCardImages.appendChild(img);
         });
+
         void keyCardImages.offsetWidth;
         keyCardImages.classList.add("revealing");
       }
+
       cardStage.classList.remove("winner");
       void cardStage.offsetWidth;
       cardStage.classList.add("winner");
@@ -202,16 +225,23 @@
       spinButton.disabled = true;
       spinButton.textContent = "準備中...";
       statusElement.textContent = "デッキを読み込み中です。";
+
       try {
         const response = await fetch(`${API_BASE}/decks`);
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error || `デッキ取得に失敗しました（HTTP ${response.status}）`);
+
+        if (!response.ok) {
+          throw new Error(data.error || `デッキ取得に失敗しました（HTTP ${response.status}）`);
+        }
+
         decks = Array.isArray(data) ? data : (data.decks ?? []);
         renderDeckList();
+
         if (decks.length === 0) {
           statusElement.textContent = "抽選対象のデッキがありません。Notionの設定を確認してください。";
           return;
         }
+
         statusElement.textContent = `抽選対象：${decks.length}デッキ`;
         spinButton.textContent = "抽選スタート";
         spinButton.disabled = false;
@@ -226,14 +256,16 @@
     }
 
     async function requestDraw() {
-      const excludeDeckId = avoidRepeatCheckbox.checked ? lastDrawnDeckId : null;
+      const excludeDeckIds = getExcludedDeckIds();
+
       const response = await fetch(`${API_BASE}/spin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ excludeDeckId })
+        body: JSON.stringify({ excludeDeckIds })
       });
 
       let data;
+
       try {
         data = await response.json();
       } catch {
@@ -245,12 +277,15 @@
       }
 
       const deck = data.deck ?? data;
+
       if (!deck || !deck.id || !getDeckName(deck)) {
         throw new Error("抽選結果の形式が正しくありません。");
       }
-      if (excludeDeckId && deck.id === excludeDeckId) {
-        throw new Error("Workerが直前の当選デッキを返しました。Workerの設定を確認してください。");
+
+      if (excludeDeckIds.includes(deck.id)) {
+        throw new Error("Workerが除外対象のデッキを返しました。Workerの設定を確認してください。");
       }
+
       return deck;
     }
 
@@ -262,22 +297,23 @@
       spinButton.classList.add("hidden");
       statusElement.classList.add("hidden");
       settingsElement.classList.add("hidden");
+
       resultElement.classList.remove("result-reveal");
       resultElement.classList.add("has-result");
       showDrawingCard();
 
       try {
-        const candidates = avoidRepeatCheckbox.checked && lastDrawnDeckId
-          ? decks.filter(deck => deck.id !== lastDrawnDeckId)
-          : decks;
+        const excludedIds = new Set(getExcludedDeckIds());
+        const candidates = decks.filter(deck => !excludedIds.has(deck.id));
 
         if (candidates.length === 0) {
-          throw new Error("重複除外後に抽選できるデッキがありません。抽選対象のデッキを増やすか、重複除外を解除してください。");
+          throw new Error("直近3回の当選デッキを除外すると抽選できません。抽選対象のデッキを増やすか、重複除外を解除してください。");
         }
 
         for (let i = 0; i < 20; i++) {
           const randomDeck = candidates[Math.floor(Math.random() * candidates.length)];
           resultElement.textContent = getDeckName(randomDeck);
+
           const progress = i / 19;
           await sleep(45 + 300 * progress * progress);
         }
@@ -286,8 +322,13 @@
         const deckName = getDeckName(deck);
 
         resultElement.textContent = deckName;
-        lastDrawnDeckName = deckName;
-        lastDrawnDeckId = deck.id;
+
+        // 最新の当選デッキを先頭に追加し、直近3個を保持
+        recentDrawnDeckIds = [
+          deck.id,
+          ...recentDrawnDeckIds.filter(id => id !== deck.id)
+        ].slice(0, 3);
+
         renderDeckList();
 
         await showKeyCards(deck);
@@ -296,16 +337,19 @@
 
         const eligibleCount = candidates.length;
         statusElement.textContent = `抽選完了（対象 ${eligibleCount} デッキ）`;
+
         await sleep(900);
       } catch (error) {
         console.error(error);
         resultElement.textContent = "抽選に失敗しました";
         keyCardImages.replaceChildren();
         cardStage.classList.remove("winner");
+
         const fallback = document.createElement("div");
         fallback.className = "fallback";
         fallback.textContent = error.message || "通信状態を確認して、もう一度お試しください。";
         keyCardImages.appendChild(fallback);
+
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
         drawingCard.classList.add("hidden");
