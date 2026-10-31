@@ -57,7 +57,7 @@
     .mana-absorption.absorbing .drawing-card{animation:cardAbsorb .72s cubic-bezier(.2,.85,.25,1) both}
     @keyframes cardAbsorb{0%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}42%{transform:translate(-50%,-50%) scale(1.13);filter:brightness(1.75)}72%{transform:translate(-50%,-50%) scale(.97);filter:brightness(1.2)}100%{transform:translate(-50%,-50%) scale(1.06);filter:brightness(1.35)}}
     .mana-absorption.absorbing{animation:stageFlash .72s ease-out both}
-    @keyframes stageFlash{0%{filter:brightness(1)}28%{filter:brightness(2.25)}52%{filter:brightness(1.55)}100%{filter:brightness(1)}}
+    @keyframes stageFlash{0%{filter:brightness(1)}24%{filter:brightness(2.7)}48%{filter:brightness(1.65)}100%{filter:brightness(1)}}
     .card-stage.absorption-burst{animation:stageImpact .42s ease-out both}
     @keyframes stageImpact{0%{transform:scale(1)}24%{transform:scale(1.025)}100%{transform:scale(1)}}
     @keyframes runeSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}}
@@ -83,10 +83,20 @@
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
     @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:250px}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
+    /* 結果発表前の暗転・余韻 */
+    #suspenseOverlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(14,18,38,.78),rgba(3,5,15,.94));opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;backdrop-filter:blur(2px)}
+    body.suspense-dim #suspenseOverlay{opacity:1;visibility:visible}
+    /* 吸収時に短く画面を揺らす */
+    .card-stage.absorption-burst{animation:stageImpact .48s ease-out both}
+    @keyframes stageImpact{0%,100%{transform:translateX(0)}18%{transform:translateX(-5px)}36%{transform:translateX(5px)}54%{transform:translateX(-3px)}72%{transform:translateX(2px)} }
+    /* 周回中は文明色の光を強め、軌道を見やすくする */
+    .mana-absorption.charging .drawing-card{box-shadow:0 0 24px rgb(109 143 255 / 42%),0 0 52px rgb(160 133 255 / 28%),inset 0 0 24px rgb(255 255 255 / 25%)}
+    .mana-absorption.charging .drawing-card:before{box-shadow:inset 0 0 22px rgb(255 255 255 / 72%),0 0 22px rgb(255 255 255 / 48%)}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
+  <div id="suspenseOverlay" aria-hidden="true"></div>
   <main>
     <h1>DMデッキルーレット</h1>
     <p class="subtitle">次に使用するデッキを抽選します</p>
@@ -430,9 +440,15 @@
 
         renderDeckList();
 
+        // 吸収直後に画面を暗くし、結果が出るまでの余韻を明確に作る。
+        document.body.classList.add("suspense-dim");
+        await sleep(720);
+        document.body.classList.remove("suspense-dim");
+        await sleep(180);
+
+        // 暗転解除後にキーカードを召喚し、さらに間を置いてデッキ名を発表。
         await showKeyCards(deck);
-        // キーカードを先に召喚し、短い間を置いてからデッキ名を発表する。
-        await sleep(380);
+        await sleep(520);
         resultElement.textContent = deckName;
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
@@ -454,6 +470,7 @@
 
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
+        document.body.classList.remove("suspense-dim");
         drawingCard.classList.add("hidden");
         spinButton.classList.remove("hidden");
         spinButton.textContent = "抽選スタート";
