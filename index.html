@@ -84,12 +84,12 @@
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
     @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:250px}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
-    /* 結果発表前の暗転・余韻 */
-    #whiteFlash{position:fixed;inset:0;z-index:10000;background:#fff;opacity:0;pointer-events:none}
-    #whiteFlash.active{animation:fullWhiteFlash .34s ease-out both}
-    @keyframes fullWhiteFlash{0%{opacity:0}18%{opacity:.96}42%{opacity:.72}100%{opacity:0}}
-    #suspenseOverlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(14,18,38,.78),rgba(3,5,15,.94));opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;backdrop-filter:blur(2px)}
-    body.suspense-dim #suspenseOverlay{opacity:1;visibility:visible}
+    /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
+    .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
+    @keyframes revealPending{
+      from{transform:translate(-50%,-50%) scale(1.035);filter:brightness(1.22);box-shadow:0 0 24px rgb(255 255 255 / 55%),0 0 42px rgb(130 155 255 / 42%)}
+      to{transform:translate(-50%,-50%) scale(1.09);filter:brightness(1.62);box-shadow:0 0 34px rgb(255 255 255 / 82%),0 0 66px rgb(255 210 100 / 62%),0 0 90px rgb(130 155 255 / 35%)}
+    }
     /* 吸収時に短く画面を揺らす */
     .card-stage.absorption-burst{animation:stageImpact .48s ease-out both}
     @keyframes stageImpact{0%,100%{transform:translateX(0)}18%{transform:translateX(-5px)}36%{transform:translateX(5px)}54%{transform:translateX(-3px)}72%{transform:translateX(2px)} }
@@ -100,8 +100,6 @@
   </style>
 </head>
 <body>
-  <div id="suspenseOverlay" aria-hidden="true"></div>
-  <div id="whiteFlash" aria-hidden="true"></div>
   <main>
     <h1>DMデッキルーレット</h1>
     <p class="subtitle">次に使用するデッキを抽選します</p>
@@ -143,7 +141,6 @@
     const drawingCard = document.getElementById("drawingCard");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
-    const whiteFlash = document.getElementById("whiteFlash");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
     const settingsElement = document.getElementById("settings");
 
@@ -215,7 +212,6 @@
       const radius = Math.min(145, Math.max(92, drawingCard.clientWidth * 0.88));
       const duration = 3900;
       const turns = 2.35;
-      const trailLength = 0.105;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
       const canvas = document.createElement("canvas");
       canvas.id = "manaTrailCanvas";
@@ -256,39 +252,35 @@
         return icon.animate(frames, { duration, easing: "linear", fill: "forwards" });
       });
 
-      // アイコンの現在位置を追いかける文明色の光跡を、同じ軌道上に連続描画する。
+      // 線ではなく、アイコンの少し後ろに柔らかな光のにじみを残す。
+      // それぞれ独立した光の粒として描き、終盤は早めに薄くして
+      // 5本の線が中心で交差・結合して星形に見えることを防ぐ。
       const startTime = performance.now();
       let trailFrame;
       const drawTrails = now => {
         const t = Math.min(1, (now - startTime) / duration);
         ctx.clearRect(0, 0, rect.width, rect.height);
-        icons.forEach((icon, index) => {
-          const tailT = Math.max(0, t - trailLength);
-          const head = pointAt(index, t);
-          const tail = pointAt(index, tailT);
-          const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
-          gradient.addColorStop(0, "rgba(255,255,255,0)");
-          gradient.addColorStop(0.55, colors[index] + "88");
-          gradient.addColorStop(1, colors[index]);
-          ctx.save();
-          ctx.lineCap = "round";
-          ctx.strokeStyle = gradient;
-          ctx.lineWidth = 5.5;
-          ctx.shadowColor = colors[index];
-          ctx.shadowBlur = 17;
-          ctx.globalAlpha = Math.min(1, t / 0.08) * Math.min(1, (1 - t) / 0.035);
-          ctx.beginPath();
-          ctx.moveTo(tail.x, tail.y);
-          ctx.lineTo(head.x, head.y);
-          ctx.stroke();
-          // 光跡の先端に小さな発光点を重ね、アイコンとの一体感を出す。
-          ctx.fillStyle = "#fff";
-          ctx.shadowBlur = 20;
-          ctx.beginPath();
-          ctx.arc(head.x, head.y, 2.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        });
+        if (t < 0.82) {
+          icons.forEach((icon, index) => {
+            const tailT = Math.max(0, t - 0.035);
+            const point = pointAt(index, tailT);
+            const fadeIn = Math.min(1, t / 0.10);
+            const fadeOut = Math.min(1, (0.82 - t) / 0.18);
+            const alpha = 0.34 * fadeIn * fadeOut;
+            const glowRadius = 23 - 7 * t;
+            const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, glowRadius);
+            gradient.addColorStop(0, colors[index] + "88");
+            gradient.addColorStop(0.38, colors[index] + "38");
+            gradient.addColorStop(1, colors[index] + "00");
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          });
+        }
         if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
       trailFrame = requestAnimationFrame(drawTrails);
@@ -296,9 +288,6 @@
       await sleep(3500);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
-      whiteFlash.classList.remove("active");
-      void whiteFlash.offsetWidth;
-      whiteFlash.classList.add("active");
 
       await Promise.all(animations.map(animation => animation.finished));
       if (trailFrame) cancelAnimationFrame(trailFrame);
@@ -495,13 +484,14 @@
 
         renderDeckList();
 
-        // 吸収直後に画面を暗くし、結果が出るまでの余韻を明確に作る。
-        document.body.classList.add("suspense-dim");
-        await sleep(720);
-        document.body.classList.remove("suspense-dim");
-        await sleep(180);
+        // 埋め込み枠の外側を暗転させることはできないため、
+        // カード自体の発光を一段強めて短く溜め、公開へつなげる。
+        const drawingFace = drawingCard.querySelector(".drawing-card");
+        drawingFace.classList.add("reveal-pending");
+        await sleep(620);
+        drawingFace.classList.remove("reveal-pending");
 
-        // 暗転解除後にキーカードを召喚し、さらに間を置いてデッキ名を発表。
+        // キーカードを公開し、少し間を置いてデッキ名を発表。
         await showKeyCards(deck);
         await sleep(520);
         resultElement.textContent = deckName;
@@ -525,7 +515,6 @@
 
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
-        document.body.classList.remove("suspense-dim");
         drawingCard.classList.add("hidden");
         spinButton.classList.remove("hidden");
         spinButton.textContent = "抽選スタート";
