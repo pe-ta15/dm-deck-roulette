@@ -33,10 +33,18 @@
     .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
     .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
-    /* 抽選結果の文明色を、カードの縁に沿って滑らかにつなぐ */
-    .drawing-card.deck-civ-colored{border:4px solid transparent;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%) padding-box,linear-gradient(135deg,var(--deck-civ-gradient)) border-box;box-shadow:0 0 12px var(--deck-civ-glow),0 0 28px var(--deck-civ-glow),inset 0 0 18px rgb(255 255 255 / 35%);animation:civFramePulse 1.05s ease-in-out infinite alternate}
-    .drawing-card.deck-civ-colored:before{inset:7px;border-color:rgb(255 255 255 / 88%);box-shadow:inset 0 0 12px var(--deck-civ-glow),0 0 12px var(--deck-civ-glow)}
-    @keyframes civFramePulse{from{filter:brightness(1);box-shadow:0 0 9px var(--deck-civ-glow),0 0 20px var(--deck-civ-glow),inset 0 0 12px rgb(255 255 255 / 25%)}to{filter:brightness(1.28);box-shadow:0 0 16px var(--deck-civ-glow),0 0 38px var(--deck-civ-glow),inset 0 0 22px rgb(255 255 255 / 48%)}}
+    /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
+    .drawing-card.deck-civ-colored{
+      border:10px solid transparent;
+      background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%) padding-box,var(--deck-civ-gradient) border-box;
+      box-shadow:0 0 12px 2px var(--deck-civ-glow),0 0 30px 5px var(--deck-civ-glow),0 0 58px rgb(255 255 255 / 48%),inset 0 0 22px rgb(255 255 255 / 58%);
+      animation:civFramePulse 1.05s ease-in-out infinite alternate
+    }
+    .drawing-card.deck-civ-colored:before{inset:4px;border:2px solid rgb(255 255 255 / 96%);box-shadow:inset 0 0 16px var(--deck-civ-glow),0 0 12px var(--deck-civ-glow)}
+    .mana-absorption.charging .drawing-card.deck-civ-colored{border-width:10px;box-shadow:0 0 18px 3px var(--deck-civ-glow),0 0 42px 7px var(--deck-civ-glow),0 0 72px rgb(255 255 255 / 55%),inset 0 0 28px rgb(255 255 255 / 70%);animation:cardChargeCiv .72s ease-in-out infinite alternate}
+    .mana-absorption.charging .drawing-card.deck-civ-colored:before{box-shadow:inset 0 0 22px var(--deck-civ-glow),0 0 20px var(--deck-civ-glow)}
+    @keyframes cardChargeCiv{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1.15) saturate(1.25)}to{transform:translate(-50%,-50%) scale(1.075);filter:brightness(1.7) saturate(1.8)}}
+    @keyframes civFramePulse{from{filter:brightness(1.08) saturate(1.2);box-shadow:0 0 16px var(--deck-civ-glow),0 0 34px var(--deck-civ-glow),inset 0 0 18px rgb(255 255 255 / 35%)}to{filter:brightness(1.6) saturate(1.7);box-shadow:0 0 28px var(--deck-civ-glow),0 0 62px var(--deck-civ-glow),0 0 90px rgb(255 255 255 / 40%),inset 0 0 30px rgb(255 255 255 / 68%)}}
     .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 75%);border-radius:8px}
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
     .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
@@ -158,29 +166,30 @@
       return deck?.name ?? deck?.deckName ?? deck?.["デッキ名"] ?? "名称不明";
     }
 
-    // NotionのMulti-select「文明」を想定。APIの返却形式の違いにも対応する。
+    // NotionのMulti-select「文明」を取得。/spinの返却に文明がない場合は/decksの情報を補完する。
     function getDeckCivilizations(deck) {
+      const property = deck?.properties?.["文明"] ?? deck?.properties?.civilization;
       const raw = deck?.civilization ?? deck?.civilizations ?? deck?.文明
-        ?? deck?.properties?.文明?.multi_select
-        ?? deck?.properties?.['文明']?.multi_select;
+        ?? property?.multi_select ?? property?.select ?? property?.value ?? property;
       if (raw == null) return [];
       let values;
       if (Array.isArray(raw)) values = raw;
-      else if (typeof raw === "string") values = raw.split(/[、,，\/・]/);
+      else if (typeof raw === "string") values = raw.split(/[、,，/・]/);
       else if (Array.isArray(raw.multi_select)) values = raw.multi_select;
       else if (Array.isArray(raw.select)) values = raw.select;
       else if (typeof raw.name === "string") values = [raw.name];
+      else if (typeof raw.value === "string") values = [raw.value];
       else return [];
       const aliases = new Map([
-        ["火", "fire"], ["水", "water"], ["自然", "nature"],
-        ["光", "light"], ["闇", "darkness"], ["ゼロ", "zero"],
-        ["無色", "zero"], ["ゼロ/無色", "zero"], ["ゼロ／無色", "zero"]
+        ["火", "fire"], ["火文明", "fire"], ["水", "water"], ["水文明", "water"],
+        ["自然", "nature"], ["自然文明", "nature"], ["光", "light"], ["光文明", "light"],
+        ["闇", "darkness"], ["闇文明", "darkness"], ["ゼロ", "zero"], ["無色", "zero"],
+        ["ゼロ/無色", "zero"], ["ゼロ／無色", "zero"]
       ]);
       const found = [];
       for (const value of values) {
-        const name = typeof value === "string" ? value : value?.name ?? value?.title ?? "";
-        const normalized = String(name).trim().replace(/\s/g, "");
-        const key = aliases.get(normalized);
+        const name = typeof value === "string" ? value : value?.name ?? value?.title ?? value?.plain_text ?? "";
+        const key = aliases.get(String(name).trim().replace(/\s/g, ""));
         if (key && !found.includes(key)) found.push(key);
       }
       return found;
@@ -197,11 +206,11 @@
       face.style.removeProperty("--deck-civ-gradient");
       face.style.removeProperty("--deck-civ-glow");
       if (colors.length === 0) return;
-      const stops = colors.length === 1
-        ? `${colors[0]}, ${colors[0]}`
-        : colors.map((color, index) => `${color} ${(index / (colors.length - 1)) * 100}%`).join(", ");
-      face.style.setProperty("--deck-civ-gradient", stops);
-      face.style.setProperty("--deck-civ-glow", colors.length === 1 ? colors[0] : "#ffffff");
+      // 変数には色の羅列ではなく、完成したCSSグラデーションを設定する。
+      // これにより単色・複数文明のどちらも確実に外周へ描画される。
+      const gradient = `linear-gradient(135deg, ${colors.join(", ")})`;
+      face.style.setProperty("--deck-civ-gradient", gradient);
+      face.style.setProperty("--deck-civ-glow", colors[0]);
       face.classList.add("deck-civ-colored");
     }
 
@@ -541,7 +550,14 @@
 
         // API抽選と演出を並行させ、演出終了後に結果を公開する。
         const drawResult = requestDraw().then(
-          deck => ({ deck }),
+          deck => {
+            // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
+            const listedDeck = decks.find(item => String(item.id) === String(deck.id));
+            const completeDeck = listedDeck ? { ...listedDeck, ...deck } : deck;
+            // 抽選結果が届いた時点で文明色を適用し、吸収演出中から見えるようにする。
+            applyDeckCivilizationFrame(completeDeck);
+            return { deck: completeDeck };
+          },
           error => ({ error })
         );
         await playManaSequence();
