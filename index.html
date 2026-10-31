@@ -33,6 +33,10 @@
     .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
     .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
+    /* 抽選結果の文明色を、カードの縁に沿って滑らかにつなぐ */
+    .drawing-card.deck-civ-colored{border:4px solid transparent;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%) padding-box,linear-gradient(135deg,var(--deck-civ-gradient)) border-box;box-shadow:0 0 12px var(--deck-civ-glow),0 0 28px var(--deck-civ-glow),inset 0 0 18px rgb(255 255 255 / 35%);animation:civFramePulse 1.05s ease-in-out infinite alternate}
+    .drawing-card.deck-civ-colored:before{inset:7px;border-color:rgb(255 255 255 / 88%);box-shadow:inset 0 0 12px var(--deck-civ-glow),0 0 12px var(--deck-civ-glow)}
+    @keyframes civFramePulse{from{filter:brightness(1);box-shadow:0 0 9px var(--deck-civ-glow),0 0 20px var(--deck-civ-glow),inset 0 0 12px rgb(255 255 255 / 25%)}to{filter:brightness(1.28);box-shadow:0 0 16px var(--deck-civ-glow),0 0 38px var(--deck-civ-glow),inset 0 0 22px rgb(255 255 255 / 48%)}}
     .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 75%);border-radius:8px}
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
     .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
@@ -154,6 +158,53 @@
       return deck?.name ?? deck?.deckName ?? deck?.["デッキ名"] ?? "名称不明";
     }
 
+    // NotionのMulti-select「文明」を想定。APIの返却形式の違いにも対応する。
+    function getDeckCivilizations(deck) {
+      const raw = deck?.civilization ?? deck?.civilizations ?? deck?.文明
+        ?? deck?.properties?.文明?.multi_select
+        ?? deck?.properties?.['文明']?.multi_select;
+      if (raw == null) return [];
+      let values;
+      if (Array.isArray(raw)) values = raw;
+      else if (typeof raw === "string") values = raw.split(/[、,，\/・]/);
+      else if (Array.isArray(raw.multi_select)) values = raw.multi_select;
+      else if (Array.isArray(raw.select)) values = raw.select;
+      else if (typeof raw.name === "string") values = [raw.name];
+      else return [];
+      const aliases = new Map([
+        ["火", "fire"], ["水", "water"], ["自然", "nature"],
+        ["光", "light"], ["闇", "darkness"], ["ゼロ", "zero"],
+        ["無色", "zero"], ["ゼロ/無色", "zero"], ["ゼロ／無色", "zero"]
+      ]);
+      const found = [];
+      for (const value of values) {
+        const name = typeof value === "string" ? value : value?.name ?? value?.title ?? "";
+        const normalized = String(name).trim().replace(/\s/g, "");
+        const key = aliases.get(normalized);
+        if (key && !found.includes(key)) found.push(key);
+      }
+      return found;
+    }
+
+    function applyDeckCivilizationFrame(deck) {
+      const face = drawingCard.querySelector(".drawing-card");
+      const palette = {
+        fire: "#e53935", water: "#168bd2", nature: "#299b45",
+        light: "#f2c600", darkness: "#743c9b", zero: "#d9e0eb"
+      };
+      const colors = getDeckCivilizations(deck).map(key => palette[key]).filter(Boolean);
+      face.classList.remove("deck-civ-colored");
+      face.style.removeProperty("--deck-civ-gradient");
+      face.style.removeProperty("--deck-civ-glow");
+      if (colors.length === 0) return;
+      const stops = colors.length === 1
+        ? `${colors[0]}, ${colors[0]}`
+        : colors.map((color, index) => `${color} ${(index / (colors.length - 1)) * 100}%`).join(", ");
+      face.style.setProperty("--deck-civ-gradient", stops);
+      face.style.setProperty("--deck-civ-glow", colors.length === 1 ? colors[0] : "#ffffff");
+      face.classList.add("deck-civ-colored");
+    }
+
     function getKeyCardImageUrls(deck) {
       const candidates = deck?.keyCards ?? deck?.keyCardImages ?? deck?.key_cards ?? deck?.images ?? [];
       if (!Array.isArray(candidates)) return [];
@@ -199,6 +250,10 @@
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
+      const drawingFace = drawingCard.querySelector(".drawing-card");
+      drawingFace.classList.remove("deck-civ-colored", "reveal-pending");
+      drawingFace.style.removeProperty("--deck-civ-gradient");
+      drawingFace.style.removeProperty("--deck-civ-glow");
       drawingCard.querySelectorAll(".mana-orb").forEach(icon => {
         icon.getAnimations().forEach(animation => animation.cancel());
         icon.style.opacity = "0";
@@ -299,52 +354,8 @@
           ctx.restore();
         }
 
-        // ② 吸収直前：軌道に沿って内側へ流れる短い、幅広の光の波。
-        // 個別のぼかし楕円にして、細い線や五角形の輪郭を作らない。
-        if (t >= 0.64 && t < 0.96) {
-          const waveStrength = Math.min(1, (t - 0.64) / 0.16) * Math.min(1, (0.96 - t) / 0.18);
-          icons.forEach((icon, index) => {
-            const point = pointAt(index, t);
-            const centerX = rect.width / 2, centerY = rect.height / 2;
-            const angle = Math.atan2(centerY - point.y, centerX - point.x);
-            const x = point.x + Math.cos(angle) * 18;
-            const y = point.y + Math.sin(angle) * 18;
-            ctx.save();
-            ctx.translate(x, y); ctx.rotate(angle);
-            ctx.globalAlpha = 0.20 * waveStrength;
-            const gradient = ctx.createLinearGradient(-22, 0, 22, 0);
-            gradient.addColorStop(0, colors[index] + '00');
-            gradient.addColorStop(0.5, colors[index] + 'bb');
-            gradient.addColorStop(1, '#ffffff00');
-            ctx.fillStyle = gradient; ctx.shadowColor = colors[index]; ctx.shadowBlur = 18;
-            ctx.beginPath(); ctx.ellipse(0, 0, 24, 9, 0, 0, Math.PI * 2); ctx.fill();
-            ctx.restore();
-          });
-        }
-
-        // ③ 最後の吸収：5色の光を線で結ばず、カード中心の光に重ねて集中。
-        if (t >= 0.84) {
-          const focus = Math.min(1, (t - 0.84) / 0.16);
-          const pulse = 0.65 + 0.35 * Math.sin(focus * Math.PI);
-          const cx = rect.width / 2, cy = rect.height / 2;
-          const radius = 18 + 42 * (1 - focus);
-          const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-          glow.addColorStop(0, `rgba(255,255,255,${0.72 * focus * pulse})`);
-          glow.addColorStop(0.25, `rgba(255,238,180,${0.42 * focus})`);
-          glow.addColorStop(1, 'rgba(255,255,255,0)');
-          ctx.fillStyle = glow; ctx.beginPath();
-          ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
-          colors.forEach((color, index) => {
-            const a = -Math.PI / 2 + Math.PI * 2 * index / colors.length;
-            const x = cx + Math.cos(a) * (34 * (1 - focus));
-            const y = cy + Math.sin(a) * (34 * (1 - focus));
-            const r = 7 + 9 * focus;
-            const spot = ctx.createRadialGradient(x, y, 0, x, y, r);
-            spot.addColorStop(0, color + 'cc'); spot.addColorStop(1, color + '00');
-            ctx.fillStyle = spot; ctx.beginPath();
-            ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
-          });
-        }
+        // ②・③の控えめで差が分かりにくかった光の波／中心集中表現は廃止。
+        // 粒子の演出から、抽選結果の文明色をまとったカード縁の発光へつなぐ。
         if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
       trailFrame = requestAnimationFrame(drawTrails);
@@ -538,6 +549,7 @@
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
+        applyDeckCivilizationFrame(deck);
 
         // 最新の当選デッキを先頭に追加し、直近3個を保持
         recentDrawnDeckIds = [
