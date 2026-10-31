@@ -40,7 +40,6 @@
     .mana-orb.water{--mana-color:#168bd2;--mana-symbol:var(--symbol-4);--start-x:160px;--start-y:95px;--delay:-1.45s}
     .mana-orb.darkness{--mana-color:#743c9b;--mana-symbol:var(--symbol-5);--start-x:-160px;--start-y:95px;--delay:-1.8s}
     @keyframes manaDrift{0%{opacity:0;transform:translate(var(--start-x),var(--start-y)) scale(.72) rotate(-12deg)}12%{opacity:1}52%{opacity:1;transform:translate(calc(var(--start-x)*.48),calc(var(--start-y)*.48)) scale(1.08) rotate(8deg)}88%{opacity:1;transform:translate(0,0) scale(.28) rotate(0)}100%{opacity:0;transform:translate(0,0) scale(0)}}
-    .mana-caption{position:absolute;left:0;right:0;bottom:5px;color:#6f7787;font-size:.82rem;font-weight:700;letter-spacing:.1em}
     #keyCardImages{position:relative;z-index:1;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
     #keyCardImages img{display:block;flex:0 1 auto;width:min(180px,42vw);height:auto;max-height:360px;object-fit:contain;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
     #keyCardImages.revealing img{animation:cardFlipIn .9s cubic-bezier(.2,.75,.25,1) both}
@@ -76,7 +75,6 @@
           <span class="mana-orb nature" aria-hidden="true"></span>
           <span class="mana-orb water" aria-hidden="true"></span>
           <span class="mana-orb darkness" aria-hidden="true"></span>
-          <span class="mana-caption" aria-hidden="true">五文明の力を集束中</span>
         </div>
         <div id="keyCardImages"></div>
       </div>
