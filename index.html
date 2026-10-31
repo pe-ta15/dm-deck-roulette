@@ -27,20 +27,20 @@
     @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
     .card-stage{position:relative;width:100%;max-width:620px;min-height:250px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;align-items:center;isolation:isolate}
     #cardStage #drawingCard,#cardStage #keyCardImages{grid-column:1;grid-row:1;justify-self:center;margin:0 auto}
-    .mana-absorption{position:relative;width:min(100%,420px);height:250px;display:grid;place-items:center;isolation:isolate;overflow:hidden}
-    .mana-core{position:absolute;left:50%;top:50%;width:74px;height:74px;border:2px solid rgb(255 255 255 / 85%);border-radius:50%;background:radial-gradient(circle,#fff 0%,#fff2bf 18%,#f4bd45 48%,rgb(233 174 66 / 10%) 72%);box-shadow:0 0 18px #ffd76a,0 0 48px rgb(255 193 62 / 75%);transform:translate(-50%,-50%);animation:corePulse 1.15s ease-in-out infinite alternate}
-    .mana-core:before,.mana-core:after{content:"";position:absolute;inset:-15px;border:1px solid rgb(255 224 139 / 65%);border-radius:50%;animation:coreRing 1.8s ease-out infinite}
-    .mana-core:after{animation-delay:.9s}
-    .mana-orb{--orb:#fff;position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px;border:2px solid rgb(255 255 255 / 85%);border-radius:50%;display:grid;place-items:center;color:#fff;font-size:1.35rem;font-weight:900;text-shadow:0 1px 5px rgb(0 0 0 / 45%);background:radial-gradient(circle at 35% 28%,#fff,var(--orb) 38%,#333 130%);box-shadow:0 0 18px var(--orb),inset 0 0 12px rgb(255 255 255 / 55%);animation:manaDrift 2s cubic-bezier(.45,0,.8,.35) infinite;animation-delay:var(--delay);will-change:transform,opacity}
-    .mana-orb:nth-child(2){--orb:#36a9ff;--delay:-.35s}
-    .mana-orb:nth-child(3){--orb:#a9a9b5;--delay:-.8s}
-    .mana-orb:nth-child(4){--orb:#f0523c;--delay:-1.1s}
-    .mana-orb:nth-child(5){--orb:#55bd62;--delay:-1.5s}
-    .mana-orb:nth-child(6){--orb:#f4cf45;--delay:-.55s}
-    @keyframes manaDrift{0%{opacity:0;transform:translate(var(--start-x),var(--start-y)) scale(.72)}12%{opacity:1}55%{opacity:1;transform:translate(calc(var(--start-x)*.42),calc(var(--start-y)*.42)) scale(1.08)}88%{opacity:1;transform:translate(0,0) scale(.25)}100%{opacity:0;transform:translate(0,0) scale(0)}}
-    @keyframes corePulse{from{transform:translate(-50%,-50%) scale(.88);filter:brightness(.95)}to{transform:translate(-50%,-50%) scale(1.14);filter:brightness(1.35)}}
-    @keyframes coreRing{0%{opacity:.8;transform:scale(.55)}100%{opacity:0;transform:scale(1.8)}}
-    .mana-caption{position:absolute;left:0;right:0;bottom:12px;color:#6f7787;font-size:.86rem;font-weight:700;letter-spacing:.12em}
+    .mana-absorption{position:relative;width:min(100%,420px);height:270px;display:grid;place-items:center;isolation:isolate;overflow:hidden}
+    .drawing-card{position:absolute;z-index:2;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#e8ecf7 0%,#cbd3e8 48%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;animation:cardPulse 1.2s ease-in-out infinite alternate}
+    .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 65%);border-radius:8px}
+    .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
+    .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
+    @keyframes cardPulse{from{transform:scale(.97);box-shadow:0 0 16px rgb(109 143 255 / 20%)}to{transform:scale(1.03);box-shadow:0 0 36px rgb(109 143 255 / 55%)}}
+    .mana-orb{position:absolute;z-index:3;left:50%;top:50%;width:58px;height:58px;margin:-29px;display:block;background:var(--mana-color);-webkit-mask:var(--mana-symbol) center/contain no-repeat;mask:var(--mana-symbol) center/contain no-repeat;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 14px var(--mana-color));animation:manaDrift 2.15s cubic-bezier(.45,0,.8,.35) infinite;animation-delay:var(--delay);will-change:transform,opacity}
+    .mana-orb.fire{--mana-color:#e53935;--mana-symbol:var(--symbol-1);--start-x:-165px;--start-y:-88px;--delay:-.2s}
+    .mana-orb.light{--mana-color:#f2c600;--mana-symbol:var(--symbol-2);--start-x:0px;--start-y:-112px;--delay:-.65s}
+    .mana-orb.nature{--mana-color:#299b45;--mana-symbol:var(--symbol-3);--start-x:165px;--start-y:-72px;--delay:-1.05s}
+    .mana-orb.water{--mana-color:#168bd2;--mana-symbol:var(--symbol-4);--start-x:160px;--start-y:95px;--delay:-1.45s}
+    .mana-orb.darkness{--mana-color:#743c9b;--mana-symbol:var(--symbol-5);--start-x:-160px;--start-y:95px;--delay:-1.8s}
+    @keyframes manaDrift{0%{opacity:0;transform:translate(var(--start-x),var(--start-y)) scale(.72) rotate(-12deg)}12%{opacity:1}52%{opacity:1;transform:translate(calc(var(--start-x)*.48),calc(var(--start-y)*.48)) scale(1.08) rotate(8deg)}88%{opacity:1;transform:translate(0,0) scale(.28) rotate(0)}100%{opacity:0;transform:translate(0,0) scale(0)}}
+    .mana-caption{position:absolute;left:0;right:0;bottom:5px;color:#6f7787;font-size:.82rem;font-weight:700;letter-spacing:.1em}
     #keyCardImages{position:relative;z-index:1;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
     #keyCardImages img{display:block;flex:0 1 auto;width:min(180px,42vw);height:auto;max-height:360px;object-fit:contain;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
     #keyCardImages.revealing img{animation:cardFlipIn .9s cubic-bezier(.2,.75,.25,1) both}
@@ -58,7 +58,7 @@
     .deck-list li{padding:12px 14px;border:1px solid #e1e4eb;border-radius:10px;background:#f8f9fb;overflow-wrap:anywhere}
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
-    @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:220px}.mana-absorption{height:220px}.mana-orb{width:50px;height:50px;margin:-25px;font-size:1.2rem}#keyCardImages img{width:min(155px,42vw)}}
+    @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:250px}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
   </style>
 </head>
@@ -70,12 +70,12 @@
       <div id="result" aria-live="polite"></div>
       <div id="cardStage" class="card-stage hidden">
         <div id="drawingCard" class="mana-absorption hidden" aria-label="5文明の力を吸収して抽選中">
-          <div class="mana-core"></div>
-          <span class="mana-orb" style="--start-x:-165px;--start-y:-78px" aria-hidden="true">光</span>
-          <span class="mana-orb" style="--start-x:158px;--start-y:-88px" aria-hidden="true">水</span>
-          <span class="mana-orb" style="--start-x:-178px;--start-y:24px" aria-hidden="true">闇</span>
-          <span class="mana-orb" style="--start-x:172px;--start-y:30px" aria-hidden="true">火</span>
-          <span class="mana-orb" style="--start-x:-35px;--start-y:112px" aria-hidden="true">自然</span>
+          <div class="drawing-card"><span class="drawing-label">抽選中</span></div>
+          <span class="mana-orb fire" aria-hidden="true"></span>
+          <span class="mana-orb light" aria-hidden="true"></span>
+          <span class="mana-orb nature" aria-hidden="true"></span>
+          <span class="mana-orb water" aria-hidden="true"></span>
+          <span class="mana-orb darkness" aria-hidden="true"></span>
           <span class="mana-caption" aria-hidden="true">五文明の力を集束中</span>
         </div>
         <div id="keyCardImages"></div>
