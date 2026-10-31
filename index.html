@@ -252,39 +252,102 @@
         return icon.animate(frames, { duration, easing: "linear", fill: "forwards" });
       });
 
-      // 線ではなく、アイコンの少し後ろに柔らかな光のにじみを残す。
-      // それぞれ独立した光の粒として描き、終盤は早めに薄くして
-      // 5本の線が中心で交差・結合して星形に見えることを防ぐ。
+      // 旋回中は短命の光粒子、終盤は幅のあるエネルギー波、
+      // 吸収時は五文明色がカード中心に集まる光を描画する。
+      // 線で軌道を結ばず、粒子やぼかした光だけで表現する。
       const startTime = performance.now();
+      const particles = [];
+      let lastEmission = 0;
       let trailFrame;
+      const rand = (min, max) => min + Math.random() * (max - min);
       const drawTrails = now => {
         const t = Math.min(1, (now - startTime) / duration);
+        const dt = Math.min(0.04, (now - (drawTrails.lastTime || now)) / 1000);
+        drawTrails.lastTime = now;
         ctx.clearRect(0, 0, rect.width, rect.height);
-        if (t < 0.82) {
+
+        // ① 旋回中：アイコンの周囲から小さな粒子を控えめに放出
+        if (t < 0.70 && now - lastEmission > 42) {
+          lastEmission = now;
           icons.forEach((icon, index) => {
-            const tailT = Math.max(0, t - 0.035);
-            const point = pointAt(index, tailT);
-            const fadeIn = Math.min(1, t / 0.10);
-            const fadeOut = Math.min(1, (0.82 - t) / 0.18);
-            const alpha = 0.34 * fadeIn * fadeOut;
-            const glowRadius = 23 - 7 * t;
-            const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, glowRadius);
-            gradient.addColorStop(0, colors[index] + "88");
-            gradient.addColorStop(0.38, colors[index] + "38");
-            gradient.addColorStop(1, colors[index] + "00");
+            const point = pointAt(index, t);
+            const tangent = pointAt(index, Math.max(0, t - 0.012));
+            const angle = Math.atan2(point.y - tangent.y, point.x - tangent.x);
+            const count = t < 0.28 ? 1 : 2;
+            for (let n = 0; n < count; n++) {
+              const spread = angle + Math.PI + rand(-0.9, 0.9);
+              particles.push({
+                x: point.x + rand(-7, 7), y: point.y + rand(-7, 7),
+                vx: Math.cos(spread) * rand(10, 34),
+                vy: Math.sin(spread) * rand(10, 34),
+                life: 0, maxLife: rand(0.28, 0.55),
+                size: rand(1.2, 3.2), color: colors[index]
+              });
+            }
+          });
+        }
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt;
+          const alpha = Math.max(0, 1 - p.life / p.maxLife);
+          if (alpha <= 0) { particles.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = alpha * 0.82;
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color; ctx.shadowBlur = 9;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+
+        // ② 吸収直前：軌道に沿って内側へ流れる短い、幅広の光の波。
+        // 個別のぼかし楕円にして、細い線や五角形の輪郭を作らない。
+        if (t >= 0.64 && t < 0.96) {
+          const waveStrength = Math.min(1, (t - 0.64) / 0.16) * Math.min(1, (0.96 - t) / 0.18);
+          icons.forEach((icon, index) => {
+            const point = pointAt(index, t);
+            const centerX = rect.width / 2, centerY = rect.height / 2;
+            const angle = Math.atan2(centerY - point.y, centerX - point.x);
+            const x = point.x + Math.cos(angle) * 18;
+            const y = point.y + Math.sin(angle) * 18;
             ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(point.x, point.y, glowRadius, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.translate(x, y); ctx.rotate(angle);
+            ctx.globalAlpha = 0.20 * waveStrength;
+            const gradient = ctx.createLinearGradient(-22, 0, 22, 0);
+            gradient.addColorStop(0, colors[index] + '00');
+            gradient.addColorStop(0.5, colors[index] + 'bb');
+            gradient.addColorStop(1, '#ffffff00');
+            ctx.fillStyle = gradient; ctx.shadowColor = colors[index]; ctx.shadowBlur = 18;
+            ctx.beginPath(); ctx.ellipse(0, 0, 24, 9, 0, 0, Math.PI * 2); ctx.fill();
             ctx.restore();
+          });
+        }
+
+        // ③ 最後の吸収：5色の光を線で結ばず、カード中心の光に重ねて集中。
+        if (t >= 0.84) {
+          const focus = Math.min(1, (t - 0.84) / 0.16);
+          const pulse = 0.65 + 0.35 * Math.sin(focus * Math.PI);
+          const cx = rect.width / 2, cy = rect.height / 2;
+          const radius = 18 + 42 * (1 - focus);
+          const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+          glow.addColorStop(0, `rgba(255,255,255,${0.72 * focus * pulse})`);
+          glow.addColorStop(0.25, `rgba(255,238,180,${0.42 * focus})`);
+          glow.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = glow; ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.fill();
+          colors.forEach((color, index) => {
+            const a = -Math.PI / 2 + Math.PI * 2 * index / colors.length;
+            const x = cx + Math.cos(a) * (34 * (1 - focus));
+            const y = cy + Math.sin(a) * (34 * (1 - focus));
+            const r = 7 + 9 * focus;
+            const spot = ctx.createRadialGradient(x, y, 0, x, y, r);
+            spot.addColorStop(0, color + 'cc'); spot.addColorStop(1, color + '00');
+            ctx.fillStyle = spot; ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
           });
         }
         if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
       trailFrame = requestAnimationFrame(drawTrails);
-
       await sleep(3500);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
