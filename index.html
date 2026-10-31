@@ -30,8 +30,8 @@
     #cardStage #drawingCard,#cardStage #keyCardImages{grid-column:1;grid-row:1;justify-self:center;margin:0 auto}
     .mana-absorption{position:relative;width:min(100%,440px);height:300px;display:grid;place-items:center;isolation:isolate;overflow:visible}
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
-    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 55%);box-shadow:0 0 22px rgb(133 158 239 / 28%),inset 0 0 22px rgb(133 158 239 / 15%);opacity:1;animation:runeSpin 3.35s linear both}
-    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 75%);opacity:1;animation:runeSpinReverse 3.35s linear both}
+    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
+    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
     .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 75%);border-radius:8px}
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
@@ -49,14 +49,17 @@
     .mana-orb.nature{filter:drop-shadow(0 0 5px #7dff8c) drop-shadow(0 0 15px #299b45) drop-shadow(0 0 26px rgb(41 155 69 / 55%))}
     .mana-orb.water{filter:drop-shadow(0 0 5px #8be4ff) drop-shadow(0 0 15px #168bd2) drop-shadow(0 0 26px rgb(22 139 210 / 55%))}
     .mana-orb.darkness{filter:drop-shadow(0 0 5px #d49aff) drop-shadow(0 0 15px #743c9b) drop-shadow(0 0 26px rgb(116 60 155 / 60%))}
-    .mana-absorption.charging .drawing-card{animation:cardCharge .9s ease-in-out infinite alternate}
-    @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1) saturate(1)}to{transform:translate(-50%,-50%) scale(1.055);filter:brightness(1.25) saturate(1.25)}}
+    .mana-absorption.charging .drawing-card{animation:cardCharge .72s ease-in-out infinite alternate}
+    .mana-absorption.charging .drawing-card:before{box-shadow:inset 0 0 18px rgb(255 255 255 / 55%),0 0 15px rgb(255 255 255 / 35%)}
+    @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1) saturate(1)}to{transform:translate(-50%,-50%) scale(1.065);filter:brightness(1.38) saturate(1.25)}}
     .mana-absorption.absorbing:after{content:"";position:absolute;z-index:5;left:50%;top:50%;width:240px;height:240px;border-radius:50%;border:3px solid rgb(255 255 255 / 85%);box-shadow:0 0 25px #fff,0 0 55px #e9c85c,0 0 85px #8e8cff;pointer-events:none;animation:finalShockwave .72s cubic-bezier(.12,.7,.2,1) both}
     @keyframes finalShockwave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}22%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
     .mana-absorption.absorbing .drawing-card{animation:cardAbsorb .72s cubic-bezier(.2,.85,.25,1) both}
     @keyframes cardAbsorb{0%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}42%{transform:translate(-50%,-50%) scale(1.13);filter:brightness(1.75)}72%{transform:translate(-50%,-50%) scale(.97);filter:brightness(1.2)}100%{transform:translate(-50%,-50%) scale(1.06);filter:brightness(1.35)}}
     .mana-absorption.absorbing{animation:stageFlash .72s ease-out both}
-    @keyframes stageFlash{0%{filter:brightness(1)}35%{filter:brightness(1.5)}100%{filter:brightness(1)}}
+    @keyframes stageFlash{0%{filter:brightness(1)}28%{filter:brightness(2.25)}52%{filter:brightness(1.55)}100%{filter:brightness(1)}}
+    .card-stage.absorption-burst{animation:stageImpact .42s ease-out both}
+    @keyframes stageImpact{0%{transform:scale(1)}24%{transform:scale(1.025)}100%{transform:scale(1)}}
     @keyframes runeSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}}
     @keyframes runeSpinReverse{from{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}to{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}}
     #keyCardImages{position:relative;z-index:1;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
@@ -72,6 +75,7 @@
     @keyframes lightBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.1)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
     @keyframes ringBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.1)}}
     .particle{position:absolute;z-index:3;width:var(--size,6px);height:var(--size,6px);border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffbdc 0%,#ffd45e 55%,#ff9c2d 100%);box-shadow:0 0 9px 2px rgb(255 213 96 / 75%);animation:particleFly var(--duration,1s) ease-out forwards}
+    #result.result-reveal{position:relative;color:#8b5a08;text-shadow:0 0 12px rgb(255 226 143 / 80%),0 0 28px rgb(255 190 65 / 45%)}
     @keyframes particleFly{0%{opacity:0;transform:translate(0,0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
     .fallback{width:100%;padding:28px 14px;color:var(--muted);line-height:1.7}
     .deck-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;padding:0;margin:18px 0 0;list-style:none;text-align:left}
@@ -189,29 +193,35 @@
       });
     }
 
-    // 5文明アイコンがカードの周囲を同じ方向に周回し、渦を巻いて中心へ吸い込まれる。
+    // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
     async function playManaSequence() {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
       const radius = Math.min(145, Math.max(92, drawingCard.clientWidth * 0.88));
-      const duration = 3200;
-      const framesByIcon = icons.map((icon, index) => {
+      const duration = 3900;
+      const turns = 2.35;
+
+      drawingCard.classList.add("charging");
+
+      const animations = icons.map((icon, index) => {
         const frames = [];
         const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
-        const steps = 96;
+        const steps = 120;
 
         for (let step = 0; step <= steps; step++) {
           const t = step / steps;
-          // 回転は途切れず、後半ほど速くなる。半径は連続的に縮小する。
-          const angle = startAngle + Math.PI * 2 * (1.15 * t + 1.0 * t * t);
-          const r = radius * Math.pow(1 - t, 0.92);
+          // 最初は円周上を周回し、後半ほど回転が加速しながら中心へ収束する。
+          const easedTurn = turns * (0.20 * t + 0.80 * t * t);
+          const angle = startAngle + Math.PI * 2 * easedTurn;
+          const contraction = Math.pow(1 - t, 0.88);
+          const r = radius * contraction;
           const x = Math.cos(angle) * r;
           const y = Math.sin(angle) * r;
-          const scale = 0.92 + 0.16 * t;
-          const opacity = t < 0.035 ? t / 0.035 : Math.max(0, 1 - Math.max(0, t - 0.91) / 0.09);
+          const scale = 0.88 + 0.18 * t;
+          const opacity = Math.min(1, t / 0.10) * Math.min(1, (1 - t) / 0.045);
 
           frames.push({
             transform: `translate(${x}px, ${y}px) scale(${scale})`,
-            opacity,
+            opacity: Math.max(0, opacity),
             offset: t
           });
         }
@@ -223,15 +233,13 @@
         });
       });
 
-      drawingCard.classList.add("charging");
-
-      // 渦の終盤に合わせてカード側の吸収光を発生させる。
-      await sleep(2600);
+      // 渦の終盤で吸収の閃光を重ねる。
+      await sleep(3500);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
 
-      await Promise.all(framesByIcon.map(animation => animation.finished));
-      await sleep(180);
+      await Promise.all(animations.map(animation => animation.finished));
+      await sleep(220);
       drawingCard.classList.remove("charging", "absorbing");
       cardStage.classList.remove("absorption-burst");
 
@@ -247,7 +255,7 @@
       const centerX = cardStage.clientWidth / 2;
       const centerY = cardStage.clientHeight / 2;
 
-      for (let i = 0; i < 38; i++) {
+      for (let i = 0; i < 26; i++) {
         const particle = document.createElement("span");
         particle.className = "particle";
 
@@ -414,8 +422,6 @@
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
 
-        resultElement.textContent = deckName;
-
         // 最新の当選デッキを先頭に追加し、直近3個を保持
         recentDrawnDeckIds = [
           deck.id,
@@ -425,6 +431,9 @@
         renderDeckList();
 
         await showKeyCards(deck);
+        // キーカードを先に召喚し、短い間を置いてからデッキ名を発表する。
+        await sleep(380);
+        resultElement.textContent = deckName;
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
 
