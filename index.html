@@ -37,6 +37,7 @@
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
     .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
     @keyframes cardPulse{from{box-shadow:0 0 16px rgb(109 143 255 / 20%)}to{box-shadow:0 0 36px rgb(109 143 255 / 55%)}}
+    #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
     .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:64px;height:64px;margin:-32px;display:block;object-fit:contain;opacity:0;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 18px var(--mana-color));will-change:transform,opacity;pointer-events:none}
     .mana-orb.fire{--mana-color:#e53935}
     .mana-orb.light{--mana-color:#f2c600}
@@ -84,6 +85,9 @@
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
     @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:250px}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
     /* 結果発表前の暗転・余韻 */
+    #whiteFlash{position:fixed;inset:0;z-index:10000;background:#fff;opacity:0;pointer-events:none}
+    #whiteFlash.active{animation:fullWhiteFlash .34s ease-out both}
+    @keyframes fullWhiteFlash{0%{opacity:0}18%{opacity:.96}42%{opacity:.72}100%{opacity:0}}
     #suspenseOverlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(14,18,38,.78),rgba(3,5,15,.94));opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;backdrop-filter:blur(2px)}
     body.suspense-dim #suspenseOverlay{opacity:1;visibility:visible}
     /* 吸収時に短く画面を揺らす */
@@ -97,6 +101,7 @@
 </head>
 <body>
   <div id="suspenseOverlay" aria-hidden="true"></div>
+  <div id="whiteFlash" aria-hidden="true"></div>
   <main>
     <h1>DMデッキルーレット</h1>
     <p class="subtitle">次に使用するデッキを抽選します</p>
@@ -138,6 +143,7 @@
     const drawingCard = document.getElementById("drawingCard");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
+    const whiteFlash = document.getElementById("whiteFlash");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
     const settingsElement = document.getElementById("settings");
 
@@ -209,46 +215,95 @@
       const radius = Math.min(145, Math.max(92, drawingCard.clientWidth * 0.88));
       const duration = 3900;
       const turns = 2.35;
+      const trailLength = 0.105;
+      const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
+      const canvas = document.createElement("canvas");
+      canvas.id = "manaTrailCanvas";
+      drawingCard.appendChild(canvas);
+      const ctx = canvas.getContext("2d");
+      const rect = drawingCard.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.scale(dpr, dpr);
+
+      const pointAt = (index, t) => {
+        const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
+        const easedTurn = turns * (0.20 * t + 0.80 * t * t);
+        const angle = startAngle + Math.PI * 2 * easedTurn;
+        const r = radius * Math.pow(1 - t, 0.88);
+        return {
+          x: rect.width / 2 + Math.cos(angle) * r,
+          y: rect.height / 2 + Math.sin(angle) * r
+        };
+      };
 
       drawingCard.classList.add("charging");
-
       const animations = icons.map((icon, index) => {
         const frames = [];
-        const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
         const steps = 120;
-
         for (let step = 0; step <= steps; step++) {
           const t = step / steps;
-          // 最初は円周上を周回し、後半ほど回転が加速しながら中心へ収束する。
-          const easedTurn = turns * (0.20 * t + 0.80 * t * t);
-          const angle = startAngle + Math.PI * 2 * easedTurn;
-          const contraction = Math.pow(1 - t, 0.88);
-          const r = radius * contraction;
-          const x = Math.cos(angle) * r;
-          const y = Math.sin(angle) * r;
+          const point = pointAt(index, t);
           const scale = 0.88 + 0.18 * t;
           const opacity = Math.min(1, t / 0.10) * Math.min(1, (1 - t) / 0.045);
-
           frames.push({
-            transform: `translate(${x}px, ${y}px) scale(${scale})`,
+            transform: `translate(${point.x - rect.width / 2}px, ${point.y - rect.height / 2}px) scale(${scale})`,
             opacity: Math.max(0, opacity),
             offset: t
           });
         }
-
-        return icon.animate(frames, {
-          duration,
-          easing: "linear",
-          fill: "forwards"
-        });
+        return icon.animate(frames, { duration, easing: "linear", fill: "forwards" });
       });
 
-      // 渦の終盤で吸収の閃光を重ねる。
+      // アイコンの現在位置を追いかける文明色の光跡を、同じ軌道上に連続描画する。
+      const startTime = performance.now();
+      let trailFrame;
+      const drawTrails = now => {
+        const t = Math.min(1, (now - startTime) / duration);
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        icons.forEach((icon, index) => {
+          const tailT = Math.max(0, t - trailLength);
+          const head = pointAt(index, t);
+          const tail = pointAt(index, tailT);
+          const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
+          gradient.addColorStop(0, "rgba(255,255,255,0)");
+          gradient.addColorStop(0.55, colors[index] + "88");
+          gradient.addColorStop(1, colors[index]);
+          ctx.save();
+          ctx.lineCap = "round";
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 5.5;
+          ctx.shadowColor = colors[index];
+          ctx.shadowBlur = 17;
+          ctx.globalAlpha = Math.min(1, t / 0.08) * Math.min(1, (1 - t) / 0.035);
+          ctx.beginPath();
+          ctx.moveTo(tail.x, tail.y);
+          ctx.lineTo(head.x, head.y);
+          ctx.stroke();
+          // 光跡の先端に小さな発光点を重ね、アイコンとの一体感を出す。
+          ctx.fillStyle = "#fff";
+          ctx.shadowBlur = 20;
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, 2.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+        if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
+      };
+      trailFrame = requestAnimationFrame(drawTrails);
+
       await sleep(3500);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
+      whiteFlash.classList.remove("active");
+      void whiteFlash.offsetWidth;
+      whiteFlash.classList.add("active");
 
       await Promise.all(animations.map(animation => animation.finished));
+      if (trailFrame) cancelAnimationFrame(trailFrame);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      canvas.remove();
       await sleep(220);
       drawingCard.classList.remove("charging", "absorbing");
       cardStage.classList.remove("absorption-burst");
