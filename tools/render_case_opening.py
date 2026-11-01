@@ -102,5 +102,5 @@ for fi in range(int(FPS*DUR)):
         im=Image.blend(Image.new("RGB",(W,H),(3,5,12)),im,f)
     im.save(f"{frames}/f{fi:04d}.jpg",quality=91)
 
-subprocess.run(["ffmpeg","-y","-framerate",str(FPS),"-i",f"{frames}/f%04d.jpg","-c:v","libvpx-vp9","-b:v","0","-crf","30","-pix_fmt","yuv420p","-an",OUT],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+subprocess.run(["ffmpeg","-y","-framerate",str(FPS),"-i",f"{frames}/f%04d.jpg","-c:v","libvpx","-b:v","1500k","-crf","10","-deadline","good","-cpu-used","4","-pix_fmt","yuv420p","-an",OUT],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 print(f"Rendered {OUT}")
