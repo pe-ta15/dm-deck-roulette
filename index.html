@@ -284,6 +284,63 @@
       #result.has-result{margin-top:5px!important;}
     }
 
+  
+
+    /* ===== Final layout + fixed opening cut-in (2026-11) ===== */
+    /* 吸収シーン：五文明アイコンの正円軌道が欠けないよう、正方形の演出領域を確保 */
+    #cardStage:not(.winner){grid-template-rows:228px auto!important;}
+    #drawingCard.mana-absorption{height:228px!important;min-height:228px!important;max-width:460px!important;overflow:visible!important;}
+    .mana-absorption:before,.mana-absorption:after{width:156px!important;height:156px!important;}
+    .mana-absorption.charging:before{border-color:rgba(255,218,145,.32)!important;}
+    .mana-absorption.charging:after{border-color:rgba(255,255,255,.42)!important;}
+    .mana-orb{width:48px!important;height:48px!important;margin:-24px!important;}
+    @media(max-width:480px){
+      #cardStage:not(.winner){grid-template-rows:210px auto!important;}
+      #drawingCard.mana-absorption{height:210px!important;min-height:210px!important;}
+      .mana-orb{width:42px!important;height:42px!important;margin:-21px!important;}
+      .mana-absorption:before,.mana-absorption:after{width:142px!important;height:142px!important;}
+    }
+
+    /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
+    #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important;}
+    #drawingCard.opening-cutin:before,#drawingCard.opening-cutin:after{opacity:0!important;}
+    #drawingCard.opening-cutin .mana-orb,#drawingCard.opening-cutin .drawing-card{display:none!important;}
+    #drawingCard.opening-cutin .deck-case,
+    .deck-case.treasure-open{width:244px!important;height:204px!important;top:53%!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(34deg) rotateY(-2deg) scale(1.12)!important;filter:drop-shadow(0 30px 28px rgba(0,0,0,.78))!important;}
+    /* 本体は深い収納箱。前壁・左右の厚み・内底を別レイヤーにする */
+    .deck-case.treasure-open .case-body{top:54px!important;left:4px!important;right:4px!important;bottom:5px!important;border:7px solid #354151!important;border-top:0!important;border-radius:7px 7px 18px 18px!important;background:linear-gradient(90deg,#a1adbd 0%,#4c596b 7%,#1b2533 18%,#111a27 32%,#344153 50%,#121b28 78%,#8995a5 96%,#263242 100%)!important;box-shadow:inset 12px 0 16px rgba(255,255,255,.18),inset -14px 0 18px rgba(0,0,0,.78),inset 0 -24px 28px rgba(0,0,0,.82),0 13px 18px rgba(0,0,0,.65)!important;}
+    .deck-case.treasure-open .case-cavity{left:23px!important;right:23px!important;top:9px!important;bottom:20px!important;border:3px solid #536176!important;border-bottom-width:7px!important;border-radius:5px!important;background:linear-gradient(180deg,#02050a,#111b29 72%,#263448)!important;box-shadow:inset 0 0 28px #000,inset 0 12px 18px rgba(0,0,0,.9),0 0 0 2px rgba(0,0,0,.5)!important;}
+    /* 蓋は上面＋前面スカートを持つ巻き込み式。閉じた時に箱の前面まで覆う */
+    .deck-case.treasure-open .case-lid{left:0!important;right:0!important;top:0!important;height:76px!important;border:6px solid #8794a6!important;border-bottom:7px solid #1a2431!important;border-radius:13px 13px 5px 5px!important;background:linear-gradient(180deg,#d1d9e3 0%,#7e8b9d 18%,#394657 55%,#1a2431 100%)!important;box-shadow:inset 0 5px 9px rgba(255,255,255,.5),inset 0 -12px 15px rgba(0,0,0,.72),0 12px 16px rgba(0,0,0,.72)!important;transform-origin:50% 8px!important;}
+    .deck-case.treasure-open .case-lid:before{left:12px!important;right:12px!important;top:10px!important;height:48px!important;border:3px solid rgba(255,255,255,.22)!important;background:linear-gradient(135deg,rgba(255,255,255,.24),transparent 48%,rgba(0,0,0,.4))!important;}
+    .deck-case.treasure-open .case-lid:after{content:""!important;position:absolute!important;left:-6px!important;right:-6px!important;bottom:-39px!important;height:38px!important;border:5px solid #687689!important;border-top:0!important;border-radius:0 0 8px 8px!important;background:linear-gradient(90deg,#a1adbd 0%,#4a586b 12%,#263344 50%,#3d4b5e 88%,#9aa6b6 100%)!important;box-shadow:inset 0 -8px 10px rgba(0,0,0,.5),0 6px 9px rgba(0,0,0,.6)!important;}
+    .deck-case.treasure-open .case-hinge{left:15px!important;right:15px!important;top:1px!important;height:15px!important;background:linear-gradient(180deg,#f2f5f8,#8997a9 48%,#1b2532)!important;box-shadow:0 4px 7px #000!important;}
+    .deck-case.treasure-open .case-lock{top:68px!important;width:40px!important;height:19px!important;border:3px solid #e7edf4!important;background:linear-gradient(180deg,#fff,#aab7c7 50%,#364355)!important;box-shadow:0 5px 9px #000,inset 0 2px 3px #fff!important;}
+    /* 文明色は吸収フェーズで保持。開封カットインでは共通の白金色へ切り替える */
+    .deck-case.treasure-open .case-spectrum,.deck-case.treasure-open .case-glow{background:radial-gradient(ellipse,#fff 0%,#fff8dc 32%,rgba(255,220,150,.75) 55%,transparent 82%)!important;}
+    .deck-case.treasure-open .case-light{top:62%!important;width:210px!important;height:170px!important;background:radial-gradient(ellipse,#fff 0%,#fffef5 26%,#ffe8ad 48%,rgba(255,218,135,.62) 66%,transparent 84%)!important;filter:blur(22px)!important;}
+    .deck-case.treasure-open.opening .case-lid{animation:fixedWrapLidOpen 1.35s cubic-bezier(.14,.76,.16,1) both!important;}
+    @keyframes fixedWrapLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}14%{transform:rotateX(-12deg) translateZ(3px);filter:brightness(1.2)}42%{transform:rotateX(-68deg) translateZ(10px);filter:brightness(1.55)}72%{transform:rotateX(-126deg) translateZ(17px);filter:brightness(2)}100%{transform:rotateX(-150deg) translateZ(22px);filter:brightness(1.7)}}
+    .deck-case.treasure-open.opening .case-light{animation:fixedInteriorFlare 1.8s ease-out .48s both!important;}
+    @keyframes fixedInteriorFlare{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}62%{opacity:1;transform:translate(-50%,-50%) scale(1.5)}100%{opacity:.96;transform:translate(-50%,-50%) scale(1.35)}}
+    .deck-case.treasure-open.opening .case-cavity{animation:fixedCavityFlare 1.9s ease-out .42s both!important;}
+    @keyframes fixedCavityFlare{0%,24%{background:linear-gradient(180deg,#02050a,#111b29 72%,#263448);box-shadow:inset 0 0 28px #000}52%{background:radial-gradient(ellipse at 50% 52%,#fff 0%,#fffdf2 25%,#ffe8ad 52%,#5a4728 78%,#090d14 100%);box-shadow:inset 0 0 45px #fff,inset 0 0 90px #ffe6a0,0 0 48px rgba(255,230,170,.8)}100%{background:radial-gradient(ellipse at 50% 52%,#fff 0%,#fffdf2 30%,#ffe8ad 56%,#594426 80%,#090d14 100%);box-shadow:inset 0 0 52px #fff,inset 0 0 105px #ffe6a0,0 0 54px rgba(255,230,170,.9)}}
+
+    /* 結果表示：カード画像を通常フローに置き、結果名・ボタン・設定と重ねない */
+    #cardStage.winner{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:min-content!important;row-gap:0!important;height:auto!important;min-height:0!important;overflow:visible!important;}
+    #cardStage.winner #drawingCard{display:none!important;}
+    #cardStage.winner #keyCardImages{position:relative!important;inset:auto!important;grid-column:1!important;grid-row:1!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-flow:row wrap!important;justify-content:center!important;align-items:flex-start!important;gap:10px!important;padding:0!important;margin:0 auto!important;overflow:visible!important;}
+    #cardStage.winner #keyCardImages img{position:static!important;display:block!important;flex:0 1 142px!important;width:min(142px,calc((100% - 20px)/2))!important;max-width:100%!important;height:auto!important;max-height:min(220px,28vh)!important;object-fit:contain!important;margin:0!important;transform:none;}
+    #result.has-result{display:grid!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;margin:7px auto 0!important;padding:0 5px!important;line-height:1.15!important;overflow:visible!important;}
+    #spinButton{margin-top:0!important;}
+    .roulette-panel:has(#result.has-result) #spinButton{margin-top:8px!important;}
+    #status{margin-top:6px!important;}
+    #settings{margin-top:8px!important;}
+    @media(max-width:480px){
+      #cardStage.winner #keyCardImages img{flex-basis:126px!important;width:min(126px,calc((100% - 14px)/2))!important;max-height:min(190px,27vh)!important;}
+      #result.has-result{margin-top:6px!important;}
+    }
+
   </style>
 </head>
 <body>
@@ -459,7 +516,7 @@
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
-      drawingCard.classList.remove("treasure-scene");
+      drawingCard.classList.remove("treasure-scene", "opening-cutin");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -481,9 +538,11 @@
     // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
     async function playManaSequence() {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
-      const orbitRadiusX = Math.max(72, Math.min(150, drawingCard.clientWidth / 2 - 34));
-      // アイコンの半径(32px)＋安全余白(10px)を確保し、上下端で切れない楕円軌道にする。
-      const orbitRadiusY = Math.max(48, Math.min(76, drawingCard.clientHeight / 2 - 42));
+      // 五文明は正円で周回。アイコン半径＋12pxの安全余白を四辺に確保する。
+      const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
+      const orbitRadius = Math.max(0, Math.min(drawingCard.clientWidth, drawingCard.clientHeight) / 2 - iconRadius - 12);
+      const orbitRadiusX = orbitRadius;
+      const orbitRadiusY = orbitRadius;
       const duration = 3900;
       const turns = 2.35;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
@@ -786,7 +845,7 @@
         // 開封映像は抽選結果の到着タイミング・文明・デッキ内容に依存させず、毎回同じ順序で再生。
         // API結果の待機と開封演出を並行させ、演出自体は抽選結果に左右されない。
         const openingSequence = (async () => {
-          drawingCard.classList.add("treasure-scene");
+          drawingCard.classList.add("treasure-scene", "opening-cutin");
           deckCase.classList.remove("civ-charging");
           deckCase.classList.add("treasure-open");
           void deckCase.offsetWidth;
@@ -795,8 +854,8 @@
           deckCase.classList.remove("pressure");
           deckCase.classList.add("opening");
           createParticles();
-          // 蓋が開ききったあと、白金色の内部発光を見せる。
-          await sleep(1450);
+          // 蓋が開ききったあと、白金色の内部発光を十分に見せてから結果へ。
+          await sleep(1650);
         })();
 
         const outcome = await drawResult;
