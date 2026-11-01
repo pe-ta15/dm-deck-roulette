@@ -4,6 +4,7 @@ on:
     paths:
       - ".github/workflows/render-opening.yml"
       - "tools/render_case_opening.py"
+      - "index.html"
   workflow_dispatch:
 permissions:
   contents: write
@@ -12,6 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate page JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script>(.*?)</script>", html, re.S)
+          if not scripts:
+              raise SystemExit("No inline application script found")
+          Path("/tmp/dm-deck-roulette.js").write_text(scripts[-1], encoding="utf-8")
+          PY
+          node --check /tmp/dm-deck-roulette.js
       - name: Install Blender and FFmpeg
         run: |
           sudo apt-get update
