@@ -2614,6 +2614,123 @@ body.is-spinning .roulette-panel{
   #result .civilization-icon{width:14px!important;height:14px!important;flex-basis:14px!important}
 }
 
+  
+/* ===== Final geometry pass: attached folding lid, card backs only, desktop-safe centering ===== */
+/* Keep the opening stage centered in its own containing block after the five-civilization sequence. */
+.card-stage.case-opening-stage{
+  position:relative!important;left:0!important;right:0!important;
+  display:block!important;width:min(100%,680px)!important;max-width:680px!important;
+  height:460px!important;min-height:460px!important;margin:20px auto 0!important;
+  padding:0!important;transform:none!important;overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#cardStage.case-opening-stage #drawingCard,
+#drawingCard.mana-absorption.opening-cutin{
+  position:absolute!important;left:50%!important;top:50%!important;
+  display:block!important;width:min(100%,500px)!important;max-width:500px!important;
+  height:460px!important;min-height:460px!important;margin:0!important;padding:0!important;
+  transform:translate(-50%,-50%)!important;box-sizing:border-box!important;
+  border:1px solid #e9e9e7!important;border-radius:24px!important;
+  background:linear-gradient(180deg,#fff,#fbfbfa)!important;
+  box-shadow:inset 0 0 0 7px #f7f7f5,0 9px 26px rgba(15,15,15,.06)!important;
+  overflow:hidden!important;
+}
+#drawingCard.opening-cutin .deck-case{
+  position:absolute!important;left:50%!important;top:50%!important;
+  margin:0!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(18deg) rotateY(-3deg)!important;
+}
+body.is-spinning .roulette-panel{padding:30px 28px 34px!important}
+@media(max-width:700px){
+  .card-stage.case-opening-stage{width:100%!important;height:350px!important;min-height:350px!important;margin:16px auto 0!important}
+  #cardStage.case-opening-stage #drawingCard,
+  #drawingCard.mana-absorption.opening-cutin{
+    width:min(100%,370px)!important;height:350px!important;min-height:350px!important;
+  }
+  #drawingCard.opening-cutin .deck-case{transform:translate(-50%,-50%) perspective(980px) rotateX(18deg) rotateY(-3deg) scale(.92)!important}
+  body.is-spinning .roulette-panel{padding:20px 14px 24px!important}
+}
+/* A true continuous case lid: top panel remains on the rear hinge; front flap remains
+   a child of that panel at the front fold. Both inner faces are visible while opening. */
+.deck-case .case-lid{
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  backface-visibility:visible!important;overflow:visible!important;
+}
+.deck-case .case-lid-inner{
+  backface-visibility:visible!important;transform:translateZ(1px)!important;
+  background:linear-gradient(145deg,#f7fbf8 0%,#dbe7df 48%,#b5c9ba 100%)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.85),inset 0 0 15px rgba(62,91,69,.16)!important;
+}
+.deck-case .case-lid-front{
+  position:absolute!important;left:-3px!important;right:-3px!important;
+  top:calc(100% - 2px)!important;height:46px!important;
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  backface-visibility:visible!important;z-index:5!important;
+  border:3px solid #aab9ad!important;border-top:0!important;border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#aebfb2 0%,#f8fbf8 13%,#dce8df 48%,#b3c5b7 87%,#f9fcf9 100%)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 5px 8px rgba(40,57,43,.22)!important;
+}
+.deck-case .case-lid-front:before{
+  content:""!important;position:absolute!important;inset:4px 5px 5px!important;
+  border:1px solid rgba(255,255,255,.65)!important;border-radius:2px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(99,126,106,.12))!important;
+  transform:translateZ(1px)!important;
+}
+.deck-case .case-lid-front:after{
+  content:""!important;position:absolute!important;left:50%!important;bottom:5px!important;
+  width:30px!important;height:10px!important;transform:translateX(-50%) translateZ(2px)!important;
+  border:1px solid #9eafa2!important;border-radius:3px!important;
+  background:linear-gradient(180deg,#fff,#d8e2da 65%,#aab9ad)!important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16)!important;
+}
+/* The card stack is turned face-down: no name, artwork, rules or power may show. */
+.deck-case .case-card-stack{
+  border:2px solid #172c52!important;border-radius:6px!important;
+  background:
+    radial-gradient(circle at 50% 50%,#e9d89e 0 3%,#172c52 3.5% 6%,transparent 6.5%),
+    repeating-radial-gradient(circle at 50% 50%,transparent 0 5px,rgba(237,216,158,.76) 5.5px 6.5px,transparent 7px 10px),
+    radial-gradient(ellipse at 50% 48%,#365f91 0%,#234675 42%,#13294e 100%)!important;
+  box-shadow:0 5px 9px rgba(0,0,0,.4),inset 0 0 0 2px rgba(241,220,164,.72)!important;
+}
+.deck-case .case-card-stack .card-face{display:none!important;visibility:hidden!important}
+.deck-case .case-card-stack .card-edge{
+  background:linear-gradient(90deg,#d8e2e9,#fff 45%,#9aabc0)!important;
+  opacity:.68!important;
+}
+/* Equalize the two visual gaps: card-to-title and title/civilization-to-button. */
+#cardStage.winner #keyCardImages{
+  padding:0 8px 16px!important;margin:0 auto!important;
+  box-sizing:border-box!important;
+}
+#result.has-result,#result.result-reveal{
+  margin:16px auto 16px!important;padding:0 8px!important;
+  row-gap:8px!important;box-sizing:border-box!important;
+}
+#spinButton{margin-top:0!important}
+.roulette-panel:has(#result.has-result) #spinButton{margin-top:0!important}
+#result .result-civilizations{
+  gap:8px!important;margin:4px auto 0!important;padding:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+#result .civilization-icon{
+  width:20px!important;height:20px!important;flex:0 0 20px!important;
+}
+@media(max-width:480px){
+  #cardStage.winner #keyCardImages{padding-bottom:14px!important}
+  #result.has-result,#result.result-reveal{margin:14px auto 14px!important}
+  #result .civilization-icon{width:25px!important;height:25px!important;flex-basis:25px!important}
+}
+
+  
+/* Fine tune the two requested result gaps to the same 16px rhythm. */
+#cardStage.winner #keyCardImages{padding-bottom:0!important}
+#result.has-result,#result.result-reveal{margin:16px auto 0!important}
+#spinButton,.roulette-panel:has(#result.has-result) #spinButton{margin-top:16px!important}
+@media(max-width:480px){
+  #result.has-result,#result.result-reveal{margin-top:14px!important}
+  #spinButton,.roulette-panel:has(#result.has-result) #spinButton{margin-top:14px!important}
+}
+.deck-case .case-card-stack{opacity:.62!important}
+
   </style>
 </head>
 <body>
