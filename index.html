@@ -542,6 +542,9 @@
       drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished");
       if (caseOpeningVideo) {
         caseOpeningVideo.pause();
+        caseOpeningVideo.style.removeProperty("display");
+        caseOpeningVideo.style.removeProperty("visibility");
+        caseOpeningVideo.style.removeProperty("opacity");
         caseOpeningVideo.currentTime = 0;
       }
       deckCase.style.removeProperty("opacity");
@@ -936,7 +939,20 @@
               cleanup();
               callback(value);
             };
-            const onEnded = () => finish(resolve);
+            const onEnded = () => {
+              // endedイベント内で同期的に動画と演出枠を隠し、次フレームに黒い最終画面を描画させない。
+              caseOpeningVideo.pause();
+              caseOpeningVideo.style.setProperty("display", "none", "important");
+              caseOpeningVideo.style.setProperty("visibility", "hidden", "important");
+              caseOpeningVideo.style.setProperty("opacity", "0", "important");
+              drawingCard.classList.add("video-finished");
+              drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
+              drawingCard.style.setProperty("display", "none", "important");
+              drawingCard.style.setProperty("visibility", "hidden", "important");
+              drawingCard.style.setProperty("opacity", "0", "important");
+              cardStage.classList.add("opening-cleanup");
+              finish(resolve);
+            };
             const onError = () => finish(
               reject,
               new Error(`開封動画の再生中にエラーが発生しました（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`)
