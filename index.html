@@ -1805,7 +1805,7 @@
     #result.has-result {
       position:relative!important;isolation:isolate!important;
       display:flex!important;flex-direction:column!important;align-items:center!important;gap:9px!important;
-      width:min(100% - 12px,560px)!important;margin:14px auto 5px!important;padding:22px 18px 18px!important;
+      width:min(calc(100% - 12px),560px)!important;margin:14px auto 5px!important;padding:22px 18px 18px!important;
       border:1px solid rgba(190,164,105,.54)!important;border-radius:22px!important;
       background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.98),rgba(250,248,239,.96) 48%,rgba(239,241,231,.96))!important;
       box-shadow:0 14px 34px rgba(73,83,64,.13),0 3px 0 rgba(255,255,255,.9) inset,0 0 0 5px rgba(255,255,255,.55)!important;
@@ -2034,7 +2034,7 @@
       drawingCard.style.removeProperty("visibility");
       drawingCard.style.removeProperty("opacity");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
-      deckCase.classList.remove("opening", "civ-charging", "pressure", "overloaded", "critical", "treasure-open");
+      deckCase.classList.remove("opening", "civ-charging", "pressure", "overloaded", "critical", "treasure-open", "mouth-eruption");
       drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished", "case-blast", "case-impact");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
@@ -2042,6 +2042,7 @@
       deckCase.style.removeProperty("--case-civ-gradient");
       deckCase.style.removeProperty("--case-civ-glow");
       deckCase.querySelector(".case-lid").style.removeProperty("transform");
+      deckCase.querySelector(".case-body").style.removeProperty("transform");
       deckCase.querySelector(".case-lock").style.removeProperty("transform");
       const drawingFace = drawingCard.querySelector(".drawing-card");
       drawingFace.classList.remove("deck-civ-colored", "reveal-pending");
@@ -2180,36 +2181,33 @@
     // 同じデッキケースを使い、蓋の解放と光の噴出を短いテンポで連結する。
     // CSSアニメーションの優先順位や端末差に依存せず、JSで蓋とケース本体を直接駆動する。
     // transformはinline !importantで更新し、Chrome/Androidでも開閉が確実に反映されるようにする。
-    function animateTransform(element, frames, duration, easing = t => t) {
+    function animateTransform(element, frames, duration, format, easing = t => t) {
       return new Promise(resolve => {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const total = reduced ? 1 : duration;
         const started = performance.now();
         const tick = now => {
           const raw = Math.min(1, (now - started) / total);
-          const eased = easing(raw);
+          const eased = Math.max(0, Math.min(1, easing(raw)));
           let left = frames[0];
           let right = frames[frames.length - 1];
           for (let i = 0; i < frames.length - 1; i++) {
-            if (raw >= frames[i].at && raw <= frames[i + 1].at) {
+            if (eased >= frames[i].at && eased <= frames[i + 1].at) {
               left = frames[i]; right = frames[i + 1]; break;
             }
           }
           const span = Math.max(.0001, right.at - left.at);
           const local = Math.max(0, Math.min(1, (eased - left.at) / span));
           const values = left.values.map((value, index) => value + (right.values[index] - value) * local);
-          element.style.setProperty("transform", values.join(" "), "important");
+          element.style.setProperty("transform", format(values), "important");
           if (raw < 1) requestAnimationFrame(tick);
           else resolve();
         };
         requestAnimationFrame(tick);
       });
     }
-    const easeOutBack = t => {
-      const c1 = 1.35, c3 = c1 + 1;
-      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-    };
     const easeInOut = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+    const easeOutCubic = t => 1 - Math.pow(1-t,3);
 
     async function playCaseOpeningSequence() {
       drawingCard.classList.add("opening-cutin");
@@ -2223,25 +2221,25 @@
 
       // 蓄積：ケース全体ではなく、箱の壁そのものが押し広げられる動きを明示。
       const pulseFrames = [
-        {at:0, values:["translateY(0px)","scaleX(1)","scaleY(1)"]},
-        {at:.22, values:["translateY(-3px)","scaleX(1.025)","scaleY(1.035)"]},
-        {at:.48, values:["translateY(2px)","scaleX(.985)","scaleY(1.015)"]},
-        {at:.72, values:["translateY(-5px)","scaleX(1.055)","scaleY(1.055)"]},
-        {at:1, values:["translateY(0px)","scaleX(1)","scaleY(1)"]}
+        {at:0, values:[0,1,1]},
+        {at:.22, values:[-3,1.025,1.035]},
+        {at:.48, values:[2,.985,1.015]},
+        {at:.72, values:[-5,1.055,1.055]},
+        {at:1, values:[0,1,1]}
       ];
-      const pulse = () => animateTransform(body, pulseFrames, 520, easeInOut);
+      const pulse = () => animateTransform(body, pulseFrames, 520, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeInOut);
       await pulse();
       deckCase.classList.add("overloaded");
       await pulse();
       deckCase.classList.add("critical");
       lock.style.setProperty("transform", "translateX(-50%) rotate(8deg) scale(1.12)", "important");
       await animateTransform(body, [
-        {at:0,values:["translateY(0px)","scaleX(1)","scaleY(1)"]},
-        {at:.32,values:["translateY(7px)","scaleX(.94)","scaleY(1.08)"]},
-        {at:.58,values:["translateY(-7px)","scaleX(1.075)","scaleY(.94)"]},
-        {at:.78,values:["translateY(2px)","scaleX(.98)","scaleY(1.02)"]},
-        {at:1,values:["translateY(0px)","scaleX(1)","scaleY(1)"]}
-      ], 420, easeOutBack);
+        {at:0,values:[0,1,1]},
+        {at:.32,values:[7,.94,1.08]},
+        {at:.58,values:[-7,1.075,.94]},
+        {at:.78,values:[2,.98,1.02]},
+        {at:1,values:[0,1,1]}
+      ], 420, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeOutCubic);
 
       deckCase.classList.remove("pressure", "overloaded", "critical");
       drawingCard.classList.add("case-impact", "case-blast");
@@ -2250,12 +2248,12 @@
       // 蓋はヒンジを支点に後方へ倒す。transform !importantを毎フレーム設定し、
       // CSSの静止指定や端末ごとのアニメーション合成差に上書きされないようにする。
       await animateTransform(lid, [
-        {at:0,values:["rotateX(0deg)","translateY(0px)","translateZ(0px)"]},
-        {at:.12,values:["rotateX(-16deg)","translateY(-2px)","translateZ(4px)"]},
-        {at:.34,values:["rotateX(-72deg)","translateY(-13px)","translateZ(12px)"]},
-        {at:.68,values:["rotateX(-132deg)","translateY(-30px)","translateZ(24px)"]},
-        {at:1,values:["rotateX(-148deg)","translateY(-34px)","translateZ(27px)"]}
-      ], 1120, easeOutBack);
+        {at:0,values:[0,0,0]},
+        {at:.12,values:[-16,-2,4]},
+        {at:.34,values:[-72,-13,12]},
+        {at:.68,values:[-132,-30,24]},
+        {at:1,values:[-148,-34,27]}
+      ], 1120, v => "rotateX("+v[0]+"deg) translateY("+v[1]+"px) translateZ("+v[2]+"px)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
       deckCase.classList.add("mouth-eruption");
