@@ -2948,7 +2948,68 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
   #result .civilization-icon[src*="light.png"]{width:20px!important;height:20px!important;flex-basis:20px!important}
 }
 
-  </style>
+  
+/* ===== Magnetic case mechanics and grounded card reveal ===== */
+/* Magnetic closure: no clasp, lock or hinge-release motion. The lid is one continuous,
+   rear-hinged shell; the front skirt is opaque and stays attached to its top panel. */
+.deck-case .case-hinge{display:block!important;opacity:.72!important}
+.deck-case .case-lock{display:none!important}
+.deck-case .case-lid{
+  top:0!important;left:2px!important;right:2px!important;height:76px!important;
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  border:3px solid #b8c1ba!important;border-bottom:5px solid #8b968d!important;
+  background:linear-gradient(145deg,#fff 0%,#f0f3f0 48%,#cbd3cd 100%)!important;
+}
+.deck-case .case-lid-front{
+  top:calc(100% - 2px)!important;height:29px!important;
+  border:3px solid #b8c1ba!important;border-top:1px solid #dce3de!important;
+  border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#cbd4cd 0%,#f7f9f7 18%,#e8ede9 50%,#cbd4cd 84%,#f7f9f7 100%)!important;
+  opacity:1!important;backface-visibility:visible!important;
+  box-shadow:inset 0 -4px 8px rgba(67,83,71,.12),0 4px 7px rgba(40,57,43,.16)!important;
+}
+.deck-case .case-lid-front:before{
+  display:block!important;height:2px!important;background:rgba(255,255,255,.9)!important
+}
+.deck-case .case-lid-front span{display:none!important}
+/* A card-back surface with a clean, even white edge; remove stray horizontal strips. */
+.deck-case .case-card-stack{
+  background-color:#f7f8f6!important;
+  background-size:100% 100%!important;background-position:center!important;
+  background-repeat:no-repeat!important;
+  border:3px solid #f7f8f6!important;border-radius:6px!important;
+  box-shadow:0 0 0 1px rgba(40,55,44,.35),0 4px 10px rgba(0,0,0,.38)!important;
+  opacity:.72!important;filter:saturate(.9) brightness(.96)!important;
+  overflow:hidden!important;
+}
+.deck-case .case-card-stack:before,.deck-case .case-card-stack:after{display:none!important;content:none!important}
+.deck-case .case-card-stack .card-edge{opacity:.42!important}
+/* Remove the outer display frame around the case; preserve breathing room in layout. */
+#drawingCard.mana-absorption.opening-cutin{
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;padding:0!important;
+}
+#cardStage.case-opening-stage{row-gap:22px!important;margin-top:20px!important}
+#drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 15px 14px rgba(25,25,25,.2))!important}
+@media(max-width:480px){#cardStage.case-opening-stage{row-gap:18px!important;margin-top:16px!important}}
+/* The result card is lifted from the cavity along the case's depth axis, not from below. */
+#keyCardImages{
+  perspective:1100px!important;transform-style:preserve-3d!important;
+}
+#keyCardImages.case-launch img{
+  animation:cardEmergeFromCavity .82s cubic-bezier(.16,.82,.22,1) both!important;
+}
+@keyframes cardEmergeFromCavity{
+  0%{opacity:0;transform:translate3d(0,82px,-115px) rotateX(28deg) scale(.58);filter:brightness(.65) blur(2px)}
+  38%{opacity:1;transform:translate3d(0,20px,42px) rotateX(8deg) scale(.82);filter:brightness(1.2) blur(0)}
+  72%{opacity:1;transform:translate3d(0,-18px,105px) rotateX(0) scale(1.04);filter:brightness(1.12)}
+  100%{opacity:1;transform:translate3d(0,-28px,125px) rotateX(0) scale(1);filter:brightness(1)}
+}
+#keyCardImages.result-ready img{
+  transform:translate3d(0,-28px,125px)!important;
+}
+
+</style>
 </head>
 <body>
   <main>
@@ -3338,7 +3399,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
       deckCase.classList.add("overloaded");
       await pulse();
       deckCase.classList.add("critical");
-      lock.style.setProperty("transform", "translateX(-50%) rotate(8deg) scale(1.12)", "important");
+      // Magnetic closure releases without a mechanical clasp animation.
       await animateTransform(body, [
         {at:0,values:[0,1,1]},
         {at:.32,values:[7,.94,1.08]},
@@ -3356,11 +3417,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
       // 背面ヒンジを支点に親パネルだけを回転させ、折り角は最後まで維持する。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.10,values:[-7,0,1]},
-        {at:.34,values:[-38,-1,3]},
-        {at:.68,values:[-82,-2,7]},
-        {at:.88,values:[-99,-2,9]},
-        {at:1,values:[-94,-2,8]}
+        {at:.10,values:[8,0,1]},
+        {at:.34,values:[38,-1,3]},
+        {at:.68,values:[76,-2,7]},
+        {at:.88,values:[91,-2,9]},
+        {at:1,values:[90,-2,8]}
       ], 1120, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
