@@ -2249,10 +2249,10 @@
       // CSSの静止指定や端末ごとのアニメーション合成差に上書きされないようにする。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.12,values:[-16,-2,4]},
-        {at:.34,values:[-72,-13,12]},
-        {at:.68,values:[-132,-30,24]},
-        {at:1,values:[-148,-34,27]}
+        {at:.12,values:[16,-2,4]},
+        {at:.34,values:[72,-13,12]},
+        {at:.68,values:[132,-30,24]},
+        {at:1,values:[148,-34,27]}
       ], 1120, v => "rotateX("+v[0]+"deg) translateY("+v[1]+"px) translateZ("+v[2]+"px)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
