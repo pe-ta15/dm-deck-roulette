@@ -59,29 +59,39 @@
     .case-seam{position:absolute;left:0;right:0;top:7px;height:2px;background:rgb(255 255 255 / 18%);box-shadow:0 2px 3px #080b12}
     .case-lock{position:absolute;z-index:4;left:50%;bottom:15px;width:24px;height:15px;transform:translateX(-50%);border:1px solid #d2d9e5;border-radius:4px;background:linear-gradient(145deg,#e0e6ef,#69778c 55%,#303b4e);box-shadow:0 2px 5px #080b12,inset 0 1px 2px #fff}
     .case-lock:after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;background:#222b39;box-shadow:0 0 3px #fff}
-    .case-glow{position:absolute;inset:0;opacity:0;background:var(--case-civ-gradient,linear-gradient(180deg,transparent,rgba(255,255,255,.8),transparent));mix-blend-mode:screen;transition:opacity 1.5s ease}
-    .case-lid{position:absolute;z-index:3;left:5px;right:5px;top:5px;height:154px;border:2px solid #8792a5;border-radius:10px 10px 7px 7px;transform-origin:50% 0%;transform:rotateX(0deg);transform-style:preserve-3d;background:linear-gradient(145deg,#687386 0%,#252d3b 52%,#485367 100%);box-shadow:inset 0 2px 5px rgb(255 255 255 / 22%),inset 0 -5px 10px rgb(0 0 0 / 38%),0 4px 8px rgb(0 0 0 / 35%);backface-visibility:visible}
-    .case-lid:before{content:"DUEL MASTERS";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;color:rgb(235 240 250 / 76%);font-size:8px;font-weight:900;letter-spacing:2px;text-shadow:0 1px 3px #111}
-    .case-lid:after{content:"";position:absolute;inset:7px;border:1px solid rgb(255 255 255 / 18%);border-radius:5px;box-shadow:inset 0 0 12px rgb(0 0 0 / 25%)}
-    .case-light{position:absolute;z-index:1;left:50%;top:50%;width:150px;height:170px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 35%,transparent 72%);filter:blur(9px)}
-    .deck-case.civ-charging{filter:drop-shadow(0 0 9px var(--case-civ-glow,#fff)) drop-shadow(0 0 24px var(--case-civ-glow,#fff))}
-    .deck-case.civ-charging .case-body{border-color:transparent;background:linear-gradient(145deg,#303948,#111722 58%,#30394a) padding-box,var(--case-civ-gradient) border-box;box-shadow:inset 0 3px 7px rgb(255 255 255 / 16%),inset 0 -10px 15px rgb(0 0 0 / 48%),0 0 12px var(--case-civ-glow),0 0 28px var(--case-civ-glow);transition:box-shadow 2.2s ease,border-color 2.2s ease}
-    .deck-case.civ-charging .case-lid{border-color:transparent;background:linear-gradient(145deg,#687386 0%,#252d3b 52%,#485367 100%) padding-box,var(--case-civ-gradient) border-box;box-shadow:0 0 10px var(--case-civ-glow),inset 0 2px 5px rgb(255 255 255 / 22%)}
-    .deck-case.civ-charging .case-glow{opacity:.9}
+    /* 文明エネルギーはケースの外周ではなく、内部に閉じ込めて蓄積させる */
+    .case-glow{position:absolute;z-index:2;inset:10px 8px 9px;opacity:0;border-radius:5px;background:radial-gradient(ellipse at 50% 85%,var(--case-civ-glow,#b9d8ff) 0%,transparent 68%),linear-gradient(180deg,transparent 12%,var(--case-civ-glow,#b9d8ff) 50%,transparent 92%);mix-blend-mode:screen;filter:blur(8px);transition:opacity .8s ease;pointer-events:none}
+    .case-light{position:absolute;z-index:2;left:50%;top:54%;width:72px;height:126px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 30%,transparent 72%);filter:blur(12px);pointer-events:none}
+    .deck-case.civ-charging{filter:drop-shadow(0 10px 14px rgb(0 0 0 / 42%))}
+    .deck-case.civ-charging .case-body{border-color:#778397;background:linear-gradient(145deg,#303948,#111722 58%,#30394a);box-shadow:inset 0 3px 7px rgb(255 255 255 / 16%),inset 0 -10px 15px rgb(0 0 0 / 48%),inset 0 0 22px var(--case-civ-glow);transition:box-shadow 1.8s ease}
+    .deck-case.civ-charging .case-lid{border-color:#8792a5;background:linear-gradient(145deg,#687386 0%,#252d3b 52%,#485367 100%);box-shadow:inset 0 2px 5px rgb(255 255 255 / 22%),inset 0 -5px 10px rgb(0 0 0 / 38%),0 4px 8px rgb(0 0 0 / 35%)}
+    .deck-case.civ-charging .case-glow{opacity:.78}
     .deck-case.civ-charging .case-light{animation:caseLightIn 1.5s ease-out forwards}
-    .deck-case.opening .case-lock{animation:magnetRelease .18s ease-in both}
-    .deck-case.opening .case-body{animation:caseBodyRecoil .58s cubic-bezier(.16,.82,.22,1) both}
-    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:-20px;background:radial-gradient(ellipse at 50% 45%,#fff 0%,var(--case-civ-glow,#dceaff) 20%,transparent 70%);opacity:0;pointer-events:none;animation:caseCoreFlash .58s ease-out both}
-    .deck-case.opening .case-lid{animation:caseLidOpen .58s cubic-bezier(.12,.86,.18,1) both}
-    .deck-case.opening .case-light{animation:caseLightPeak .58s cubic-bezier(.12,.8,.2,1) both}
-    .deck-case.opening{filter:drop-shadow(0 0 16px var(--case-civ-glow,#fff)) drop-shadow(0 0 42px var(--case-civ-glow,#fff))}
-    @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0);filter:brightness(1)}55%{transform:translateX(-50%) translateY(5px) scale(1.12);filter:brightness(2)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.5)}}
-    @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.65;transform:translate(-50%,-50%) scale(1.05)}}
-    @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.35)}38%{opacity:1;transform:translate(-50%,-50%) scale(1.65)}72%{opacity:.95;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:.72;transform:translate(-50%,-50%) scale(1.05)}}
-    @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}28%{transform:translateY(5px) scale(.97,1.025)}58%{transform:translateY(-3px) scale(1.025,.98)}100%{transform:translateY(0) scale(1)}}
-    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}35%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.8)}}
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}16%{transform:rotateX(-10deg);filter:brightness(1.7)}58%{transform:rotateX(-92deg);filter:brightness(2.3)}100%{transform:rotateX(-142deg);filter:brightness(2)}}
+    .deck-case.pressure .case-body{animation:casePressure .16s ease-in-out infinite alternate}
+    .deck-case.pressure .case-glow{opacity:1;filter:blur(5px);animation:coreOverload .42s ease-in-out infinite alternate}
+    .deck-case.pressure .case-light{opacity:.9;animation:corePulse .32s ease-in-out infinite alternate}
+    .deck-case.pressure .case-lock{animation:lockStrain .22s ease-in-out infinite alternate}
+    .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
+    .deck-case.opening .case-body{animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both}
+    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#dceaff) 23%,transparent 72%);opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
+    .deck-case.opening .case-lid{animation:caseLidOpen .5s cubic-bezier(.08,.9,.16,1) both}
+    .deck-case.opening .case-light{animation:caseLightPeak .5s cubic-bezier(.12,.8,.2,1) both}
+    .deck-case.opening{filter:drop-shadow(0 12px 16px rgb(0 0 0 / 45%))}
+    @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(7px) scale(1.2);filter:brightness(2.5)}100%{transform:translateX(-50%) translateY(3px);filter:brightness(1.5)}}
+    @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.58;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.3)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
+    @keyframes corePulse{from{transform:translate(-50%,-50%) scale(.75);opacity:.55}to{transform:translate(-50%,-50%) scale(1.35);opacity:1}}
+    @keyframes coreOverload{from{opacity:.62;filter:blur(8px)}to{opacity:1;filter:blur(3px)}}
+    @keyframes casePressure{from{transform:translateY(0) scale(1)}to{transform:translateY(-1px) scale(1.025,1.012)}}
+    @keyframes lockStrain{from{transform:translateX(-50%) rotate(-3deg)}to{transform:translateX(-50%) rotate(3deg)}}
+    @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}24%{transform:translateY(7px) scale(.95,1.04)}55%{transform:translateY(-5px) scale(1.04,.97)}100%{transform:translateY(0) scale(1)}}
+    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.9)}}
+    @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}12%{transform:rotateX(-12deg);filter:brightness(1.4)}48%{transform:rotateX(-105deg);filter:brightness(1.8)}100%{transform:rotateX(-155deg);filter:brightness(1.4)}}
 
+    /* 決壊時の圧力波と文明色の破片 */
+    .case-burst{position:absolute;z-index:6;left:50%;top:50%;width:30px;height:30px;border:3px solid var(--case-civ-glow,#fff);border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2)}
+    .deck-case.opening .case-burst{animation:ruptureWave .62s cubic-bezier(.12,.72,.18,1) both}
+    @keyframes ruptureWave{0%{opacity:0;transform:translate(-50%,-50%) scale(.2);border-width:8px}18%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(7);border-width:1px}}
     /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
     #keyCardImages.case-launch img{animation:caseCardLaunch .82s cubic-bezier(.12,.82,.18,1) both}
     #keyCardImages.case-launch img:nth-child(2){animation-delay:.09s}
@@ -172,6 +182,7 @@
             </div>
             <div class="case-lid"></div>
             <div class="case-light"></div>
+            <div class="case-burst"></div>
           </div>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
@@ -197,7 +208,7 @@
     </section>
   </main>
   <script>
-    const API_BASE = "https://dm-deck-roulette-api.nabkde16ngh.workers.dev";
+    const API_BASE = "https://dm-deck-roulette-api.nabkde16ng.workers.dev";
 
     const spinButton = document.getElementById("spinButton");
     const statusElement = document.getElementById("status");
@@ -315,7 +326,7 @@
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
-      deckCase.classList.remove("opening", "civ-charging");
+      deckCase.classList.remove("opening", "civ-charging", "pressure");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -512,12 +523,15 @@
           keyCardImages.appendChild(img);
         });
 
+        // 蓋が開き始める短い瞬間だけ待ち、開放の勢いにカード射出を同期させる。
+        await sleep(260);
         void keyCardImages.offsetWidth;
         keyCardImages.classList.add("case-launch");
       }
 
       // カードがケースから飛び出した後、ケースを奥へ退かせてカードを主役にする。
-      deckCase.style.transition = "opacity .35s ease, transform .5s ease";
+      await sleep(360);
+      deckCase.style.transition = "opacity .28s ease, transform .38s ease";
       deckCase.style.opacity = "0";
       deckCase.style.transform = "translate(-50%,-58%) perspective(650px) rotateX(7deg) scale(.82)";
       cardStage.classList.remove("winner");
@@ -643,16 +657,17 @@
 
         renderDeckList();
 
-        // 結果確定後に一気に蓋を開き、開き切る瞬間にカードを射出する。
-        // 蓋だけが開いた状態で待たないよう、開閉演出とカード発射を連続させる。
+        // 内部に文明エネルギーを圧縮。ケースが耐えきれず震え、留め具が外れて決壊する。
         deckCase.classList.add("civ-charging");
         void deckCase.offsetWidth;
+        deckCase.classList.add("pressure");
+        await sleep(620);
+        deckCase.classList.remove("pressure");
         deckCase.classList.add("opening");
         createParticles();
-        await sleep(570);
-
-        // 蓋が開き切るタイミングでキーカードを飛び出させる。
-        await showKeyCards(deck);
+        // 蓋が開き始めるタイミングに合わせて、カードの準備と射出を連続実行。
+        const cardLaunch = showKeyCards(deck);
+        await Promise.all([cardLaunch, sleep(930)]);
         await sleep(520);
         resultElement.textContent = deckName;
         void resultElement.offsetWidth;
