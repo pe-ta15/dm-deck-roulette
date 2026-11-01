@@ -657,7 +657,7 @@
     @keyframes verticalCoreSurge{0%{opacity:.08;transform:translate(-50%,-50%) scale(.12)}22%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}52%{opacity:1;transform:translate(-50%,-50%) scale(2.25)}100%{opacity:.48;transform:translate(-50%,-50%) scale(2.8)}}
     .deck-case.opening .case-cavity{animation:verticalCavityFlash .95s ease-out both!important}
     @keyframes verticalCavityFlash{0%{background:linear-gradient(180deg,rgba(185,201,191,.38),rgba(232,240,235,.55) 65%,rgba(176,194,182,.44));box-shadow:inset 0 0 12px #fff}38%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf4 36%,#ffe8aa 70%,#fff 100%);box-shadow:inset 0 0 42px #fff,inset 0 0 78px #ffe6a0,0 0 40px rgba(255,220,145,.9)}100%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf4 42%,#fff0c6 76%,#fff 100%);box-shadow:inset 0 0 48px #fff,inset 0 0 88px #ffe6a0,0 0 46px rgba(255,220,145,.88)}}
-    .case-cutin-caption{position:absolute;z-index:18;left:0;right:0;top:7%;margin:auto;width:max-content;max-width:92%;padding:7px 18px;border:1px solid rgba(205,164,79,.55);border-radius:999px;background:rgba(255,252,241,.94);color:#79551c;font-size:clamp(11px,2.5vw,14px);font-weight:950;letter-spacing:.28em;box-shadow:0 4px 18px rgba(162,128,61,.12);opacity:0;transform:translateY(10px) scale(.88);pointer-events:none}
+    .case-cutin-caption{position:absolute;z-index:18;left:0;right:0;top:-8%;margin:auto;width:max-content;max-width:92%;padding:7px 18px;border:1px solid rgba(205,164,79,.55);border-radius:999px;background:rgba(255,252,241,.94);color:#79551c;font-size:clamp(11px,2.5vw,14px);font-weight:950;letter-spacing:.28em;box-shadow:0 4px 18px rgba(162,128,61,.12);opacity:0;transform:translateY(10px) scale(.88);pointer-events:none}
     #drawingCard.case-impact .case-cutin-caption{animation:cutinCaption .7s cubic-bezier(.16,.86,.2,1) .12s both}
     @keyframes cutinCaption{0%{opacity:0;transform:translateY(10px) scale(.88)}55%{opacity:1;transform:translateY(-2px) scale(1.05)}100%{opacity:1;transform:translateY(0) scale(1)}}
     #drawingCard.case-impact:before{display:block!important;content:""!important;position:absolute!important;z-index:1!important;inset:-30px!important;border:0!important;border-radius:50%!important;background:radial-gradient(ellipse at 50% 52%,rgba(255,255,255,.98) 0%,rgba(255,244,207,.78) 22%,rgba(255,220,145,.34) 42%,transparent 72%)!important;opacity:0;animation:cutinAura .95s ease-out both;pointer-events:none}
@@ -665,7 +665,7 @@
     #drawingCard.case-impact .case-rays{animation:caseRaysBlast 1.08s cubic-bezier(.12,.78,.18,1) both}
     #drawingCard.case-impact .case-burst{animation:ruptureWave .9s cubic-bezier(.12,.72,.18,1) both}
     #revealFlash.active{animation:rouletteWhiteout .86s cubic-bezier(.16,.72,.18,1) both!important}
-    @media(max-width:480px){.deck-case,#drawingCard.opening-cutin .deck-case,.deck-case.treasure-open{width:142px!important;height:194px!important}#drawingCard.opening-cutin .deck-case{transform:translate(-50%,-50%) perspective(900px) rotateX(5deg) rotateY(-5deg) scale(1.04)!important}.case-cutin-caption{top:6%;letter-spacing:.2em;padding:6px 13px}}
+    @media(max-width:480px){.deck-case,#drawingCard.opening-cutin .deck-case,.deck-case.treasure-open{width:142px!important;height:194px!important}#drawingCard.opening-cutin .deck-case{transform:translate(-50%,-50%) perspective(900px) rotateX(5deg) rotateY(-5deg) scale(.92)!important}.case-cutin-caption{top:-7%;letter-spacing:.2em;padding:6px 13px}}
     /* 結果フェーズはカードを即座に上段へ詰め、演出用の空行を一切残さない */
     #cardStage.winner{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:min-content!important;row-gap:0!important;height:auto!important;min-height:0!important;overflow:visible!important}
     #cardStage.winner #drawingCard{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important}
@@ -865,7 +865,7 @@
       drawingCard.style.removeProperty("opacity");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
-      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished", "case-blast");
+      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished", "case-blast", "case-impact");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
