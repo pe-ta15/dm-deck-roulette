@@ -69,13 +69,18 @@
     .deck-case.civ-charging .case-lid{border-color:transparent;background:linear-gradient(145deg,#687386 0%,#252d3b 52%,#485367 100%) padding-box,var(--case-civ-gradient) border-box;box-shadow:0 0 10px var(--case-civ-glow),inset 0 2px 5px rgb(255 255 255 / 22%)}
     .deck-case.civ-charging .case-glow{opacity:.9}
     .deck-case.civ-charging .case-light{animation:caseLightIn 1.5s ease-out forwards}
-    .deck-case.opening .case-lock{animation:magnetRelease .22s ease-in both}
-    .deck-case.opening .case-lid{animation:caseLidOpen .72s cubic-bezier(.18,.78,.2,1) both}
-    .deck-case.opening .case-light{animation:caseLightPeak .65s ease-out both}
+    .deck-case.opening .case-lock{animation:magnetRelease .18s ease-in both}
+    .deck-case.opening .case-body{animation:caseBodyRecoil .58s cubic-bezier(.16,.82,.22,1) both}
+    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:-20px;background:radial-gradient(ellipse at 50% 45%,#fff 0%,var(--case-civ-glow,#dceaff) 20%,transparent 70%);opacity:0;pointer-events:none;animation:caseCoreFlash .58s ease-out both}
+    .deck-case.opening .case-lid{animation:caseLidOpen .58s cubic-bezier(.12,.86,.18,1) both}
+    .deck-case.opening .case-light{animation:caseLightPeak .58s cubic-bezier(.12,.8,.2,1) both}
+    .deck-case.opening{filter:drop-shadow(0 0 16px var(--case-civ-glow,#fff)) drop-shadow(0 0 42px var(--case-civ-glow,#fff))}
     @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0);filter:brightness(1)}55%{transform:translateX(-50%) translateY(5px) scale(1.12);filter:brightness(2)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.5)}}
     @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.65;transform:translate(-50%,-50%) scale(1.05)}}
-    @keyframes caseLightPeak{0%{opacity:.6;transform:translate(-50%,-50%) scale(.65)}45%{opacity:1;transform:translate(-50%,-50%) scale(1.35)}100%{opacity:.85;transform:translate(-50%,-50%) scale(1.15)}}
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}18%{transform:rotateX(-8deg);filter:brightness(1.35)}100%{transform:rotateX(-112deg);filter:brightness(1.8)}}
+    @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.35)}38%{opacity:1;transform:translate(-50%,-50%) scale(1.65)}72%{opacity:.95;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:.72;transform:translate(-50%,-50%) scale(1.05)}}
+    @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}28%{transform:translateY(5px) scale(.97,1.025)}58%{transform:translateY(-3px) scale(1.025,.98)}100%{transform:translateY(0) scale(1)}}
+    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}35%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.8)}}
+    @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}16%{transform:rotateX(-10deg);filter:brightness(1.7)}58%{transform:rotateX(-92deg);filter:brightness(2.3)}100%{transform:rotateX(-142deg);filter:brightness(2)}}
 
     /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
     #keyCardImages.case-launch img{animation:caseCardLaunch .82s cubic-bezier(.12,.82,.18,1) both}
@@ -442,9 +447,7 @@
         icon.style.opacity = "0";
         icon.style.transform = "translate(0,0) scale(.7)";
       });
-      deckCase.classList.add("opening");
-      createParticles();
-      await sleep(820);
+      // 抽選結果が確定するまではケースを閉じたままにし、開いたまま待つ時間を作らない。
     }
 
     function createParticles() {
@@ -640,12 +643,15 @@
 
         renderDeckList();
 
-        // 埋め込み枠の外側を暗転させることはできないため、
-        // カード自体の発光を一段強めて短く溜め、公開へつなげる。
+        // 結果確定後に一気に蓋を開き、開き切る瞬間にカードを射出する。
+        // 蓋だけが開いた状態で待たないよう、開閉演出とカード発射を連続させる。
         deckCase.classList.add("civ-charging");
-        await sleep(500);
+        void deckCase.offsetWidth;
+        deckCase.classList.add("opening");
+        createParticles();
+        await sleep(570);
 
-        // キーカードを公開し、少し間を置いてデッキ名を発表。
+        // 蓋が開き切るタイミングでキーカードを飛び出させる。
         await showKeyCards(deck);
         await sleep(520);
         resultElement.textContent = deckName;
