@@ -376,6 +376,82 @@
     @media(max-width:480px){
       #cardStage.reveal-hold{grid-template-rows:auto auto!important;min-height:0!important;}
     }
+
+    /* === DAISO風・乳白色半透明ケースへ待機画面と開封映像の意匠を統一 === */
+    .deck-case{
+      width:190px!important;height:154px!important;
+      filter:drop-shadow(0 12px 14px rgb(70 80 78 / 18%))!important;
+    }
+    .case-body{
+      border:2px solid rgba(207,218,214,.96)!important;
+      border-top:0!important;
+      background:linear-gradient(90deg,rgba(255,255,255,.96),rgba(220,230,226,.78) 13%,rgba(246,249,247,.86) 48%,rgba(211,222,218,.78) 88%,rgba(255,255,255,.96))!important;
+      box-shadow:inset 5px 0 10px rgba(255,255,255,.82),inset -5px 0 10px rgba(143,158,151,.16),inset 0 -10px 16px rgba(164,179,171,.2),0 4px 8px rgba(90,105,98,.12)!important;
+      backdrop-filter:blur(2px);
+    }
+    .case-body:before{
+      border:1px solid rgba(191,204,198,.86)!important;
+      background:linear-gradient(180deg,rgba(197,208,202,.56),rgba(230,237,233,.72) 65%,rgba(183,198,190,.58))!important;
+      box-shadow:inset 0 0 14px rgba(119,139,128,.16),inset 0 5px 9px rgba(255,255,255,.62)!important;
+    }
+    .case-body:after{
+      border:1px solid rgba(255,255,255,.96)!important;
+      border-bottom:2px solid rgba(179,194,186,.9)!important;
+      background:linear-gradient(180deg,#fff 0%,#e7eeea 55%,#cbd8d1 100%)!important;
+      box-shadow:0 2px 4px rgba(93,111,101,.12)!important;
+    }
+    .case-seam{background:linear-gradient(180deg,#fff,#c4d1ca 72%,#f8fbf9)!important;box-shadow:0 2px 4px rgba(105,125,114,.12)!important}
+    .case-lid{
+      border:2px solid rgba(211,222,216,.98)!important;
+      border-bottom:3px solid rgba(184,198,190,.95)!important;
+      background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(224,234,228,.88) 45%,rgba(246,249,247,.96))!important;
+      box-shadow:inset 0 2px 7px rgba(255,255,255,.96),inset 0 -5px 8px rgba(156,174,163,.16),0 4px 7px rgba(105,122,112,.12)!important;
+    }
+    .case-lid:before{border:1px solid rgba(255,255,255,.92)!important;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(220,232,225,.12) 55%,rgba(180,198,187,.18))!important;box-shadow:inset 0 0 7px rgba(255,255,255,.72)!important}
+    .case-lid:after{background:linear-gradient(180deg,#f9fcfa,#c4d1ca)!important;box-shadow:0 2px 4px rgba(100,118,107,.12)!important}
+    .case-hinge{background:linear-gradient(180deg,#fff,#dce6e0 48%,#b8c7be)!important;box-shadow:0 1px 3px rgba(100,118,107,.12)!important}
+    .case-lock{border:1px solid #d2ded7!important;background:linear-gradient(180deg,#fff,#e4ece7 58%,#c7d4cc)!important;box-shadow:0 2px 4px rgba(100,118,107,.14),inset 0 1px 2px #fff!important}
+    .case-lock:after{background:#a9bbb0!important;box-shadow:0 0 3px #fff!important}
+    #drawingCard.mana-absorption.opening-cutin{
+      background:#fff!important;border:0!important;box-shadow:none!important;
+      border-radius:0!important;overflow:visible!important;
+    }
+    #drawingCard.opening-cutin{background:#fff!important}
+    #drawingCard.video-opening{background:#fff!important}
+    #caseOpeningVideo{background:#fff!important;object-fit:contain!important}
+    #drawingCard.opening-cutin .deck-case,
+    .deck-case.treasure-open{
+      width:244px!important;height:198px!important;
+      filter:drop-shadow(0 14px 14px rgba(125,145,134,.18))!important;
+    }
+    .deck-case.treasure-open .case-body{
+      border-color:rgba(207,218,214,.98)!important;
+      background:linear-gradient(90deg,#fff,rgba(219,230,224,.8) 18%,rgba(246,249,247,.94) 52%,rgba(211,224,216,.82) 86%,#fff)!important;
+      box-shadow:inset 8px 0 12px rgba(255,255,255,.9),inset -8px 0 12px rgba(148,166,154,.16),inset 0 -16px 20px rgba(160,178,166,.2),0 7px 10px rgba(105,122,112,.12)!important;
+    }
+    .deck-case.treasure-open .case-cavity{background:linear-gradient(180deg,rgba(195,208,199,.66),rgba(230,238,233,.82) 60%,rgba(183,200,189,.68))!important}
+    .deck-case.treasure-open .case-lid{background:linear-gradient(145deg,#fff,#e1ebe4 52%,#f8fbf9)!important}
+    .deck-case.treasure-open .case-lid:before{background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(215,230,220,.28))!important}
+    /* デッキ名は当選カードの下に独立したタイトルとして表示 */
+    #result.has-result{display:flex;flex-direction:column;gap:5px;margin:13px auto 4px;min-height:62px}
+    .result-eyebrow{font-size:.68rem;font-weight:900;letter-spacing:.2em;color:#8b7441;text-shadow:none}
+    .deck-name-title{
+      display:inline-block;max-width:100%;padding:7px 18px 9px;
+      color:#27333a;font-size:clamp(1.25rem,4.2vw,1.9rem);font-weight:950;
+      letter-spacing:.055em;line-height:1.25;overflow-wrap:anywhere;
+      background:linear-gradient(180deg,#fff 0%,#f8f6ee 100%);
+      border:1px solid rgba(203,174,103,.76);border-radius:12px;
+      box-shadow:0 4px 0 rgba(194,164,94,.18),0 7px 20px rgba(137,117,70,.13),inset 0 1px 0 #fff;
+      text-shadow:0 1px 0 #fff,0 0 14px rgba(255,221,135,.38);
+    }
+    #result.result-reveal .deck-name-title{animation:deckNameImpact .78s cubic-bezier(.16,.88,.2,1) both}
+    @keyframes deckNameImpact{0%{opacity:0;transform:translateY(18px) scale(.72);filter:brightness(1.8)}58%{opacity:1;transform:translateY(-3px) scale(1.08);filter:brightness(1.25);box-shadow:0 0 0 5px rgba(255,222,145,.3),0 0 36px rgba(255,194,75,.65)}100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}}
+    @media(max-width:480px){
+      .deck-case{width:176px!important;height:144px!important}
+      #drawingCard.opening-cutin .deck-case,.deck-case.treasure-open{width:218px!important;height:184px!important}
+      .deck-name-title{padding:7px 12px 8px}
+    }
+
   </style>
 </head>
 <body>
@@ -401,7 +477,7 @@
             <div class="case-burst"></div>
           </div>
           <video id="caseOpeningVideo" preload="auto" muted playsinline aria-hidden="true">
-            <source src="case-opening.webm?v=3d-case-20261101" type="video/webm">
+            <source src="case-opening.webm?v=milky-white-case-20261101" type="video/webm">
           </video>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
@@ -990,7 +1066,14 @@
 
         const cardLaunch = showKeyCards(deck);
         await Promise.all([cardLaunch, sleep(620)]);
-        resultElement.textContent = deckName;
+        resultElement.replaceChildren();
+        const resultEyebrow = document.createElement("span");
+        resultEyebrow.className = "result-eyebrow";
+        resultEyebrow.textContent = "今回の当選デッキ";
+        const resultTitle = document.createElement("span");
+        resultTitle.className = "deck-name-title";
+        resultTitle.textContent = deckName;
+        resultElement.append(resultEyebrow, resultTitle);
         resultElement.classList.add("has-result");
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
