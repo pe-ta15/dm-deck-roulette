@@ -31,8 +31,8 @@
     #cardStage #keyCardImages{grid-column:1;grid-row:2;justify-self:center;margin:0 auto}
     .mana-absorption{position:relative;width:min(100%,440px);height:208px;display:grid;place-items:center;isolation:isolate;overflow:visible}
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
-    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
-    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
+    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 2.85s linear both}
+    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 2.85s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
     /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
     .drawing-card.deck-civ-colored{
@@ -301,21 +301,7 @@
       .mana-absorption:before,.mana-absorption:after{width:142px!important;height:142px!important;}
     }
 
-    /* 透過WebM開封カットイン。動画未配置・再生失敗時は既存CSS演出へ戻す */
-    #caseOpeningVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:30;display:none;pointer-events:none;background:transparent;}
-    #drawingCard.video-opening #caseOpeningVideo{display:block;}
-    #drawingCard.video-opening .deck-case{visibility:hidden!important;}
-    /* WebM終了後もCSS製ケースを再表示しない */
-    #drawingCard.video-finished .deck-case{display:none!important;visibility:hidden!important;}
-    /* WebM終了後に残る暗いカットイン背景も消し、演出領域を透明化 */
-    #drawingCard.video-finished{display:none!important;background:transparent!important;border:0!important;box-shadow:none!important;filter:none!important;opacity:0!important;visibility:hidden!important;}
-    #drawingCard.video-finished:before,#drawingCard.video-finished:after{display:none!important;content:none!important;}
-    #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
-    #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
-    #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
-    /* 動画終了から当選カード表示まで、演出用の空白領域も畳んで黒い帯を残さない */
-    #cardStage.opening-cleanup{grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;background:transparent!important;}
-    #cardStage.opening-cleanup #drawingCard{display:none!important;width:0!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;}
+    /* 開封カットインはCSSで描画。ケース本体を非表示にする動画レイヤーは使用しない。 */
 
     /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
     #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important;}
@@ -363,8 +349,7 @@
     #cardStage:not(.hidden){display:grid!important;}
     .roulette-panel{padding-top:8px!important;}
     #spinButton{margin-top:0!important;}
-    /* A full-screen whiteout bridges the rendered WebM into the live result UI. */
-    #caseOpeningVideo{object-fit:cover!important;}
+    /* 白いフラッシュで開封から当選結果へつなぐ。 */
     #revealFlash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;visibility:hidden;pointer-events:none;}
     #revealFlash.active{visibility:visible;animation:rouletteWhiteout 1.18s cubic-bezier(.16,.72,.18,1) both;}
     @keyframes rouletteWhiteout{0%{opacity:1}18%{opacity:1}100%{opacity:0}}
@@ -417,8 +402,6 @@
       border-radius:0!important;overflow:visible!important;
     }
     #drawingCard.opening-cutin{background:#fff!important}
-    #drawingCard.video-opening{background:#fff!important}
-    #caseOpeningVideo{background:#fff!important;object-fit:contain!important}
     #drawingCard.opening-cutin .deck-case,
     .deck-case.treasure-open{
       width:244px!important;height:198px!important;
@@ -670,7 +653,6 @@
             <div class="case-rays" aria-hidden="true"></div>
             <div class="case-burst"></div>
           </div>
-          <div class="case-rays" aria-hidden="true"></div>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
           <img class="mana-orb nature" src="icons/nature.png" alt="" aria-hidden="true">
@@ -855,7 +837,7 @@
       const orbitRadius = Math.max(0, Math.min(drawingCard.clientWidth, drawingCard.clientHeight) / 2 - iconRadius - 12);
       const orbitRadiusX = orbitRadius;
       const orbitRadiusY = orbitRadius;
-      const duration = 3900;
+      const duration = 2850;
       const turns = 2.35;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
       const canvas = document.createElement("canvas");
@@ -951,7 +933,7 @@
         if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
       trailFrame = requestAnimationFrame(drawTrails);
-      await sleep(3500);
+      await sleep(2850);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
 
@@ -1175,7 +1157,6 @@
         await playCaseOpeningSequence();
 
         const outcome = await drawResult;
-        await openingSequence;
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
