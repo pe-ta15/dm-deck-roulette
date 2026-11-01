@@ -21,15 +21,15 @@
     button:disabled{background:#b8bdc7;color:#fff;opacity:1;cursor:wait;box-shadow:none;transform:none;filter:none}
     #status{min-height:24px;margin:16px 0 0;color:var(--muted);font-size:.92rem}
     .hidden{display:none!important}
-    #result{position:relative;z-index:12;width:100%;margin:0 auto 14px;min-height:0;display:grid;place-items:center;overflow-wrap:anywhere;font-size:clamp(1.35rem,4.6vw,2rem);font-weight:900;line-height:1.25;padding:0 8px}
+    #result{position:relative;z-index:12;width:100%;margin:0 auto 6px;min-height:0;display:grid;place-items:center;overflow-wrap:anywhere;font-size:clamp(1.35rem,4.6vw,2rem);font-weight:900;line-height:1.25;padding:0 8px}
     #result:empty{display:none}
-    #result.has-result{min-height:54px;margin:18px auto 10px}
+    #result.has-result{min-height:48px;margin:8px auto 6px}
     .result-reveal{animation:resultReveal .75s ease-out both}
     @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
-    .card-stage{position:relative;width:100%;max-width:620px;min-height:350px;margin:0 auto 8px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:250px auto;justify-items:center;align-items:center;isolation:isolate;overflow:visible}
+    .card-stage{position:relative;width:100%;max-width:620px;min-height:286px;margin:0 auto 2px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:218px auto;justify-items:center;align-items:center;isolation:isolate;overflow:visible}
     #cardStage #drawingCard{grid-column:1;grid-row:1;justify-self:center;margin:0 auto}
     #cardStage #keyCardImages{grid-column:1;grid-row:2;justify-self:center;margin:0 auto}
-    .mana-absorption{position:relative;width:min(100%,440px);height:300px;display:grid;place-items:center;isolation:isolate;overflow:visible}
+    .mana-absorption{position:relative;width:min(100%,440px);height:248px;display:grid;place-items:center;isolation:isolate;overflow:visible}
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
     .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
     .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
@@ -54,22 +54,26 @@
     .drawing-card.case-mode{opacity:0;pointer-events:none;animation:none}
     /* 縦長のトレーディングカード用デッキケース。背面上端を軸に蓋が上へ開く */
     /* 無地の縦型デッキケース。奥側ヒンジのフリップトップ蓋＋前面マグネット */
-    .deck-case{position:absolute;z-index:2;left:50%;top:50%;width:126px;height:184px;transform:translate(-50%,-50%) perspective(900px) rotateX(7deg);transform-style:preserve-3d;opacity:1;filter:drop-shadow(0 14px 18px rgb(0 0 0 / 42%));pointer-events:none;transition:opacity .45s ease,filter .8s ease}
+    .deck-case{position:absolute;z-index:2;left:50%;top:50%;width:132px;height:190px;transform:translate(-50%,-50%) perspective(1050px) rotateX(5deg) rotateY(0deg) scale(1);transform-style:preserve-3d;opacity:1;filter:drop-shadow(0 14px 18px rgb(0 0 0 / 42%));pointer-events:none;transition:transform .34s cubic-bezier(.2,.75,.25,1),opacity .45s ease,filter .8s ease;will-change:transform}
     .case-body{position:absolute;left:3px;right:3px;top:13px;bottom:3px;border:2px solid #343b47;border-top:0;border-radius:5px 5px 13px 13px;background:linear-gradient(100deg,#3a414c 0%,#171c25 16%,#242b36 52%,#111720 86%,#414956 100%);box-shadow:inset 5px 0 7px rgb(255 255 255 / 8%),inset -5px 0 8px rgb(0 0 0 / 42%),inset 0 -12px 18px rgb(0 0 0 / 48%);overflow:hidden}
     .case-body:before{content:"";position:absolute;z-index:1;inset:7px 7px 9px;border:1px solid rgb(255 255 255 / 13%);border-radius:4px 4px 9px 9px;background:linear-gradient(180deg,rgb(0 0 0 / 64%),rgb(0 0 0 / 82%));box-shadow:inset 0 0 20px #000}
     .case-spectrum{position:absolute;z-index:2;inset:12px 11px 12px;border-radius:4px;background:var(--case-civ-gradient,linear-gradient(90deg,#9aa7bd,#d9e0eb));opacity:0;mix-blend-mode:screen;filter:blur(8px);transform:scale(.82);transition:opacity 1s ease,transform 1.3s ease}
     .case-front-mark{display:none}
     .case-seam{position:absolute;z-index:4;left:5px;right:5px;top:8px;height:3px;border-radius:2px;background:linear-gradient(180deg,#8993a1,#171c25);box-shadow:0 2px 4px #080b12}
     /* 蓋は上面全体を覆うフラップ。奥端が蝶番、手前中央がマグネット */
-    .case-lid{position:absolute;z-index:7;left:1px;right:1px;top:0;height:25px;border:2px solid #505967;border-bottom:3px solid #151a22;border-radius:7px 7px 4px 4px;background:linear-gradient(180deg,#596270 0%,#303743 48%,#1a202a 100%);box-shadow:inset 0 2px 5px rgb(255 255 255 / 18%),inset 0 -4px 8px rgb(0 0 0 / 52%),0 3px 5px rgb(0 0 0 / 45%);transform-origin:50% 0%;transform:rotateX(0deg);transform-style:preserve-3d;backface-visibility:visible}
+    .case-lid{position:absolute;z-index:7;left:1px;right:1px;top:0;height:34px;border:2px solid #505967;border-bottom:3px solid #151a22;border-radius:7px 7px 4px 4px;background:linear-gradient(180deg,#596270 0%,#303743 48%,#1a202a 100%);box-shadow:inset 0 2px 5px rgb(255 255 255 / 18%),inset 0 -4px 8px rgb(0 0 0 / 52%),0 3px 5px rgb(0 0 0 / 45%);transform-origin:50% 0%;transform:rotateX(0deg);transform-style:preserve-3d;backface-visibility:visible}
     .case-lid:before{content:"";position:absolute;left:7px;right:7px;top:4px;height:12px;border:1px solid rgb(255 255 255 / 12%);border-radius:3px;background:linear-gradient(90deg,rgb(255 255 255 / 8%),transparent 45%,rgb(255 255 255 / 8%))}
     .case-lid:after{content:"";position:absolute;left:3px;right:3px;bottom:-4px;height:4px;border-radius:0 0 3px 3px;background:#0d121a;box-shadow:0 2px 3px #000}
-    .case-hinge{position:absolute;z-index:8;left:12px;right:12px;top:3px;height:6px;border-radius:4px;background:linear-gradient(180deg,#aeb7c3,#414b59 55%,#151a22);box-shadow:0 1px 3px #080b12}
-    .case-lock{position:absolute;z-index:10;left:50%;top:17px;width:23px;height:10px;transform:translateX(-50%);border:1px solid #c4ccd6;border-radius:2px;background:linear-gradient(180deg,#e0e5eb,#7b8796 58%,#303946);box-shadow:0 2px 4px #080b12,inset 0 1px 2px #fff}
+    .case-hinge{position:absolute;z-index:8;left:10px;right:10px;top:2px;height:8px;border-radius:4px;background:linear-gradient(180deg,#aeb7c3,#414b59 55%,#151a22);box-shadow:0 1px 3px #080b12}
+    .case-lock{position:absolute;z-index:10;left:50%;top:27px;width:25px;height:11px;transform:translateX(-50%);border:1px solid #c4ccd6;border-radius:2px;background:linear-gradient(180deg,#e0e5eb,#7b8796 58%,#303946);box-shadow:0 2px 4px #080b12,inset 0 1px 2px #fff}
     .case-lock:after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;transform:translate(-50%,-50%);border-radius:50%;background:#1a2029;box-shadow:0 0 2px #fff}
     .case-glow{position:absolute;z-index:3;inset:13px 9px 10px;opacity:0;border-radius:5px;background:var(--case-civ-gradient,linear-gradient(90deg,#b9d8ff,#d9e0eb));mix-blend-mode:screen;filter:blur(10px);transition:opacity 1s ease;pointer-events:none}
     .case-light{position:absolute;z-index:4;left:50%;top:55%;width:82px;height:128px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 38%,transparent 76%);filter:blur(12px);pointer-events:none}
     .deck-case.civ-charging{filter:drop-shadow(0 10px 14px rgb(0 0 0 / 42%))}
+    /* 3カメ切替：正面→斜め上→開いた内部を見下ろす視点 */
+    .deck-case.camera-1{transform:translate(-50%,-50%) perspective(1050px) rotateX(5deg) rotateY(0deg) scale(1.04)}
+    .deck-case.camera-2{transform:translate(-50%,-53%) perspective(760px) rotateX(18deg) rotateY(-27deg) scale(1.16)}
+    .deck-case.camera-3{transform:translate(-50%,-54%) perspective(680px) rotateX(24deg) rotateY(23deg) scale(1.2)}
     .deck-case.civ-charging .case-body{border-color:#778397;box-shadow:inset 0 3px 7px rgb(255 255 255 / 16%),inset 0 -10px 15px rgb(0 0 0 / 48%),inset 0 0 22px var(--case-civ-glow,#d9e0eb);transition:box-shadow 1.8s ease}
     .deck-case.civ-charging .case-spectrum{opacity:.78;transform:scale(1)}
     .deck-case.civ-charging .case-glow{opacity:.82}
@@ -79,7 +83,7 @@
     .deck-case.pressure .case-light{opacity:.9;animation:corePulse .32s ease-in-out infinite alternate}
     .deck-case.pressure .case-lock{animation:lockStrain .22s ease-in-out infinite alternate}
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
-    .deck-case.opening .case-lid{animation:caseLidOpen .62s cubic-bezier(.12,.78,.18,1) both}
+    .deck-case.opening .case-lid{animation:caseLidOpen .82s cubic-bezier(.12,.78,.18,1) both}
     .deck-case.opening .case-body{animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both}
     .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#dceaff) 23%,transparent 72%);opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
     .deck-case.opening .case-light{animation:caseLightPeak .5s cubic-bezier(.12,.8,.2,1) both}
@@ -93,7 +97,7 @@
     @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}24%{transform:translateY(6px) scale(.97,1.03)}55%{transform:translateY(-4px) scale(1.03,.98)}100%{transform:translateY(0) scale(1)}}
     @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.9)}}
     /* 奥側の蝶番を固定軸に、蓋の板面が後方へ倒れる。位置移動ではなく回転 */
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}16%{transform:rotateX(-22deg);filter:brightness(1.25)}55%{transform:rotateX(-108deg);filter:brightness(1.65)}100%{transform:rotateX(-132deg);filter:brightness(1.35)}}
+    @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}12%{transform:rotateX(-18deg) translateZ(2px);filter:brightness(1.35)}38%{transform:rotateX(-72deg) translateZ(5px);filter:brightness(1.8)}68%{transform:rotateX(-118deg) translateZ(8px);filter:brightness(2)}100%{transform:rotateX(-148deg) translateZ(10px);filter:brightness(1.45)}}
 
     /* 決壊時の圧力波と文明色の破片 */
     .case-burst{position:absolute;z-index:7;left:50%;top:48%;width:34px;height:34px;border:4px solid #fff;border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 12px 5px #fff,0 0 28px 12px var(--case-civ-glow,#fff),inset 0 0 14px #fff}
@@ -138,7 +142,7 @@
     @keyframes stageImpact{0%{transform:scale(1)}24%{transform:scale(1.025)}100%{transform:scale(1)}}
     @keyframes runeSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}}
     @keyframes runeSpinReverse{from{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}to{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}}
-    #keyCardImages{position:relative;z-index:5;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
+    #keyCardImages{position:relative;z-index:5;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:4px 0 2px}
     #keyCardImages img{display:block;flex:0 1 auto;width:min(180px,42vw);height:auto;max-height:360px;object-fit:contain;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
     #keyCardImages.revealing img{animation:cardFlipIn .9s cubic-bezier(.2,.75,.25,1) both}
     #keyCardImages.revealing img:nth-child(2){animation-delay:.12s}
@@ -158,7 +162,7 @@
     .deck-list li{padding:12px 14px;border:1px solid #e1e4eb;border-radius:10px;background:#f8f9fb;overflow-wrap:anywhere}
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
-    @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:330px;grid-template-rows:230px auto}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
+    @media(max-width:480px){body{padding:16px 12px 28px}.panel{padding:12px 10px}.card-stage{min-height:260px;grid-template-rows:205px auto}.mana-absorption{height:220px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
     /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
     .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
     @keyframes revealPending{
@@ -345,7 +349,8 @@
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
-      deckCase.classList.remove("opening", "civ-charging", "pressure");
+      deckCase.classList.remove("opening", "civ-charging", "pressure", "camera-1", "camera-2", "camera-3");
+      deckCase.classList.add("camera-1");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -684,11 +689,16 @@
         deckCase.classList.add("pressure");
         await sleep(620);
         deckCase.classList.remove("pressure");
+        // 1カメ：正面で留め具が外れる。2カメ：斜め上から蓋の回転を見せる。
+        deckCase.classList.add("camera-1");
+        await sleep(90);
         deckCase.classList.add("opening");
         createParticles();
-        // 蓋が開き始めるタイミングに合わせて、カードの準備と射出を連続実行。
+        const cameraCut2 = sleep(150).then(() => deckCase.classList.add("camera-2"));
+        const cameraCut3 = sleep(430).then(() => deckCase.classList.add("camera-3"));
+        // 3カメ：開いたケース内部を見下ろす瞬間にカードを射出。
         const cardLaunch = showKeyCards(deck);
-        await Promise.all([cardLaunch, sleep(930)]);
+        await Promise.all([cardLaunch, cameraCut2, cameraCut3, sleep(1030)]);
         await sleep(520);
         resultElement.textContent = deckName;
         void resultElement.offsetWidth;
