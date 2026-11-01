@@ -60,8 +60,8 @@
     .case-lock{position:absolute;z-index:4;left:50%;bottom:15px;width:24px;height:15px;transform:translateX(-50%);border:1px solid #d2d9e5;border-radius:4px;background:linear-gradient(145deg,#e0e6ef,#69778c 55%,#303b4e);box-shadow:0 2px 5px #080b12,inset 0 1px 2px #fff}
     .case-lock:after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;background:#222b39;box-shadow:0 0 3px #fff}
     /* 文明エネルギーはケースの外周ではなく、内部に閉じ込めて蓄積させる */
-    .case-glow{position:absolute;z-index:2;inset:10px 8px 9px;opacity:0;border-radius:5px;background:radial-gradient(ellipse at 50% 85%,var(--case-civ-glow,#b9d8ff) 0%,transparent 68%),linear-gradient(180deg,transparent 12%,var(--case-civ-glow,#b9d8ff) 50%,transparent 92%);mix-blend-mode:screen;filter:blur(8px);transition:opacity .8s ease;pointer-events:none}
-    .case-light{position:absolute;z-index:2;left:50%;top:54%;width:72px;height:126px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 30%,transparent 72%);filter:blur(12px);pointer-events:none}
+    .case-glow{position:absolute;z-index:2;inset:10px 8px 9px;opacity:0;border-radius:5px;background:radial-gradient(ellipse at 50% 85%,var(--case-civ-gradient,#b9d8ff) 0%,transparent 72%),linear-gradient(180deg,transparent 8%,var(--case-civ-gradient,#b9d8ff) 50%,transparent 94%);mix-blend-mode:screen;filter:blur(8px);transition:opacity .8s ease;pointer-events:none}
+    .case-light{position:absolute;z-index:2;left:50%;top:54%;width:72px;height:126px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-gradient,var(--case-civ-glow,#b9d8ff)) 38%,transparent 76%);filter:blur(12px);pointer-events:none}
     .deck-case.civ-charging{filter:drop-shadow(0 10px 14px rgb(0 0 0 / 42%))}
     .deck-case.civ-charging .case-body{border-color:#778397;background:linear-gradient(145deg,#303948,#111722 58%,#30394a);box-shadow:inset 0 3px 7px rgb(255 255 255 / 16%),inset 0 -10px 15px rgb(0 0 0 / 48%),inset 0 0 22px var(--case-civ-glow);transition:box-shadow 1.8s ease}
     .deck-case.civ-charging .case-lid{border-color:#8792a5;background:linear-gradient(145deg,#687386 0%,#252d3b 52%,#485367 100%);box-shadow:inset 0 2px 5px rgb(255 255 255 / 22%),inset 0 -5px 10px rgb(0 0 0 / 38%),0 4px 8px rgb(0 0 0 / 35%)}
@@ -89,16 +89,18 @@
     @keyframes caseLidOpen{0%{transform:rotateX(0deg);filter:brightness(1)}12%{transform:rotateX(-12deg);filter:brightness(1.4)}48%{transform:rotateX(-105deg);filter:brightness(1.8)}100%{transform:rotateX(-155deg);filter:brightness(1.4)}}
 
     /* 決壊時の圧力波と文明色の破片 */
-    .case-burst{position:absolute;z-index:6;left:50%;top:50%;width:30px;height:30px;border:3px solid var(--case-civ-glow,#fff);border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2)}
+    .case-burst{position:absolute;z-index:7;left:50%;top:48%;width:34px;height:34px;border:4px solid #fff;border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 12px 5px #fff,0 0 28px 12px var(--case-civ-glow,#fff),inset 0 0 14px #fff}
+    .case-burst:before,.case-burst:after{content:"";position:absolute;inset:-15px;border:2px solid var(--case-civ-glow,#fff);border-radius:50%;box-shadow:0 0 18px var(--case-civ-glow,#fff)}
+    .case-burst:after{inset:-29px;border-width:1px;border-color:rgb(255 255 255 / 90%)}
     .deck-case.opening .case-burst{animation:ruptureWave .62s cubic-bezier(.12,.72,.18,1) both}
-    @keyframes ruptureWave{0%{opacity:0;transform:translate(-50%,-50%) scale(.2);border-width:8px}18%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(7);border-width:1px}}
+    @keyframes ruptureWave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}12%{opacity:1}38%{opacity:1;transform:translate(-50%,-50%) scale(3.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(8)}}
     /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
     #keyCardImages.case-launch img{animation:caseCardLaunch .82s cubic-bezier(.12,.82,.18,1) both}
     #keyCardImages.case-launch img:nth-child(2){animation-delay:.09s}
     #keyCardImages.case-launch img:nth-child(3){animation-delay:.18s}
     @keyframes caseCardLaunch{
-      0%{opacity:0;transform:translateY(66px) scale(.28) perspective(900px) rotateX(55deg) rotateZ(-8deg);filter:brightness(2.4) drop-shadow(0 0 24px white)}
-      42%{opacity:1;transform:translateY(-28px) scale(1.1) perspective(900px) rotateX(-12deg) rotateZ(3deg);filter:brightness(1.7) drop-shadow(0 0 22px var(--case-card-glow,#fff))}
+      0%{opacity:0;transform:translateY(92px) scale(.18) perspective(900px) rotateX(55deg) rotateZ(-8deg);filter:brightness(2.4) drop-shadow(0 0 24px white)}
+      36%{opacity:1;transform:translateY(-48px) scale(1.18) perspective(900px) rotateX(-12deg) rotateZ(3deg);filter:brightness(1.7) drop-shadow(0 0 22px var(--case-card-glow,#fff))}
       72%{transform:translateY(6px) scale(.98) perspective(900px) rotateX(4deg) rotateZ(-1deg)}
       100%{opacity:1;transform:translateY(0) scale(1) perspective(900px) rotateX(0) rotateZ(0);filter:brightness(1)}
     }
@@ -273,7 +275,8 @@
       if (colors.length === 0) return;
 
       // ケース全体に文明色を連続グラデーションで設定し、CSS transitionで徐々に発光させる。
-      const gradient = `linear-gradient(135deg, ${colors.join(", ")})`;
+      const stops = colors.map((color, index) => `${color} ${(index / colors.length) * 100}%`).join(", ");
+      const gradient = `linear-gradient(135deg, ${stops}, ${colors[0]} 100%)`;
       deckCase.style.setProperty("--case-civ-gradient", gradient);
       deckCase.style.setProperty("--case-civ-glow", colors[0]);
       keyCardImages.style.setProperty("--case-card-glow", colors[0]);
@@ -355,6 +358,7 @@
       canvas.id = "manaTrailCanvas";
       drawingCard.appendChild(canvas);
       const ctx = canvas.getContext("2d");
+
       const rect = drawingCard.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(rect.width * dpr);
