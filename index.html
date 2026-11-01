@@ -368,11 +368,13 @@
     #revealFlash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;visibility:hidden;pointer-events:none;}
     #revealFlash.active{visibility:visible;animation:rouletteWhiteout 1.18s cubic-bezier(.16,.72,.18,1) both;}
     @keyframes rouletteWhiteout{0%{opacity:1}18%{opacity:1}100%{opacity:0}}
-    #cardStage.reveal-hold{grid-template-rows:228px auto!important;min-height:228px!important;height:auto!important;overflow:visible!important;}
-    #cardStage.reveal-hold #drawingCard{visibility:hidden!important;opacity:0!important;}
-    #cardStage.winner{transition:grid-template-rows .58s cubic-bezier(.2,.75,.25,1),min-height .58s ease;}
+    #cardStage.reveal-hold{grid-template-rows:auto auto!important;min-height:0!important;height:auto!important;overflow:visible!important;}
+    #cardStage.reveal-hold #drawingCard{display:none!important;}
+    /* 開封動画の場所にキーカードを移動し、動画終了後の空白を作らない */
+    #cardStage.reveal-hold #keyCardImages{grid-row:1!important;min-height:0!important;margin:0 auto!important;align-self:center!important;}
+    #cardStage.winner{transition:none!important;}
     @media(max-width:480px){
-      #cardStage.reveal-hold{grid-template-rows:210px auto!important;min-height:210px!important;}
+      #cardStage.reveal-hold{grid-template-rows:auto auto!important;min-height:0!important;}
     }
   </style>
 </head>
@@ -972,8 +974,6 @@
         })();
 
         const outcome = await drawResult;
-        await openingSequence;
-        
         await openingSequence;
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
