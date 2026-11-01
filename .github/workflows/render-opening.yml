@@ -38,19 +38,18 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
           import sys
 
           html = Path("index.html").read_text(encoding="utf-8")
           checks = {
-              "one shared deck-case element": len(re.findall(r'id=["\\']deckCase["\\']', html)) == 1,
-              "one case-ray layer": len(re.findall(r'class=["\\'][^"\\']*\\bcase-rays\\b[^"\\']*["\\']', html)) == 1,
-              "no WebM playback reference": not re.search(r"case-opening\\.webm|<video\\b", html, re.I),
+              "one shared deck-case element": html.count('id="deckCase"') + html.count("id='deckCase'") == 1,
+              "one case-ray layer": html.count('class="case-rays"') + html.count("class='case-rays'") == 1,
+              "no WebM playback reference": "case-opening.webm" not in html and "<video" not in html.lower(),
               "milky translucent case styling": "rgba(207,218,214" in html,
               "white cut-in background": "#drawingCard.mana-absorption.opening-cutin" in html and "background:#fff!important" in html,
               "deck list API retained": "${API_BASE}/decks" in html,
               "draw API retained": "${API_BASE}/spin" in html,
-              "last-three exclusion retained": bool(re.search(r"\\.slice\\(0,\\s*3\\)", html)),
+              "last-three exclusion retained": "slice(0, 3)" in html,
               "key-card image flow retained": "getKeyCardImageUrls(deck)" in html,
               "case-opening animation retained": "function playCaseOpeningSequence()" in html,
               "winner title animation retained": "@keyframes deckTitleShine" in html,
