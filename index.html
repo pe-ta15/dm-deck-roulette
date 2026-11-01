@@ -940,7 +940,7 @@
       border-radius:5px 5px 13px 13px!important;
       background:linear-gradient(90deg,#f9fcfa 0%,#dce8df 7%,#f7faf8 20%,#eaf1ec 53%,#d2dfd6 92%,#f9fcfa 100%)!important;
       box-shadow:inset 8px 0 10px rgba(255,255,255,.95),inset -9px 0 12px rgba(100,126,108,.2),inset 0 -14px 18px rgba(100,126,108,.2),4px 5px 0 rgba(115,143,123,.18),0 8px 12px rgba(54,73,60,.18)!important;
-      overflow:visible!important;transform:translateZ(0)!important;
+      overflow:visible!important;transform:translateZ(0);
     }
     .deck-case .case-body:before {
       left:13px!important;right:13px!important;top:5px!important;bottom:13px!important;
@@ -973,7 +973,7 @@
       border:2px solid #c5d5ca!important;border-bottom:3px solid #91a997!important;border-radius:9px 9px 5px 5px!important;
       background:linear-gradient(145deg,#fff 0%,#e8f0ea 42%,#cbdacf 82%,#f9fcfa 100%)!important;
       box-shadow:inset 0 3px 8px #fff,inset 0 -5px 8px rgba(94,123,102,.2),0 5px 8px rgba(55,76,61,.22)!important;
-      transform-origin:50% 100%!important;transform:rotateX(84deg) translateZ(0)!important;
+      transform-origin:50% 100%!important;transform:rotateX(84deg) translateZ(0);
       transform-style:preserve-3d!important;backface-visibility:visible!important;
     }
     .deck-case .case-lid:before {
@@ -1095,6 +1095,160 @@
       .deck-case.opening .case-lid,.deck-case.opening .case-mouth-beam,
       .deck-case.opening .case-rays,.deck-case.opening .case-light,
       .deck-case.opening .case-cavity {animation-duration:.01ms!important;animation-iteration-count:1!important}
+    }
+
+  
+    /* ===== Five civilizations overload: rupture and premium result presentation ===== */
+    .deck-case .case-lid {
+      transform-origin:50% 100%!important;
+      transform:rotateX(0deg) translateZ(0);
+      will-change:transform,filter;
+    }
+    .deck-case.pressure .case-body {
+      animation:caseOverloadShake .105s linear infinite alternate!important;
+      box-shadow:inset 0 0 18px rgba(255,255,255,.9),inset 0 0 42px var(--case-civ-glow,#fff2b8),
+        0 0 22px var(--case-civ-glow,#fff2b8),0 9px 18px rgba(48,63,53,.2)!important;
+    }
+    .deck-case.pressure .case-body:after {
+      content:"";display:block!important;position:absolute;z-index:8;inset:0;
+      background:
+        linear-gradient(104deg,transparent 0 19%,rgba(255,255,255,.95) 20%,transparent 21% 100%),
+        linear-gradient(76deg,transparent 0 42%,rgba(255,255,255,.85) 43%,transparent 44% 100%),
+        linear-gradient(0deg,transparent 0 68%,rgba(255,255,255,.88) 69%,transparent 70% 100%);
+      opacity:.9;filter:drop-shadow(0 0 7px var(--case-civ-glow,#fff));
+      animation:caseCrackPulse .18s ease-in-out infinite alternate;
+    }
+    .deck-case.pressure .case-cavity {
+      background:radial-gradient(ellipse at 50% 5%,#fff 0%,var(--case-civ-glow,#fff2b8) 18%,rgba(255,255,255,.8) 38%,#dce8df 82%)!important;
+      box-shadow:inset 0 0 35px #fff,inset 0 0 65px var(--case-civ-glow,#fff2b8),0 0 25px var(--case-civ-glow,#fff2b8)!important;
+      animation:cavitySurge .28s ease-in-out infinite alternate;
+    }
+    .deck-case.pressure .case-lock {
+      animation:lockEject .22s ease-in both!important;
+      box-shadow:0 0 14px 5px #fff,0 0 28px var(--case-civ-glow,#fff)!important;
+    }
+    .deck-case.pressure .case-light {
+      opacity:1!important;animation:coreOverloadPulse .24s ease-in-out infinite alternate!important;
+    }
+    .deck-case.opening .case-lid {
+      animation:lidEjection .92s cubic-bezier(.12,.82,.16,1) both!important;
+      filter:drop-shadow(0 0 18px #fff) drop-shadow(0 0 34px var(--case-civ-glow,#fff2b8));
+    }
+    .deck-case.opening .case-body {
+      animation:caseRecoil .58s cubic-bezier(.16,.82,.2,1) both!important;
+    }
+    .deck-case.opening .case-lock {opacity:0!important;transition:opacity .12s ease}
+    .deck-case.opening .case-mouth-beam {
+      width:190px;height:220px;top:-178px;
+      animation:overloadBeam 1.18s cubic-bezier(.12,.8,.18,1) .12s both!important;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.96) 24%,#fff 50%,rgba(255,255,255,.96) 76%,transparent),
+        linear-gradient(90deg,rgba(229,57,53,.42),rgba(242,198,0,.35),rgba(41,155,69,.38),rgba(22,139,210,.4),rgba(116,60,155,.4));
+      background-blend-mode:screen;
+    }
+    .deck-case.opening .case-rays {
+      animation:fiveColorDispersion 1.12s cubic-bezier(.12,.78,.18,1) .18s both!important;
+      background:repeating-conic-gradient(from -8deg at 50% 58%,
+        rgba(255,255,255,0) 0deg 5deg,
+        rgba(255,255,255,.98) 5.5deg 7deg,
+        var(--case-civ-glow,#ffe6a0) 7.2deg 8deg,
+        rgba(255,255,255,0) 8.5deg 14deg);
+    }
+    .deck-case.opening .case-burst {animation:ruptureWave .88s cubic-bezier(.12,.72,.18,1) .04s both!important}
+    @keyframes caseOverloadShake {
+      from{transform:translate(-1px,0) rotate(-.6deg) scale(1.015)}
+      to{transform:translate(1px,-2px) rotate(.6deg) scale(1.045)}
+    }
+    @keyframes caseCrackPulse {from{opacity:.35;filter:brightness(1)}to{opacity:1;filter:brightness(2.4)}}
+    @keyframes cavitySurge {from{filter:brightness(1.2)}to{filter:brightness(2.2)}}
+    @keyframes lockEject {0%{transform:translateX(-50%) scale(1)}45%{transform:translateX(-50%) translateY(8px) scale(1.45);opacity:1}100%{transform:translateX(-50%) translateY(20px) scale(.2);opacity:0}}
+    @keyframes coreOverloadPulse {from{transform:translate(-50%,-50%) scale(.8);opacity:.55}to{transform:translate(-50%,-50%) scale(1.55);opacity:1}}
+    @keyframes lidEjection {
+      0%{transform:rotateX(0deg) translateZ(0) translateY(0) rotateZ(0);opacity:1}
+      20%{transform:rotateX(-22deg) translateZ(8px) translateY(-5px) rotateZ(-2deg);opacity:1}
+      54%{transform:rotateX(-112deg) translateZ(30px) translateY(-34px) rotateZ(-9deg);opacity:1}
+      78%{transform:rotateX(-158deg) translateZ(54px) translateY(-62px) rotateZ(-14deg);opacity:1}
+      100%{transform:rotateX(-164deg) translateZ(62px) translateY(-72px) rotateZ(-15deg);opacity:1}
+    }
+    @keyframes caseRecoil {
+      0%{transform:translateY(0) scale(1)}
+      24%{transform:translateY(7px) scale(.94,1.03)}
+      58%{transform:translateY(-4px) scale(1.035,.97)}
+      100%{transform:translateY(0) scale(1)}
+    }
+    @keyframes overloadBeam {
+      0%{opacity:0;transform:translateX(-50%) scaleY(.04) scaleX(.35);filter:brightness(1)}
+      22%{opacity:1;transform:translateX(-50%) scaleY(.85) scaleX(1);filter:brightness(2.5)}
+      48%{opacity:1;transform:translateX(-50%) scaleY(1.22) scaleX(1.35);filter:brightness(2)}
+      100%{opacity:.22;transform:translateX(-50%) scaleY(1.55) scaleX(1.8);filter:brightness(1.4)}
+    }
+    @keyframes fiveColorDispersion {
+      0%{opacity:0;transform:translate(-50%,-50%) scale(.12) rotate(-18deg);filter:blur(5px)}
+      22%{opacity:1;filter:blur(0)}
+      58%{opacity:.95;transform:translate(-50%,-50%) scale(1.22) rotate(8deg)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(1.72) rotate(18deg);filter:blur(3px)}
+    }
+
+    /* 結果は「当選告知→デッキ名→文明情報」の順で視線誘導 */
+    #result.has-result {
+      position:relative;isolation:isolate;gap:9px!important;
+      padding:18px 18px 16px!important;margin-top:18px!important;
+      border:1px solid rgba(203,174,103,.82);border-radius:18px;
+      background:linear-gradient(145deg,#fff 0%,#fffdf7 48%,#f3eee0 100%);
+      box-shadow:0 8px 0 rgba(177,145,75,.12),0 14px 32px rgba(69,61,42,.12),inset 0 1px 0 #fff;
+    }
+    #result.has-result:before {
+      content:"";position:absolute;z-index:-1;inset:6px;border:1px solid rgba(210,184,123,.48);
+      border-radius:12px;pointer-events:none;
+    }
+    #result.has-result:after {
+      content:"";position:absolute;z-index:-1;left:50%;top:-11px;width:42px;height:22px;
+      transform:translateX(-50%);background:#f7e7b8;border:1px solid #d5b66e;
+      border-radius:20px;box-shadow:0 2px 8px rgba(138,106,43,.18);
+    }
+    .result-eyebrow {
+      display:flex;align-items:center;gap:10px;color:#92713a!important;
+      font-size:.66rem!important;letter-spacing:.24em!important;
+    }
+    .result-eyebrow:before,.result-eyebrow:after {
+      content:"";width:30px;height:1px;background:linear-gradient(90deg,transparent,#c4a45e);
+    }
+    .result-eyebrow:after {transform:scaleX(-1)}
+    .deck-name-title {
+      width:100%;padding:12px 16px 13px!important;border-radius:11px!important;
+      border:1px solid #d7bd7d!important;
+      background:linear-gradient(180deg,#fff 0%,#f8f2df 100%)!important;
+      box-shadow:0 3px 0 rgba(194,164,94,.22),0 8px 20px rgba(137,117,70,.12),inset 0 1px 0 #fff!important;
+      font-size:clamp(1.3rem,4.4vw,2rem)!important;
+    }
+    .result-civilizations {display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px;margin-top:2px}
+    .result-civ-chip {
+      min-width:42px;padding:4px 10px;border:1px solid var(--civ-color);
+      border-radius:999px;background:color-mix(in srgb,var(--civ-color) 11%,white);
+      color:#39413d;font-size:.68rem;font-weight:850;letter-spacing:.06em;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 5px rgba(44,55,45,.06);
+    }
+    .result-seal {
+      position:absolute;right:13px;top:12px;width:34px;height:34px;display:grid;place-items:center;
+      border:1px solid #c7a65d;border-radius:50%;background:radial-gradient(circle,#fff8dc,#e8cf8e);
+      color:#8c682b;font-size:.58rem;font-weight:950;letter-spacing:-.04em;
+      box-shadow:0 2px 7px rgba(117,88,37,.16);
+    }
+    #result.result-reveal .result-seal {animation:sealStamp .5s cubic-bezier(.16,.9,.2,1) .22s both}
+    @keyframes sealStamp {0%{opacity:0;transform:scale(2.4) rotate(-22deg)}65%{opacity:1;transform:scale(.86) rotate(5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+    @media(max-width:480px) {
+      #result.has-result {padding:16px 12px 14px!important}
+      .result-seal {right:10px;top:10px;width:29px;height:29px;font-size:.52rem}
+      .result-civ-chip {padding:4px 8px}
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .deck-case.pressure .case-body,.deck-case.pressure .case-body:after,
+      .deck-case.pressure .case-cavity,.deck-case.pressure .case-lock,
+      .deck-case.pressure .case-light,.deck-case.opening .case-lid,
+      .deck-case.opening .case-body,.deck-case.opening .case-mouth-beam,
+      .deck-case.opening .case-rays,.deck-case.opening .case-burst,
+      #result.result-reveal .result-seal {
+        animation-duration:.01ms!important;animation-iteration-count:1!important;
+      }
     }
 
   </style>
@@ -1278,7 +1432,7 @@
       drawingCard.style.removeProperty("visibility");
       drawingCard.style.removeProperty("opacity");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
-      deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
+      deckCase.classList.remove("opening", "civ-charging", "pressure", "overloaded", "treasure-open");
       drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished", "case-blast", "case-impact");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
@@ -1428,8 +1582,10 @@
       void drawingCard.offsetWidth;
       await sleep(340);
       deckCase.classList.add("pressure");
-      await sleep(420);
-      deckCase.classList.remove("pressure");
+      await sleep(560);
+      deckCase.classList.add("overloaded");
+      await sleep(520);
+      deckCase.classList.remove("pressure", "overloaded");
       drawingCard.classList.add("case-impact");
       deckCase.classList.add("opening");
       drawingCard.classList.add("case-blast");
@@ -1652,10 +1808,26 @@
         const resultEyebrow = document.createElement("span");
         resultEyebrow.className = "result-eyebrow";
         resultEyebrow.textContent = "今回の当選デッキ";
+        resultEyebrow.textContent = "SUMMONED DECK";
         const resultTitle = document.createElement("span");
         resultTitle.className = "deck-name-title";
         resultTitle.textContent = deckName;
-        resultElement.append(resultEyebrow, resultTitle);
+        const resultSeal = document.createElement("span");
+        resultSeal.className = "result-seal";
+        resultSeal.textContent = "DM";
+        resultSeal.setAttribute("aria-hidden", "true");
+        const resultCivs = document.createElement("div");
+        resultCivs.className = "result-civilizations";
+        const civLabels = { fire:"火", water:"水", nature:"自然", light:"光", darkness:"闇", zero:"無色" };
+        getDeckCivilizations(deck).forEach(civ => {
+          const chip = document.createElement("span");
+          chip.className = "result-civ-chip";
+          chip.textContent = civLabels[civ] || civ;
+          chip.style.setProperty("--civ-color", ({fire:"#e53935",water:"#168bd2",nature:"#299b45",light:"#d3a900",darkness:"#743c9b",zero:"#aab4c1"})[civ] || "#aab4c1");
+          resultCivs.appendChild(chip);
+        });
+        resultElement.append(resultSeal, resultEyebrow, resultTitle);
+        if (resultCivs.childElementCount) resultElement.appendChild(resultCivs);
         resultElement.classList.add("has-result");
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
