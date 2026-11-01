@@ -12,8 +12,9 @@ os.makedirs("/tmp/case-opening-frames", exist_ok=True)
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
 scene=bpy.context.scene
-scene.render.engine="BLENDER_EEVEE_NEXT" if hasattr(scene, "eevee") else "BLENDER_EEVEE"
-scene.eevee.taa_render_samples=64 if hasattr(scene, "eevee") else 64
+scene.render.engine="BLENDER_EEVEE"
+if hasattr(scene, "eevee"):
+    scene.eevee.taa_render_samples=64
 scene.render.resolution_x=W
 scene.render.resolution_y=H
 scene.render.resolution_percentage=100
