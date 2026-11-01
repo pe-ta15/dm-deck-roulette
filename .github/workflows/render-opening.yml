@@ -12,16 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install rendering tools
+      - name: Install Blender and FFmpeg
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg python3-pil
-      - name: Render WebM
-        run: python3 tools/render_case_opening.py
+          sudo apt-get install -y blender ffmpeg
+      - name: Render realistic 3D WebM
+        run: |
+          blender --background --python tools/render_case_opening.py
+          ffmpeg -y -framerate 24 -i /tmp/case-opening-frames/frame_%04d.png -c:v libvpx -b:v 2400k -crf 8 -deadline good -cpu-used 4 -pix_fmt yuv420p -an case-opening.webm
+      - name: Verify WebM codec and dimensions
+        run: |
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,pix_fmt -of default=noprint_wrappers=1 case-opening.webm
+          test -s case-opening.webm
       - name: Commit rendered video
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add case-opening.webm
-          git commit -m "Improve deck case opening WebM" || exit 0
+          git commit -m "Render realistic 3D deck case opening" || exit 0
           git push
