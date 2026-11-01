@@ -307,6 +307,9 @@
     #drawingCard.video-opening .deck-case{visibility:hidden!important;}
     /* WebM終了後もCSS製ケースを再表示しない */
     #drawingCard.video-finished .deck-case{display:none!important;visibility:hidden!important;}
+    /* WebM終了後に残る暗いカットイン背景も消し、演出領域を透明化 */
+    #drawingCard.video-finished{background:transparent!important;border:0!important;box-shadow:none!important;filter:none!important;}
+    #drawingCard.video-finished:before,#drawingCard.video-finished:after{display:none!important;content:none!important;}
     #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
     #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
     #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
@@ -951,7 +954,7 @@
           caseOpeningVideo.pause();
           // 動画終了直後にCSSケースが一瞬復活するのを防ぐ。
           drawingCard.classList.add("video-finished");
-          drawingCard.classList.remove("video-opening");
+          drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
           await sleep(120);
         })();
 
