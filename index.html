@@ -2731,6 +2731,162 @@ body.is-spinning .roulette-panel{padding:30px 28px 34px!important}
 }
 .deck-case .case-card-stack{opacity:.62!important}
 
+  
+/* ===== Physical rear-hinged lid, authentic card back, and safe reveal layout ===== */
+/* Keep the complete opening stage in document flow: never overlap the page heading. */
+body.is-spinning main{position:relative!important}
+body.is-spinning h1,body.is-spinning .subtitle{position:relative!important;z-index:30!important}
+body.is-spinning .roulette-panel{
+  position:relative!important;z-index:1!important;
+  margin-top:18px!important;padding:22px 22px 28px!important;
+  overflow:visible!important;
+}
+body.is-spinning #cardStage.case-opening-stage{
+  position:relative!important;display:block!important;
+  width:100%!important;max-width:680px!important;height:auto!important;min-height:0!important;
+  margin:0 auto!important;padding:0!important;transform:none!important;
+  overflow:visible!important;box-sizing:border-box!important;
+}
+body.is-spinning #cardStage.case-opening-stage #drawingCard,
+body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+  position:relative!important;inset:auto!important;left:auto!important;top:auto!important;
+  display:grid!important;place-items:center!important;
+  width:100%!important;max-width:560px!important;height:410px!important;min-height:410px!important;
+  margin:0 auto!important;padding:18px!important;box-sizing:border-box!important;
+  border:1px solid rgba(55,53,47,.10)!important;border-radius:22px!important;
+  background:radial-gradient(ellipse at 50% 52%,rgba(245,244,239,.66),rgba(255,255,255,.24) 68%,rgba(255,255,255,0))!important;
+  box-shadow:inset 0 0 0 6px rgba(55,53,47,.025)!important;
+  overflow:visible!important;transform:none!important;
+}
+body.is-spinning #drawingCard.opening-cutin .deck-case{
+  position:absolute!important;left:50%!important;top:50%!important;
+  margin:0!important;transform:translate(-50%,-50%) perspective(1000px) rotateX(8deg) rotateY(-3deg)!important;
+}
+@media(max-width:700px){
+  body.is-spinning .roulette-panel{padding:16px 12px 22px!important}
+  body.is-spinning #cardStage.case-opening-stage #drawingCard,
+  body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+    height:340px!important;min-height:340px!important;padding:12px!important;
+  }
+}
+/* Two connected panels, two real fold axes:
+   top lid rotates from the rear edge; the front flap stays attached at the front edge.
+   The flap's local 90deg fold makes it turn upward together with the lid. */
+.deck-case .case-hinge{
+  display:block!important;position:absolute!important;z-index:16!important;
+  left:8px!important;right:8px!important;top:2px!important;height:9px!important;
+  border:1px solid rgba(111,137,119,.65)!important;border-radius:6px!important;
+  background:linear-gradient(180deg,#f9fcfa,#a8bcae 55%,#6f8976)!important;
+  box-shadow:0 2px 4px rgba(32,48,36,.2)!important;
+}
+.deck-case .case-lid{
+  position:absolute!important;z-index:14!important;left:2px!important;right:2px!important;
+  top:0!important;height:76px!important;
+  transform-origin:50% 0%!important;transform:rotateX(0deg) translateZ(0)!important;
+  transform-style:preserve-3d!important;backface-visibility:visible!important;
+  overflow:visible!important;
+  border:3px solid #b8c8bc!important;border-bottom:4px solid #8fa493!important;
+  border-radius:10px 10px 4px 4px!important;
+  background:linear-gradient(145deg,#fff 0%,#eaf1ec 46%,#c5d5c9 100%)!important;
+  box-shadow:inset 0 3px 8px #fff,0 5px 9px rgba(35,55,40,.2)!important;
+}
+.deck-case .case-lid-inner{
+  display:block!important;position:absolute!important;inset:7px 9px 9px!important;
+  border:1px solid rgba(255,255,255,.88)!important;border-radius:4px!important;
+  background:linear-gradient(145deg,#f8fbf9,#d9e5dc 58%,#b8cbbd)!important;
+  box-shadow:inset 0 0 14px rgba(78,105,85,.18)!important;
+  transform:translateZ(-1px)!important;backface-visibility:visible!important;
+}
+.deck-case .case-lid-front{
+  display:block!important;position:absolute!important;z-index:15!important;
+  left:-3px!important;right:-3px!important;top:calc(100% - 2px)!important;
+  height:44px!important;margin:0!important;
+  transform-origin:50% 0%!important;transform:rotateX(90deg) translateZ(0)!important;
+  transform-style:preserve-3d!important;backface-visibility:visible!important;
+  border:3px solid #a9baad!important;border-top:0!important;
+  border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#b1c2b5 0%,#f8fbf8 15%,#dce8df 50%,#b2c4b6 86%,#f9fcf9 100%)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.16),0 4px 7px rgba(40,57,43,.2)!important;
+}
+.deck-case .case-lid-front:before{
+  content:""!important;position:absolute!important;inset:4px 5px 5px!important;
+  border:1px solid rgba(255,255,255,.72)!important;border-radius:2px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.32),rgba(99,126,106,.13))!important;
+  transform:translateZ(1px)!important;
+}
+.deck-case .case-lid-front:after{
+  content:""!important;position:absolute!important;left:50%!important;bottom:5px!important;
+  width:28px!important;height:9px!important;transform:translateX(-50%) translateZ(2px)!important;
+  border:1px solid #9eafa2!important;border-radius:3px!important;
+  background:linear-gradient(180deg,#fff,#d8e2da 65%,#aab9ad)!important;
+  box-shadow:0 1px 3px rgba(0,0,0,.16)!important;
+}
+.deck-case .case-lid-front span{display:none!important}
+.deck-case .case-lock{display:none!important}
+/* Single smooth opening motion on the rear hinge. No eject/float transform is applied. */
+.deck-case.opening .case-lid{
+  animation:rearHingeOpen 1.16s cubic-bezier(.18,.78,.18,1) both!important;
+}
+@keyframes rearHingeOpen{
+  0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
+  12%{transform:rotateX(-8deg) translateZ(1px);filter:brightness(1.08)}
+  38%{transform:rotateX(-42deg) translateZ(4px);filter:brightness(1.2)}
+  72%{transform:rotateX(-88deg) translateZ(8px);filter:brightness(1.42)}
+  90%{transform:rotateX(-98deg) translateZ(9px);filter:brightness(1.28)}
+  100%{transform:rotateX(-94deg) translateZ(8px);filter:brightness(1.22)}
+}
+/* Use the actual card-back artwork shown by the linked official retail product image.
+   It is deliberately subdued so it reads as cards inside the case, not a second focal point. */
+.deck-case .case-card-stack{
+  background-image:url("https://img.amiami.jp/images/product/main/211/CARD-00014197.jpg")!important;
+  background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;
+  border:2px solid #172c52!important;border-radius:5px!important;
+  box-shadow:0 4px 9px rgba(0,0,0,.36),inset 0 0 0 1px rgba(246,225,172,.72)!important;
+  opacity:.48!important;filter:saturate(.88) brightness(.9)!important;
+}
+.deck-case .case-card-stack .card-face{display:none!important;visibility:hidden!important}
+.deck-case .case-card-stack .card-edge{opacity:.62!important}
+/* Long deck names get a flexible, padded result plaque; no content touches the frame. */
+#result.has-result,#result.result-reveal{
+  width:calc(100% - 36px)!important;max-width:620px!important;
+  box-sizing:border-box!important;margin:18px auto 16px!important;
+  padding:16px clamp(14px,3vw,28px) 18px!important;
+  gap:12px!important;overflow:visible!important;
+}
+#result .result-eyebrow{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;margin:0 auto 2px!important;line-height:1.5!important;
+}
+#result .deck-name-title{
+  display:block!important;width:100%!important;max-width:100%!important;
+  box-sizing:border-box!important;margin:0 auto!important;
+  padding:12px clamp(12px,3vw,24px)!important;
+  font-size:clamp(1.05rem,3.8vw,1.75rem)!important;
+  line-height:1.35!important;letter-spacing:.035em!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;
+  text-align:center!important;
+}
+#result .result-civilizations{
+  display:flex!important;flex-wrap:wrap!important;justify-content:center!important;
+  width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+  gap:10px!important;margin:2px auto 0!important;padding:4px 8px!important;
+}
+#result .civilization-icon{
+  width:22px!important;height:22px!important;flex:0 0 22px!important;
+  object-fit:contain!important;filter:contrast(1.18) saturate(1.12) brightness(.96)!important;
+}
+#result .civilization-icon[src*="light.png"]{
+  filter:contrast(1.55) saturate(1.45) brightness(.76) drop-shadow(0 0 1px rgba(75,72,52,.58))!important;
+}
+@media(max-width:480px){
+  #result.has-result,#result.result-reveal{
+    width:calc(100% - 20px)!important;margin:14px auto 14px!important;
+    padding:14px 12px 16px!important;gap:10px!important;
+  }
+  #result .deck-name-title{font-size:clamp(1rem,5vw,1.42rem)!important;padding:10px!important}
+  #result .civilization-icon{width:25px!important;height:25px!important;flex-basis:25px!important}
+}
+
   </style>
 </head>
 <body>
