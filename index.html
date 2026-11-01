@@ -3346,10 +3346,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   pointer-events:none!important;
 }
 .deck-case .case-lid-inner{
-  z-index:3!important;
+  z-index:1!important;
   backface-visibility:hidden!important;
 }
-.deck-case .case-lid-front{z-index:4!important}
+.deck-case .case-lid:after{z-index:4!important}
+.deck-case .case-lid-front{z-index:5!important}
 .deck-case.opening .case-lid{transform-style:preserve-3d!important}
 
 </style>
