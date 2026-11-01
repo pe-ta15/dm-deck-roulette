@@ -3009,6 +3009,113 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
   transform:translate3d(0,-28px,125px)!important;
 }
 
+
+/* ===== 2026-11-02: fabric-fold case, roomy draw stage, physical card reveal ===== */
+/* One continuous fabric shell: no hinge hardware and no clasp. */
+.deck-case .case-hinge,.deck-case .case-lock{display:none!important}
+.deck-case .case-lid{
+  z-index:14!important;left:2px!important;right:2px!important;top:0!important;height:76px!important;
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;backface-visibility:visible!important;
+  border:3px solid #b8c1ba!important;border-bottom:5px solid #8b968d!important;border-radius:10px 10px 3px 3px!important;
+  background:linear-gradient(145deg,#fff 0%,#f0f3f0 48%,#cbd3cd 100%)!important;
+  box-shadow:inset 0 3px 8px rgba(255,255,255,.95),0 5px 9px rgba(35,55,40,.18)!important;
+}
+.deck-case .case-lid:after{
+  content:""!important;position:absolute!important;left:4px!important;right:4px!important;top:-3px!important;
+  bottom:auto!important;height:3px!important;border:0!important;border-radius:3px!important;
+  background:linear-gradient(90deg,#c8d1ca,#fff 50%,#c8d1ca)!important;box-shadow:none!important;
+}
+/* Folded front flap remains a child of the lid and covers the upper card stack. */
+.deck-case .case-lid-front{
+  display:block!important;position:absolute!important;z-index:15!important;
+  left:-3px!important;right:-3px!important;top:calc(100% - 2px)!important;height:46px!important;margin:0!important;
+  transform:rotateX(90deg) translateZ(0)!important;transform-origin:50% 0%!important;
+  transform-style:preserve-3d!important;backface-visibility:visible!important;
+  border:3px solid #b8c1ba!important;border-top:1px solid #e1e8e2!important;border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#cbd4cd 0%,#f8faf8 17%,#e8ede9 50%,#cbd4cd 84%,#f8faf8 100%)!important;
+  box-shadow:inset 0 -5px 8px rgba(67,83,71,.12),0 4px 7px rgba(40,57,43,.16)!important;
+}
+.deck-case .case-lid-front:before{
+  content:""!important;position:absolute!important;inset:4px 5px!important;height:auto!important;
+  border:1px solid rgba(255,255,255,.82)!important;border-radius:2px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.4),rgba(99,126,106,.1))!important;
+}
+.deck-case .case-lid-front:after{display:none!important;content:none!important}
+.deck-case .case-body{top:72px!important}
+.deck-case .case-seam{display:none!important}
+.deck-case.opening .case-lid{animation:fabricFoldOpen 1.18s cubic-bezier(.18,.78,.18,1) both!important}
+@keyframes fabricFoldOpen{
+  0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
+  14%{transform:rotateX(-9deg) translateZ(1px);filter:brightness(1.08)}
+  42%{transform:rotateX(-48deg) translateZ(4px);filter:brightness(1.2)}
+  76%{transform:rotateX(-88deg) translateZ(8px);filter:brightness(1.38)}
+  92%{transform:rotateX(-96deg) translateZ(9px);filter:brightness(1.28)}
+  100%{transform:rotateX(-94deg) translateZ(8px);filter:brightness(1.2)}
+}
+/* Uniform white edge around the full card back; remove crop-like horizontal strips. */
+.deck-case .case-card-stack{
+  background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;
+  background-color:#f7f8f6!important;border:3px solid #f7f8f6!important;border-radius:6px!important;
+  box-shadow:0 0 0 1px rgba(40,55,44,.35),0 4px 10px rgba(0,0,0,.38)!important;overflow:hidden!important;
+}
+.deck-case .case-card-stack:before,.deck-case .case-card-stack:after{display:none!important;content:none!important}
+/* No enclosing display frame. Increase the roulette panel's actual inner padding. */
+body.is-spinning .roulette-panel{
+  padding:34px 38px 38px!important;margin-top:22px!important;overflow:visible!important;
+}
+body.is-spinning #cardStage.case-opening-stage{
+  width:100%!important;max-width:680px!important;margin:0 auto!important;padding:8px 0 12px!important;overflow:visible!important;
+}
+body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+  width:100%!important;max-width:560px!important;height:390px!important;min-height:390px!important;
+  padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;overflow:visible!important;
+}
+body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px 16px rgba(25,25,25,.22))!important}
+@media(max-width:700px){
+  body.is-spinning .roulette-panel{padding:24px 20px 30px!important;margin-top:16px!important}
+  body.is-spinning #drawingCard.mana-absorption.opening-cutin{height:340px!important;min-height:340px!important}
+}
+@media(max-width:420px){body.is-spinning .roulette-panel{padding:20px 16px 26px!important}}
+/* Card launch starts at the open case mouth and lands on a collector's plate. */
+#keyCardImages.case-launch{
+  position:absolute!important;z-index:24!important;left:50%!important;top:50%!important;
+  width:100%!important;min-height:0!important;margin:0!important;padding:12px 10px 16px!important;
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  transform:translate(-50%,-50%)!important;perspective:1100px!important;transform-style:preserve-3d!important;
+  pointer-events:none!important;
+}
+#keyCardImages.case-launch:before{
+  content:""!important;position:absolute!important;z-index:-1;left:50%!important;top:50%!important;
+  width:min(76%,390px)!important;height:calc(100% - 8px)!important;
+  transform:translate(-50%,-50%) translateZ(-2px)!important;
+  border:1px solid rgba(194,164,91,.82)!important;border-radius:13px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(241,239,226,.96) 54%,rgba(218,216,198,.97))!important;
+  box-shadow:0 12px 28px rgba(24,31,25,.22),inset 0 0 0 4px rgba(255,255,255,.78),inset 0 0 0 5px rgba(194,164,91,.24)!important;
+}
+#keyCardImages.case-launch img{
+  position:relative!important;z-index:1!important;animation:cardRiseFromMouth 1s cubic-bezier(.16,.82,.22,1) both!important;
+}
+#keyCardImages.case-launch img:nth-child(2){animation-delay:.09s!important}
+#keyCardImages.case-launch img:nth-child(3){animation-delay:.18s!important}
+@keyframes cardRiseFromMouth{
+  0%{opacity:0;transform:translate3d(0,18px,0) rotateX(12deg) scale(.72);filter:brightness(.7) blur(1px)}
+  32%{opacity:1;transform:translate3d(0,-8px,24px) rotateX(4deg) scale(.88);filter:brightness(1.35) drop-shadow(0 0 18px #fff)}
+  68%{opacity:1;transform:translate3d(0,-3px,48px) rotateX(0) scale(1.035);filter:brightness(1.12) drop-shadow(0 0 15px #f4d98a)}
+  86%{transform:translate3d(0,2px,36px) scale(.99)}
+  100%{opacity:1;transform:translate3d(0,0,30px) scale(1);filter:brightness(1) drop-shadow(0 8px 16px rgba(0,0,0,.25))}
+}
+#keyCardImages.result-ready{
+  position:relative!important;left:auto!important;top:auto!important;width:100%!important;min-height:0!important;
+  margin:0 auto!important;padding:0 8px 0!important;transform:none!important;pointer-events:auto!important;
+}
+#keyCardImages.result-ready:before{display:none!important;content:none!important}
+#keyCardImages.result-ready img{transform:none!important;filter:drop-shadow(0 8px 16px rgba(0,0,0,.24))!important}
+@media(prefers-reduced-motion:reduce){
+  #keyCardImages.case-launch img{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  .deck-case.opening .case-lid{animation-duration:.01ms!important}
+}
+
 </style>
 </head>
 <body>
@@ -3032,7 +3139,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
             </div>
-            <div class="case-hinge"></div>
             <div class="case-lid"><div class="case-lid-inner"></div><div class="case-lid-front" aria-hidden="true"><span></span></div></div>
             <div class="case-lock"></div>
             <div class="case-light"></div>
