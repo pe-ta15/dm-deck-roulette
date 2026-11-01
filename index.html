@@ -2887,6 +2887,67 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
   #result .civilization-icon{width:25px!important;height:25px!important;flex-basis:25px!important}
 }
 
+  
+/* ===== 2026-11 physical hinge, synchronized charge and result polish ===== */
+/* Give the five orbiting civilizations a larger safe stage, away from the panel edges. */
+#cardStage{grid-template-rows:276px auto!important;row-gap:16px!important;padding:8px 0 4px!important}
+#drawingCard.mana-absorption{height:276px!important;min-height:276px!important;max-width:500px!important}
+#drawingCard.mana-absorption.opening-cutin{height:340px!important;min-height:340px!important}
+#cardStage.case-opening-stage{grid-template-rows:340px auto!important;row-gap:18px!important;margin:16px auto 0!important}
+@media(max-width:480px){
+  #cardStage{grid-template-rows:248px auto!important;row-gap:13px!important}
+  #drawingCard.mana-absorption{height:248px!important;min-height:248px!important}
+  #cardStage.case-opening-stage{grid-template-rows:340px auto!important;row-gap:15px!important}
+}
+/* Closed lid covers the front; the front flap remains a child of the top panel.
+   On opening only the top panel rotates around the rear hinge, carrying the flap with it. */
+.deck-case .case-lid{transform-origin:50% 0%!important;transform-style:preserve-3d!important}
+.deck-case .case-lid-front{
+  transform:rotateX(90deg) translateZ(0)!important;
+  transform-origin:50% 0%!important;backface-visibility:visible!important;
+}
+/* The lid participates in every charge beat; glow and reflections follow the case body. */
+.deck-case.civ-charging .case-lid{
+  filter:brightness(1.18) saturate(1.12)!important;
+  box-shadow:inset 0 4px 10px rgba(255,255,255,.58),inset 0 -9px 12px rgba(0,0,0,.62),0 0 15px var(--case-civ-glow,rgba(255,255,255,.5)),0 10px 14px rgba(0,0,0,.5)!important;
+  animation:lidChargeBeat .72s ease-in-out infinite alternate;
+}
+.deck-case.civ-charging .case-lid-inner{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),var(--case-civ-glow,rgba(220,235,255,.75)) 45%,#aebfba 100%)!important;
+  box-shadow:inset 0 0 18px rgba(255,255,255,.9),0 0 12px var(--case-civ-glow,rgba(255,255,255,.4))!important;
+}
+.deck-case.civ-charging .case-lid-front{
+  filter:brightness(1.14) saturate(1.08)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 0 13px var(--case-civ-glow,rgba(255,255,255,.4))!important;
+}
+@keyframes lidChargeBeat{
+  from{filter:brightness(1.05) saturate(1);box-shadow:inset 0 4px 8px rgba(255,255,255,.4),0 5px 9px rgba(0,0,0,.35)}
+  to{filter:brightness(1.48) saturate(1.25);box-shadow:inset 0 4px 13px rgba(255,255,255,.8),0 0 22px var(--case-civ-glow,rgba(255,255,255,.55)),0 10px 14px rgba(0,0,0,.48)}
+}
+/* A clean result: remove the pale capsule/bar behind the civilization symbols. */
+#result .result-civilizations{
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  border-radius:0!important;padding:2px 0!important;gap:9px!important;
+}
+#result .result-civilizations:before,#result .result-civilizations:after{display:none!important;content:none!important}
+#result .civilization-icon{
+  width:21px!important;height:21px!important;flex:0 0 21px!important;
+  padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+  filter:contrast(1.12) saturate(1.08)!important;
+}
+#result .civilization-icon[src*="fire.png"],
+#result .civilization-icon[src*="light.png"]{
+  width:19px!important;height:19px!important;flex-basis:19px!important;
+  transform:scale(.94)!important;
+}
+#result .civilization-icon[src*="light.png"]{filter:contrast(1.18) saturate(1.12)!important}
+@media(max-width:480px){
+  #result .civilization-icon{width:22px!important;height:22px!important;flex-basis:22px!important}
+  #result .civilization-icon[src*="fire.png"],
+  #result .civilization-icon[src*="light.png"]{width:20px!important;height:20px!important;flex-basis:20px!important}
+}
+
   </style>
 </head>
 <body>
@@ -3290,22 +3351,17 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
       drawingCard.classList.add("case-impact", "case-blast");
       deckCase.classList.add("opening");
 
-      // 二つ折り蓋：先に前面フラップを折り上げ、続いて天面パネルを後方へ回す。
-      // 前面と天面の折れ目、天面とケース背面のヒンジを別々の支点として扱う。
-      const frontFlap = lid.querySelector(".case-lid-front");
-      await animateTransform(frontFlap, [
-        {at:0,values:[90,0,0]},
-        {at:.18,values:[68,-1,1]},
-        {at:.72,values:[8,-1,1]},
-        {at:1,values:[0,0,0]}
-      ], 330, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
+      // 前面フラップは蓋パネルの子要素として90度の折れ角を保つ。
+      // フラップだけを先に動かすと蓋が本体から外れたように見えるため、
+      // 背面ヒンジを支点に親パネルだけを回転させ、折り角は最後まで維持する。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.12,values:[4,0,1]},
-        {at:.48,values:[28,-1,2]},
-        {at:.82,values:[49,-2,3]},
-        {at:1,values:[58,-2,3]}
-      ], 820, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
+        {at:.10,values:[-7,0,1]},
+        {at:.34,values:[-38,-1,3]},
+        {at:.68,values:[-82,-2,7]},
+        {at:.88,values:[-99,-2,9]},
+        {at:1,values:[-94,-2,8]}
+      ], 1120, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
       deckCase.classList.add("mouth-eruption");
