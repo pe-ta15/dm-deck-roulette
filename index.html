@@ -3224,6 +3224,99 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   #keyCardImages.case-launch img{animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
 
+
+/* ===== Vertical fabric-wrap deck case: one continuous top + front flap ===== */
+/*
+  Geometry:
+  - Case body is a tall rectangular box.
+  - Lid top panel spans the full case depth from the rear upper edge to the front upper edge.
+  - Front flap is attached at the front edge of that panel and folds down over the upper card area.
+  - The rear upper edge is the only rotation axis; no visible hinge or clasp hardware.
+*/
+#drawingCard.opening-cutin .deck-case{
+  width:178px!important;height:292px!important;
+  transform:translate(-50%,-50%) perspective(1100px) rotateX(8deg) rotateY(-3deg)!important;
+}
+.deck-case .case-body{
+  position:absolute!important;left:4px!important;right:4px!important;
+  top:72px!important;bottom:4px!important;
+  border-radius:2px 2px 13px 13px!important;
+  overflow:visible!important;
+}
+/* The lid is the full top cover, not a small cap. Its rear edge sits at the back rim. */
+.deck-case .case-lid{
+  position:absolute!important;z-index:12!important;
+  left:2px!important;right:2px!important;top:0!important;
+  height:74px!important;
+  transform-origin:50% 0%!important;
+  transform-style:preserve-3d!important;
+  overflow:visible!important;
+  border:3px solid #a5b9a9!important;
+  border-bottom:3px solid #91a997!important;
+  border-radius:8px 8px 2px 2px!important;
+  background:linear-gradient(145deg,#fff 0%,#edf4ee 38%,#c4d7c8 76%,#9fb8a4 100%)!important;
+  box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -5px 9px rgba(91,119,97,.13),0 5px 8px rgba(49,70,55,.12)!important;
+  animation:none!important;
+}
+.deck-case .case-lid-inner{
+  position:absolute!important;inset:7px 8px 8px!important;
+  border:1px solid rgba(255,255,255,.8)!important;border-radius:3px!important;
+  background:linear-gradient(145deg,#fafcfb,#dce4de 60%,#bdc9c0)!important;
+}
+/* Fold seam: subtle flexible crease, not a metal hinge. */
+.deck-case .case-lid:after{
+  content:""!important;position:absolute!important;left:2px!important;right:2px!important;
+  bottom:-2px!important;height:3px!important;border-radius:50%!important;
+  background:linear-gradient(180deg,rgba(72,100,79,.28),rgba(255,255,255,.65))!important;
+  box-shadow:0 1px 2px rgba(43,62,47,.16)!important;
+}
+/* Long front skirt hangs down from the front edge. Its height is calibrated to about
+   one third of the visible card stack (52px against the ~164px stack). */
+.deck-case .case-lid-front{
+  position:absolute!important;z-index:14!important;
+  left:-3px!important;right:-3px!important;
+  top:calc(100% - 2px)!important;height:56px!important;
+  transform-origin:50% 0%!important;
+  transform:rotateX(90deg)!important;
+  transform-style:preserve-3d!important;
+  border:3px solid #aab9ad!important;border-top:0!important;
+  border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#aebfb2 0%,#f8fbf8 13%,#dce8df 48%,#b3c5b7 87%,#f9fcf9 100%)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 5px 8px rgba(40,57,43,.18)!important;
+  backface-visibility:visible!important;
+}
+.deck-case .case-lid-front:before{
+  content:""!important;position:absolute!important;inset:4px 5px 5px!important;
+  border:1px solid rgba(255,255,255,.58)!important;border-radius:2px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(99,126,106,.08))!important;
+}
+.deck-case .case-lid-front:after{
+  content:none!important;display:none!important;
+}
+.deck-case .case-hinge,.deck-case .case-lock,
+.deck-case .case-lid-front span{display:none!important}
+/* Keep the flap visibly over the card's upper portion while closed. */
+.deck-case .case-card-stack{
+  width:88%!important;left:50%!important;top:50%!important;
+  overflow:hidden!important;border:0!important;border-radius:2px!important;
+  box-shadow:none!important;clip-path:inset(0)!important;
+}
+.deck-case .case-card-stack:before,.deck-case .case-card-stack:after{
+  display:none!important;content:none!important;
+}
+.deck-case .case-card-stack .card-face{
+  left:0!important;right:0!important;top:0!important;bottom:0!important;
+  margin:0!important;border-width:1px!important;border-radius:1px!important;
+}
+/* During opening, rotate the entire wrap from the rear edge. The front flap remains
+   attached to the front edge and follows the same rigid lid panel, preserving its fold. */
+.deck-case.opening .case-lid{animation:none!important}
+@media(max-width:480px){
+  #drawingCard.opening-cutin .deck-case{width:164px!important;height:270px!important}
+  .deck-case .case-lid{height:70px!important}
+  .deck-case .case-lid-front{height:52px!important}
+}
+
 </style>
 </head>
 <body>
