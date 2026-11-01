@@ -1,46 +1,62 @@
-name: Render deck case opening
+name: Validate DM deck roulette
 on:
-  push:
+  pull_request:
     paths:
-      - ".github/workflows/render-opening.yml"
-      - "tools/render_case_opening.py"
       - "index.html"
+      - ".github/workflows/render-opening.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - ".github/workflows/render-opening.yml"
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
-  render:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate page JavaScript
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Extract and validate inline JavaScript
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
+
           html = Path("index.html").read_text(encoding="utf-8")
           scripts = re.findall(r"<script>(.*?)</script>", html, re.S)
-          if not scripts:
-              raise SystemExit("No inline application script found")
-          Path("/tmp/dm-deck-roulette.js").write_text(scripts[-1], encoding="utf-8")
+          if len(scripts) != 1:
+              raise SystemExit(f"Expected one inline application script, found {len(scripts)}")
+          Path("/tmp/dm-deck-roulette.js").write_text(scripts[0], encoding="utf-8")
           PY
           node --check /tmp/dm-deck-roulette.js
-      - name: Install Blender and FFmpeg
+      - name: Check required case and draw behavior
         run: |
-          sudo apt-get update
-          sudo apt-get install -y blender ffmpeg libegl1 libgl1 libgles2 libglx-mesa0 libegl-mesa0
-      - name: Render realistic 3D WebM
-        run: |
-          blender --background --python tools/render_case_opening.py
-          ffmpeg -y -framerate 24 -i /tmp/case-opening-frames/frame_%04d.png -c:v libvpx -b:v 2400k -crf 8 -deadline good -cpu-used 4 -pix_fmt yuv420p -an case-opening.webm
-      - name: Verify WebM codec and dimensions
-        run: |
-          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,pix_fmt -of default=noprint_wrappers=1 case-opening.webm
-          test -s case-opening.webm
-      - name: Commit rendered video
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add case-opening.webm
-          git commit -m "Render realistic 3D deck case opening" || exit 0
-          git push
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          checks = {
+              "one shared deck-case element": html.count('id="deckCase"') + html.count("id='deckCase'") == 1,
+              "one case-ray layer": html.count('class="case-rays"') + html.count("class='case-rays'") == 1,
+              "no WebM playback reference": "case-opening.webm" not in html and "<video" not in html.lower(),
+              "milky translucent case styling": "rgba(207,218,214" in html,
+              "white cut-in background": "#drawingCard.mana-absorption.opening-cutin" in html and "background:#fff!important" in html,
+              "deck list API retained": "${API_BASE}/decks" in html,
+              "draw API retained": "${API_BASE}/spin" in html,
+              "last-three exclusion retained": "slice(0, 3)" in html,
+              "key-card image flow retained": "getKeyCardImageUrls(deck)" in html,
+              "case-opening animation retained": "function playCaseOpeningSequence()" in html,
+              "winner title animation retained": "@keyframes deckTitleShine" in html,
+          }
+          failed = [name for name, passed in checks.items() if not passed]
+          for name, passed in checks.items():
+              print(("PASS" if passed else "FAIL") + " - " + name)
+          if failed:
+              sys.exit(1)
+          PY

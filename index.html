@@ -31,8 +31,8 @@
     #cardStage #keyCardImages{grid-column:1;grid-row:2;justify-self:center;margin:0 auto}
     .mana-absorption{position:relative;width:min(100%,440px);height:208px;display:grid;place-items:center;isolation:isolate;overflow:visible}
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
-    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
-    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
+    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 2.85s linear both}
+    .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 2.85s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
     /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
     .drawing-card.deck-civ-colored{
@@ -301,21 +301,7 @@
       .mana-absorption:before,.mana-absorption:after{width:142px!important;height:142px!important;}
     }
 
-    /* 透過WebM開封カットイン。動画未配置・再生失敗時は既存CSS演出へ戻す */
-    #caseOpeningVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:30;display:none;pointer-events:none;background:transparent;}
-    #drawingCard.video-opening #caseOpeningVideo{display:block;}
-    #drawingCard.video-opening .deck-case{visibility:hidden!important;}
-    /* WebM終了後もCSS製ケースを再表示しない */
-    #drawingCard.video-finished .deck-case{display:none!important;visibility:hidden!important;}
-    /* WebM終了後に残る暗いカットイン背景も消し、演出領域を透明化 */
-    #drawingCard.video-finished{display:none!important;background:transparent!important;border:0!important;box-shadow:none!important;filter:none!important;opacity:0!important;visibility:hidden!important;}
-    #drawingCard.video-finished:before,#drawingCard.video-finished:after{display:none!important;content:none!important;}
-    #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
-    #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
-    #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
-    /* 動画終了から当選カード表示まで、演出用の空白領域も畳んで黒い帯を残さない */
-    #cardStage.opening-cleanup{grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;background:transparent!important;}
-    #cardStage.opening-cleanup #drawingCard{display:none!important;width:0!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;}
+    /* 開封カットインはCSSで描画。ケース本体を非表示にする動画レイヤーは使用しない。 */
 
     /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
     #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important;}
@@ -363,8 +349,7 @@
     #cardStage:not(.hidden){display:grid!important;}
     .roulette-panel{padding-top:8px!important;}
     #spinButton{margin-top:0!important;}
-    /* A full-screen whiteout bridges the rendered WebM into the live result UI. */
-    #caseOpeningVideo{object-fit:cover!important;}
+    /* 白いフラッシュで開封から当選結果へつなぐ。 */
     #revealFlash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;visibility:hidden;pointer-events:none;}
     #revealFlash.active{visibility:visible;animation:rouletteWhiteout 1.18s cubic-bezier(.16,.72,.18,1) both;}
     @keyframes rouletteWhiteout{0%{opacity:1}18%{opacity:1}100%{opacity:0}}
@@ -417,8 +402,6 @@
       border-radius:0!important;overflow:visible!important;
     }
     #drawingCard.opening-cutin{background:#fff!important}
-    #drawingCard.video-opening{background:#fff!important}
-    #caseOpeningVideo{background:#fff!important;object-fit:contain!important}
     #drawingCard.opening-cutin .deck-case,
     .deck-case.treasure-open{
       width:244px!important;height:198px!important;
@@ -452,6 +435,199 @@
       .deck-name-title{padding:7px 12px 8px}
     }
 
+    
+    /* ===== Milky case gacha: unified case + high-impact reveal ===== */
+    /* 初期表示と開封カットインは、同じ実寸・同じ視点・同じ材質を維持する。 */
+    .deck-case,
+    #drawingCard.opening-cutin .deck-case {
+      width:190px!important;
+      height:154px!important;
+      top:50%!important;
+      transform:translate(-50%,-50%) perspective(900px) rotateX(9deg) rotateY(-4deg) scale(1)!important;
+      filter:drop-shadow(0 13px 16px rgba(91,111,101,.2))!important;
+    }
+    #drawingCard.mana-absorption.opening-cutin {
+      background:#fff!important;
+      border:0!important;
+      border-radius:0!important;
+      box-shadow:none!important;
+      overflow:visible!important;
+    }
+    #drawingCard.opening-cutin:before,
+    #drawingCard.opening-cutin:after {display:none!important;content:none!important}
+    #drawingCard.opening-cutin .mana-orb,
+    #drawingCard.opening-cutin .drawing-card {display:none!important}
+    .case-rays {
+      position:absolute;
+      z-index:5;
+      left:-105px;
+      right:-105px;
+      top:-104px;
+      height:270px;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(18px) scale(.35);
+      transform-origin:50% 58%;
+      background:
+        repeating-conic-gradient(from -8deg at 50% 58%,
+          rgba(255,255,255,0) 0deg 7deg,
+          rgba(255,255,255,.94) 7.4deg 8.4deg,
+          rgba(255,226,151,.72) 8.8deg 9.5deg,
+          rgba(255,255,255,0) 10deg 16deg);
+      filter:blur(5px) drop-shadow(0 0 13px rgba(255,220,139,.9));
+      -webkit-mask-image:radial-gradient(ellipse at 50% 58%,#000 0%,rgba(0,0,0,.88) 35%,transparent 76%);
+      mask-image:radial-gradient(ellipse at 50% 58%,#000 0%,rgba(0,0,0,.88) 35%,transparent 76%);
+    }
+    .deck-case.opening .case-rays,
+    #drawingCard.case-blast .case-rays {
+      animation:caseRaysBlast .86s cubic-bezier(.12,.78,.18,1) both;
+    }
+    @keyframes caseRaysBlast {
+      0%{opacity:0;transform:translateY(28px) scale(.24) rotate(-5deg)}
+      18%{opacity:1}
+      48%{opacity:.96;transform:translateY(-18px) scale(1.08) rotate(2deg)}
+      100%{opacity:.08;transform:translateY(-62px) scale(1.42) rotate(5deg)}
+    }
+    .deck-case.opening .case-lid {
+      animation:milkyLidSnap .72s cubic-bezier(.12,.82,.16,1) both!important;
+    }
+    @keyframes milkyLidSnap {
+      0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
+      12%{transform:rotateX(-10deg) translateZ(2px);filter:brightness(1.3)}
+      38%{transform:rotateX(-72deg) translateZ(10px);filter:brightness(1.8)}
+      68%{transform:rotateX(-132deg) translateZ(18px);filter:brightness(2.5)}
+      100%{transform:rotateX(-148deg) translateZ(22px);filter:brightness(1.75)}
+    }
+    .deck-case.opening .case-body {
+      animation:milkyCaseKick .48s cubic-bezier(.16,.82,.2,1) both!important;
+    }
+    @keyframes milkyCaseKick {
+      0%{transform:translateY(0) scale(1)}
+      25%{transform:translateY(5px) scale(.96,1.04)}
+      58%{transform:translateY(-3px) scale(1.025,.985)}
+      100%{transform:translateY(0) scale(1)}
+    }
+    .deck-case.opening .case-light {
+      animation:milkyCoreBurst .82s cubic-bezier(.12,.78,.18,1) .02s both!important;
+    }
+    @keyframes milkyCoreBurst {
+      0%{opacity:.12;transform:translate(-50%,-50%) scale(.22)}
+      24%{opacity:1;transform:translate(-50%,-50%) scale(1.45)}
+      62%{opacity:.98;transform:translate(-50%,-50%) scale(2.15)}
+      100%{opacity:.35;transform:translate(-50%,-50%) scale(2.65)}
+    }
+    .deck-case.opening .case-cavity {
+      animation:milkyCavityFlash .78s ease-out both!important;
+    }
+    @keyframes milkyCavityFlash {
+      0%{background:linear-gradient(180deg,rgba(195,208,199,.66),rgba(230,238,233,.82) 60%,rgba(183,200,189,.68));box-shadow:inset 0 0 10px rgba(255,255,255,.5)}
+      35%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf3 35%,#ffe8a7 66%,rgba(255,255,255,.5) 100%);box-shadow:inset 0 0 34px #fff,inset 0 0 70px #ffe7a6,0 0 36px rgba(255,220,145,.95)}
+      100%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf5 42%,#fff0c6 72%,rgba(255,255,255,.72) 100%);box-shadow:inset 0 0 38px #fff,inset 0 0 78px #ffe7a6,0 0 42px rgba(255,220,145,.9)}
+    }
+    .deck-case.opening .case-burst {animation:ruptureWave .72s cubic-bezier(.12,.72,.18,1) both}
+    #revealFlash.active {animation:rouletteWhiteout .78s cubic-bezier(.16,.72,.18,1) both!important}
+    @media(max-width:480px) {
+      .deck-case,
+      #drawingCard.opening-cutin .deck-case {
+        width:176px!important;
+        height:144px!important;
+      }
+      .case-rays {left:-92px;right:-92px;top:-92px;height:245px}
+    }
+
+    /* 当選発表：デッキ名を主役にした金属光沢・立体文字・衝撃波 */
+    #result.has-result {
+      position:relative!important;
+      isolation:isolate;
+      gap:8px!important;
+      margin:15px auto 7px!important;
+      padding:13px 8px 15px!important;
+    }
+    #result.has-result:before {
+      content:"";
+      position:absolute;
+      z-index:-1;
+      inset:-12px 3%;
+      border-radius:22px;
+      background:radial-gradient(ellipse at center,rgba(255,224,145,.34),rgba(255,255,255,0) 72%);
+      pointer-events:none;
+    }
+    #result.result-reveal:after {
+      content:"";
+      position:absolute;
+      z-index:-1;
+      left:50%;top:50%;
+      width:min(92vw,560px);
+      aspect-ratio:1;
+      border:2px solid rgba(255,205,92,.78);
+      border-radius:50%;
+      box-shadow:0 0 22px rgba(255,205,92,.65),inset 0 0 24px rgba(255,205,92,.28);
+      transform:translate(-50%,-50%) scale(.12);
+      animation:resultShockwave .82s cubic-bezier(.12,.72,.18,1) both;
+      pointer-events:none;
+    }
+    @keyframes resultShockwave {
+      0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}
+      18%{opacity:1}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(1.12)}
+    }
+    .result-eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#8c6823!important;
+      font-size:.72rem!important;
+      font-weight:950!important;
+      letter-spacing:.24em!important;
+      text-shadow:0 1px 0 #fff!important;
+    }
+    .result-eyebrow:before,
+    .result-eyebrow:after {
+      content:"";
+      display:block;
+      width:clamp(22px,7vw,54px);
+      height:1px;
+      background:linear-gradient(90deg,transparent,#d7a947);
+    }
+    .result-eyebrow:after {transform:scaleX(-1)}
+    .deck-name-title {
+      position:relative;
+      padding:11px clamp(16px,4vw,30px) 13px!important;
+      border:1px solid rgba(255,255,255,.96)!important;
+      border-radius:14px!important;
+      color:#fff!important;
+      font-size:clamp(1.35rem,5.2vw,2.25rem)!important;
+      font-weight:1000!important;
+      letter-spacing:.075em!important;
+      line-height:1.22!important;
+      background:linear-gradient(110deg,#76501b 0%,#d5a33d 17%,#fff1b7 34%,#bd8527 53%,#ffe9a1 72%,#80571e 100%)!important;
+      background-size:220% 100%!important;
+      -webkit-background-clip:text!important;
+      background-clip:text!important;
+      -webkit-text-fill-color:transparent!important;
+      text-shadow:0 2px 0 rgba(117,78,20,.16),0 0 18px rgba(255,197,69,.46)!important;
+      filter:drop-shadow(0 5px 0 rgba(130,91,27,.16)) drop-shadow(0 0 15px rgba(255,196,72,.45));
+      animation:deckTitleShine 2.4s ease-in-out .45s both;
+    }
+    .deck-name-title:before {
+      content:"";
+      position:absolute;
+      inset:-5px;
+      z-index:-1;
+      border-radius:17px;
+      background:linear-gradient(115deg,rgba(255,255,255,.98),rgba(255,220,137,.76),rgba(255,255,255,.96));
+      box-shadow:0 0 0 1px rgba(210,163,69,.55),0 8px 26px rgba(190,143,51,.22),inset 0 1px 0 #fff;
+    }
+    @keyframes deckTitleShine {
+      0%{background-position:100% 0;transform:translateY(18px) scale(.72);opacity:0}
+      58%{background-position:20% 0;transform:translateY(-3px) scale(1.1);opacity:1}
+      100%{background-position:0 0;transform:translateY(0) scale(1);opacity:1}
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .case-rays,.deck-case.opening .case-lid,.deck-case.opening .case-body,
+      .deck-case.opening .case-light,.deck-case.opening .case-cavity,
+      #result.result-reveal:after,.deck-name-title {animation-duration:.01ms!important;animation-iteration-count:1!important}
+    }
   </style>
 </head>
 <body>
@@ -474,11 +650,9 @@
             <div class="case-lid"><div class="case-lid-inner"></div></div>
             <div class="case-lock"></div>
             <div class="case-light"></div>
+            <div class="case-rays" aria-hidden="true"></div>
             <div class="case-burst"></div>
           </div>
-          <video id="caseOpeningVideo" preload="auto" muted playsinline aria-hidden="true">
-            <source src="case-opening.webm?v=milky-white-case-20261101" type="video/webm">
-          </video>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
           <img class="mana-orb nature" src="icons/nature.png" alt="" aria-hidden="true">
@@ -513,7 +687,6 @@
     const deckListElement = document.getElementById("deckList");
     const drawingCard = document.getElementById("drawingCard");
     const deckCase = document.getElementById("deckCase");
-    const caseOpeningVideo = document.getElementById("caseOpeningVideo");
     const revealFlashElement = document.getElementById("revealFlash");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
@@ -637,14 +810,7 @@
       drawingCard.style.removeProperty("opacity");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
-      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished");
-      if (caseOpeningVideo) {
-        caseOpeningVideo.pause();
-        caseOpeningVideo.style.removeProperty("display");
-        caseOpeningVideo.style.removeProperty("visibility");
-        caseOpeningVideo.style.removeProperty("opacity");
-        caseOpeningVideo.currentTime = 0;
-      }
+      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished", "case-blast");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -671,7 +837,7 @@
       const orbitRadius = Math.max(0, Math.min(drawingCard.clientWidth, drawingCard.clientHeight) / 2 - iconRadius - 12);
       const orbitRadiusX = orbitRadius;
       const orbitRadiusY = orbitRadius;
-      const duration = 3900;
+      const duration = 2850;
       const turns = 2.35;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
       const canvas = document.createElement("canvas");
@@ -767,7 +933,7 @@
         if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
       trailFrame = requestAnimationFrame(drawTrails);
-      await sleep(3500);
+      await sleep(2850);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
 
@@ -784,6 +950,26 @@
         icon.style.transform = "translate(0,0) scale(.7)";
       });
       // 抽選結果が確定するまではケースを閉じたままにし、開いたまま待つ時間を作らない。
+    }
+
+    // 同じデッキケースを使い、蓋の解放と光の噴出を短いテンポで連結する。
+    async function playCaseOpeningSequence() {
+      drawingCard.classList.add("opening-cutin");
+      void drawingCard.offsetWidth;
+      await sleep(220);
+      deckCase.classList.add("pressure");
+      await sleep(380);
+      deckCase.classList.remove("pressure");
+      deckCase.classList.add("opening");
+      drawingCard.classList.add("case-blast");
+      await sleep(300);
+      revealFlashElement.classList.remove("active");
+      void revealFlashElement.offsetWidth;
+      revealFlashElement.classList.add("active");
+      await sleep(720);
+      revealFlashElement.classList.remove("active");
+      drawingCard.classList.remove("case-blast");
+      // 蓋は開いた状態を保ち、キーカード射出の直後にケースを退場させる。
     }
 
     function createParticles() {
@@ -967,90 +1153,10 @@
         );
         await playManaSequence();
 
-        // WebMの実写風3D開封映像。CSSケースへの代替再生は行わない。
-        const openingSequence = (async () => {
-          drawingCard.classList.add("treasure-scene", "opening-cutin", "video-opening");
-          void drawingCard.offsetWidth;
-          if (!caseOpeningVideo) throw new Error("開封動画のvideo要素が見つかりません。");
-          caseOpeningVideo.pause();
-          try { caseOpeningVideo.currentTime = 0; } catch (_) {}
-
-          await new Promise((resolve, reject) => {
-            let settled = false;
-            let timeoutId;
-            const cleanup = () => {
-              caseOpeningVideo.removeEventListener("canplay", onReady);
-              caseOpeningVideo.removeEventListener("loadeddata", onReady);
-              caseOpeningVideo.removeEventListener("error", onError);
-              clearTimeout(timeoutId);
-            };
-            const finish = (callback, value) => {
-              if (settled) return;
-              settled = true;
-              cleanup();
-              callback(value);
-            };
-            const onReady = () => finish(resolve);
-            const onError = () => finish(reject, new Error(
-              `開封動画を読み込めません（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`
-            ));
-            caseOpeningVideo.addEventListener("canplay", onReady);
-            caseOpeningVideo.addEventListener("loadeddata", onReady);
-            caseOpeningVideo.addEventListener("error", onError);
-            timeoutId = setTimeout(
-              () => finish(reject, new Error("開封動画の読み込みがタイムアウトしました。")),
-              20000
-            );
-            if (caseOpeningVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) finish(resolve);
-            else caseOpeningVideo.load();
-          });
-
-          const endedPromise = new Promise((resolve, reject) => {
-            let settled = false;
-            let timeoutId;
-            const cleanup = () => {
-              caseOpeningVideo.removeEventListener("ended", onEnded);
-              caseOpeningVideo.removeEventListener("error", onError);
-              clearTimeout(timeoutId);
-            };
-            const finish = (callback, value) => {
-              if (settled) return;
-              settled = true;
-              cleanup();
-              callback(value);
-            };
-            const revealWhiteout = () => {
-              caseOpeningVideo.pause();
-              caseOpeningVideo.style.setProperty("display", "none", "important");
-              caseOpeningVideo.style.setProperty("visibility", "hidden", "important");
-              caseOpeningVideo.style.setProperty("opacity", "0", "important");
-              drawingCard.classList.add("video-finished");
-              drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
-              // ここでは演出行を畳まない。白い光の裏で結果素材を準備する。
-              cardStage.classList.add("reveal-hold");
-              revealFlashElement.classList.remove("active");
-              void revealFlashElement.offsetWidth;
-              revealFlashElement.classList.add("active");
-              finish(resolve);
-            };
-            const onEnded = () => revealWhiteout();
-            const onError = () => finish(reject, new Error(
-              `開封動画の再生中にエラーが発生しました（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`
-            ));
-            caseOpeningVideo.addEventListener("ended", onEnded);
-            caseOpeningVideo.addEventListener("error", onError);
-            timeoutId = setTimeout(
-              () => finish(reject, new Error("開封動画が時間内に終了しませんでした。")),
-              30000
-            );
-          });
-
-          await caseOpeningVideo.play();
-          await endedPromise;
-        })();
+        // 初期画面と同じ乳白色ケースを、そのままCSSアニメーションで開封する。
+        await playCaseOpeningSequence();
 
         const outcome = await drawResult;
-        await openingSequence;
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
