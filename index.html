@@ -313,6 +313,9 @@
     #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
     #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
     #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
+    /* 動画終了から当選カード表示まで、演出用の空白領域も畳んで黒い帯を残さない */
+    #cardStage.opening-cleanup{grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;background:transparent!important;}
+    #cardStage.opening-cleanup #drawingCard{display:none!important;width:0!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;}
 
     /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
     #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important;}
@@ -528,7 +531,7 @@
     }
 
     function showDrawingCard() {
-      cardStage.classList.remove("hidden", "winner", "absorption-burst");
+      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.style.removeProperty("display");
@@ -962,6 +965,7 @@
           drawingCard.style.setProperty("display", "none", "important");
           drawingCard.style.setProperty("visibility", "hidden", "important");
           drawingCard.style.setProperty("opacity", "0", "important");
+          cardStage.classList.add("opening-cleanup");
           await sleep(120);
         })();
 
