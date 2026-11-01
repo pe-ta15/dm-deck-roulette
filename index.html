@@ -1407,13 +1407,8 @@
     .result-civilizations {
       display:flex!important;width:min(100%,300px)!important;height:9px!important;gap:3px!important;
       padding:2px!important;overflow:hidden!important;border:1px solid rgba(142,125,91,.28)!important;
-      border-radius:999px!important;background:rgba(87,72,42,.08)!important;
-      box-shadow:inset 0 1px 2px rgba(80,64,35,.12),0 1px 0 #fff!important;
-    }
-    .result-civ-segment {
-      display:block!important;flex:1 1 0!important;min-width:0!important;height:100%!important;
-      border-radius:999px!important;background:var(--civ-color)!important;
-      box-shadow:0 0 8px color-mix(in srgb,var(--civ-color) 52%,transparent)!important;
+      border-radius:999px!important;background:var(--civ-gradient,linear-gradient(90deg,#e53935,#168bd2,#299b45,#f2c600,#743c9b))!important;
+      box-shadow:inset 0 1px 2px rgba(80,64,35,.12),0 1px 0 #fff,0 0 12px rgba(188,164,112,.16)!important;
     }
     @media(max-width:480px) {
       .deck-case,#drawingCard.opening-cutin .deck-case,.deck-case.treasure-open {width:158px!important;height:204px!important}
@@ -1997,13 +1992,13 @@
         resultCivs.setAttribute("aria-label", "使用文明");
         const civColors = { fire:"#e53935", water:"#168bd2", nature:"#299b45", light:"#f2c600", darkness:"#743c9b", zero:"#aab4c1" };
         const civilizations = getDeckCivilizations(deck);
-        civilizations.forEach(civ => {
-          const segment = document.createElement("span");
-          segment.className = "result-civ-segment";
-          segment.style.setProperty("--civ-color", civColors[civ] || "#aab4c1");
-          resultCivs.appendChild(segment);
-        });
-        resultCivs.style.setProperty("--civ-count", String(civilizations.length || 1));
+        if (civilizations.length) {
+          const stops = civilizations.map((civ, index) => {
+            const position = civilizations.length === 1 ? 50 : (index / (civilizations.length - 1)) * 100;
+            return `${civColors[civ] || "#aab4c1"} ${position}%`;
+          });
+          resultCivs.style.setProperty("--civ-gradient", `linear-gradient(90deg, ${stops.join(", ")})`);
+        }
         resultElement.append(resultEyebrow, resultTitle);
         if (resultCivs.childElementCount) resultElement.appendChild(resultCivs);
         resultElement.classList.add("has-result");
