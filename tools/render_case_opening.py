@@ -161,12 +161,6 @@ for frame, exposure in [(1,0.0),(78,0.0),(84,1.1),(89,3.0),(93,5.0),(96,5.0)]:
     scene.view_settings.exposure=exposure
     scene.view_settings.keyframe_insert(data_path="exposure",frame=frame)
 
-# Gentle ease curves, no stepped interpolation.
-for obj in scene.objects:
-    if obj.animation_data and obj.animation_data.action:
-        for fc in obj.animation_data.action.fcurves:
-            for key in fc.keyframe_points:
-                key.interpolation="BEZIER"
 scene.frame_start=1
 scene.frame_end=FRAMES
 scene.render.image_settings.color_mode="RGB"
