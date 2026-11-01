@@ -1,106 +1,184 @@
-from PIL import Image, ImageDraw, ImageFilter
-import math, random, subprocess, os
+import bpy
+import math
+from mathutils import Vector
 
-W,H,FPS,DUR = 960,540,30,3.6
-OUT = "case-opening.webm"
-random.seed(17)
-particles = [(random.uniform(0.2,3.1), random.uniform(-1,1), random.uniform(-1,1), random.uniform(1.2,4.0), random.uniform(0.5,1.0)) for _ in range(150)]
-frames = "frames"
-os.makedirs(frames, exist_ok=True)
+# Photorealistic, unbranded trading-card deck case opening.
+# Rendered headlessly by Blender; final encode is VP8/WebM for browser compatibility.
+W, H, FPS, FRAMES = 1280, 720, 24, 96
+OUT = "/tmp/case-opening-frames/frame_"
+import os
+os.makedirs("/tmp/case-opening-frames", exist_ok=True)
 
-def ease(x):
-    x=max(0,min(1,x)); return x*x*(3-2*x)
-def mix(a,b,t): return a+(b-a)*t
-def polygon(draw, pts, fill, outline=None, width=1):
-    draw.polygon(pts, fill=fill)
-    if outline: draw.line(pts+[pts[0]], fill=outline, width=width, joint="curve")
+bpy.ops.object.select_all(action="SELECT")
+bpy.ops.object.delete(use_global=False)
+scene=bpy.context.scene
+scene.render.engine="BLENDER_EEVEE_NEXT" if hasattr(scene, "eevee") else "BLENDER_EEVEE"
+scene.eevee.taa_render_samples=64 if hasattr(scene, "eevee") else 64
+scene.render.resolution_x=W
+scene.render.resolution_y=H
+scene.render.resolution_percentage=100
+scene.render.fps=FPS
+scene.render.image_settings.file_format="PNG"
+scene.render.film_transparent=False
+scene.view_settings.view_transform="AgX"
+scene.world.color=(0.006,0.009,0.016)
+scene.world.use_nodes=True
+scene.world.node_tree.nodes["Background"].inputs["Color"].default_value=(0.006,0.009,0.016,1)
+scene.world.node_tree.nodes["Background"].inputs["Strength"].default_value=0.28
 
-for fi in range(int(FPS*DUR)):
-    t=fi/FPS
-    im=Image.new("RGB",(W,H))
-    px=im.load()
-    pulse=0.5+0.5*math.sin(t*7)
-    for y in range(H):
-        for x in range(W):
-            r=((x-W/2)/(W*.72))**2+((y-H/2)/(H*.78))**2
-            vign=max(0,1-r)
-            glow=max(0,1-math.sqrt(((x-W/2)/(W*.48))**2+((y-H*.48)/(H*.58))**2))
-            px[x,y]=(int(3+9*vign+5*glow),int(5+17*vign+24*glow),int(13+32*vign+53*glow))
-    d=ImageDraw.Draw(im,"RGBA")
-    # atmospheric rays after the case arrives
-    arrival=ease((t-.15)/.55)
-    flash=max(0,1-abs(t-2.25)/.42)
-    if t>1.5:
-        for k in range(22):
-            a=k*math.pi/11+t*.14
-            x2=W/2+math.cos(a)*650; y2=H/2+math.sin(a)*650
-            d.line((W/2,H/2,x2,y2),fill=(40,170,255,int(22*flash)),width=2)
-    # floor reflection
-    d.ellipse((245,390,715,470),fill=(20,110,190,int(28+55*arrival)),outline=(40,180,255,int(30+60*arrival)),width=2)
-    # case body perspective, subtle bob + turn
-    bob=math.sin(t*5)*5
-    cx,cy=W/2,270+bob
-    scale=.72+.28*arrival
-    tilt=math.sin(t*3.3)*.07
-    # construct a premium black deck case with chamfered edges
-    bw,bh=300*scale,178*scale
-    left,right=cx-bw/2,cx+bw/2
-    top,bottom=cy-bh/2,cy+bh/2
-    dx=24*scale; dy=17*scale
-    # rear side / thickness
-    polygon(d,[(left,top),(right,top),(right+dx,top-dy),(left+dx,top-dy)],(29,43,60,255),(105,157,190,255),3)
-    polygon(d,[(right,top),(right+dx,top-dy),(right+dx,bottom-dy),(right,bottom)],(9,17,28,255),(90,137,170,255),3)
-    polygon(d,[(left,top),(left+dx,top-dy),(left+dx,bottom-dy),(left,bottom)],(32,48,66,255),(112,158,190,255),3)
-    polygon(d,[(left,top),(right,top),(right,bottom),(left,bottom)],(13,23,37,255),(139,188,218,255),4)
-    # inset front panel with brushed-metal gradient bands
-    d.rounded_rectangle((left+12*scale,top+12*scale,right-12*scale,bottom-12*scale),radius=int(13*scale),fill=(19,34,51,255),outline=(77,119,151,255),width=max(2,int(3*scale)))
-    d.line((left+22*scale,top+23*scale,right-22*scale,top+23*scale),fill=(180,224,250,95),width=2)
-    # central embossed emblem
-    ex,ey=cx,cy+4*scale
-    d.rounded_rectangle((ex-70*scale,ey-43*scale,ex+70*scale,ey+43*scale),radius=int(12*scale),fill=(8,19,31,255),outline=(70,157,211,255),width=3)
-    d.text((ex-48*scale,ey-19*scale),"DM",font=None,fill=(205,232,250,255),stroke_width=1,stroke_fill=(32,118,176,255))
-    d.text((ex-43*scale,ey+15*scale),"DECK CASE",fill=(112,183,224,255))
-    # metallic corner protectors and latch
-    for xx in (left+12*scale,right-27*scale):
-        for yy in (top+12*scale,bottom-27*scale):
-            d.rounded_rectangle((xx,yy,xx+15*scale,yy+15*scale),radius=3,fill=(122,157,181,255),outline=(220,239,250,220),width=1)
-    d.rounded_rectangle((cx-16*scale,bottom-7*scale,cx+16*scale,bottom+9*scale),radius=4,fill=(158,190,210,255),outline=(235,247,255,255),width=2)
-    # lid swings open upward in second half; stylized hinged trapezoid
-    lid=ease((t-1.15)/.72)
-    lid_h=88*scale*(1-lid*.68)
-    if lid<.995:
-        ly=top-8*scale-lid_h
-        polygon(d,[(left+5*scale,top+4*scale),(right-5*scale,top+4*scale),(right-5*scale,ly),(left+5*scale,ly)],(24,43,62,245),(130,194,228,255),4)
-        polygon(d,[(left+5*scale,ly),(right-5*scale,ly),(right+dx-5*scale,ly-14*scale),(left+dx-5*scale,ly-14*scale)],(68,105,133,255),(180,220,245,255),2)
-        d.line((left+20*scale,ly+10*scale,right-20*scale,ly+10*scale),fill=(190,230,255,180),width=3)
-        d.rounded_rectangle((cx-42*scale,ly+24*scale,cx+42*scale,ly+55*scale),radius=5,fill=(9,25,42,255),outline=(74,170,225,255),width=2)
-    # brilliant energy burst and expanding shock rings
-    if t>1.7:
-        p=ease((t-1.7)/.32)
-        radius=20+260*p
-        alpha=int(180*(1-p)*flash)
-        d.ellipse((cx-radius,cy-radius*.52,cx+radius,cy+radius*.52),outline=(105,220,255,alpha),width=5)
-        d.ellipse((cx-radius*.72,cy-radius*.38,cx+radius*.72,cy+radius*.38),outline=(230,250,255,int(alpha*.7)),width=2)
-    # particles stream outward from case
-    for born,nx,ny,size,bright in particles:
-        age=t-born
-        if 0<=age<=1.15:
-            travel=age*150
-            x=cx+nx*travel*2.1
-            y=cy+ny*travel*1.25
-            a=int(220*(1-age/1.15)*bright)
-            rr=max(1,int(size*(1-age/1.15)))
-            d.ellipse((x-rr,y-rr,x+rr,y+rr),fill=(115,220,255,a))
-            if rr>2: d.line((x-nx*rr*4,y-ny*rr*4,x,y),fill=(90,190,255,a//2),width=1)
-    # flash bloom
-    if flash>0:
-        overlay=Image.new("RGBA",(W,H),(80,190,255,int(70*flash)))
-        im=Image.alpha_composite(im.convert("RGBA"),overlay).convert("RGB")
-    # fade down into transparent-looking dark hold for safe video cleanup
-    if t>2.85:
-        f=1-ease((t-2.85)/.65)
-        im=Image.blend(Image.new("RGB",(W,H),(3,5,12)),im,f)
-    im.save(f"{frames}/f{fi:04d}.jpg",quality=91)
+def material(name, color, metallic=0.0, roughness=0.4):
+    m=bpy.data.materials.new(name)
+    m.diffuse_color=(*color,1)
+    m.use_nodes=True
+    bs=m.node_tree.nodes.get("Principled BSDF")
+    bs.inputs["Base Color"].default_value=(*color,1)
+    bs.inputs["Metallic"].default_value=metallic
+    bs.inputs["Roughness"].default_value=roughness
+    return m
 
-subprocess.run(["ffmpeg","-y","-framerate",str(FPS),"-i",f"{frames}/f%04d.jpg","-c:v","libvpx","-b:v","1500k","-crf","10","-deadline","good","-cpu-used","4","-pix_fmt","yuv420p","-an",OUT],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-print(f"Rendered {OUT}")
+def cube(name, loc, scale, mat, bevel=0.04):
+    bpy.ops.mesh.primitive_cube_add(size=1, location=loc)
+    o=bpy.context.object
+    o.name=name
+    o.dimensions=scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    o.data.materials.append(mat)
+    if bevel:
+        mod=o.modifiers.new("Soft manufactured edges","BEVEL")
+        mod.width=bevel
+        mod.segments=5
+        mod.profile=0.5
+        mod2=o.modifiers.new("Weighted corner normals","WEIGHTED_NORMAL")
+    return o
+
+mat_shell=material("Matte charcoal polymer",(0.022,0.029,0.039),0.08,0.29)
+mat_edge=material("Soft-touch edge",(0.045,0.055,0.069),0.12,0.32)
+mat_inner=material("Deep black interior",(0.003,0.005,0.009),0.0,0.52)
+mat_metal=material("Subtle graphite hinge",(0.12,0.145,0.17),0.72,0.24)
+mat_floor=material("Studio floor",(0.009,0.013,0.021),0.12,0.34)
+
+# Studio floor and low, seamless dark environment.
+cube("Studio floor",(0,0,-0.18),(200,200,0.25),mat_floor,0.08)
+
+# Case footprint: approximately 2.55 x 1.72; realistic hard-shell proportions.
+cx, cy = 0.0, 0.0
+base_z=0.13
+width, depth=2.55, 1.72
+wall=0.13
+# Four walls create a visibly hollow storage cavity.
+cube("Case front wall",(0,-depth/2+wall/2,0.55),(width,wall,0.84),mat_shell,0.075)
+cube("Case rear wall",(0,depth/2-wall/2,0.55),(width,wall,0.84),mat_shell,0.075)
+cube("Case left wall",(-width/2+wall/2,0,0.55),(wall,depth-2*wall,0.84),mat_shell,0.075)
+cube("Case right wall",(width/2-wall/2,0,0.55),(wall,depth-2*wall,0.84),mat_shell,0.075)
+cube("Case bottom",(0,0,0.18),(width-0.12,depth-0.12,0.22),mat_shell,0.075)
+cube("Inner padded base",(0,0,0.305),(width-0.36,depth-0.36,0.025),mat_inner,0.025)
+# Thin inner lip around the opening.
+cube("Front inner lip",(0,-depth/2+wall+0.035,0.96),(width-0.22,0.055,0.075),mat_edge,0.018)
+cube("Rear inner lip",(0,depth/2-wall-0.035,0.96),(width-0.22,0.055,0.075),mat_edge,0.018)
+cube("Left inner lip",(-width/2+wall+0.035,0,0.96),(0.055,depth-0.38,0.075),mat_edge,0.018)
+cube("Right inner lip",(width/2-wall-0.035,0,0.96),(0.055,depth-0.38,0.075),mat_edge,0.018)
+
+# Lid is a thick, unmarked, slightly textured single-piece shell.
+hinge=bpy.data.objects.new("Lid hinge pivot",None)
+scene.collection.objects.link(hinge)
+hinge.location=(0,depth/2-0.02,1.015)
+lid=cube("Plain hinged lid",(0,0,0),(width+0.04,depth+0.10,0.22),mat_shell,0.085)
+lid.parent=hinge
+lid.location=(0,-depth/2+0.02,0.045)
+lid.rotation_euler=(0,0,0)
+# Inner panel on the lid underside, also plain.
+inner_lid=cube("Lid inner panel",(0,0,0),(width-0.24,depth-0.30,0.035),mat_inner,0.045)
+inner_lid.parent=hinge
+inner_lid.location=(0,-depth/2+0.02,-0.085)
+# Hinge barrel along the rear edge.
+bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=0.075, depth=width-0.28,
+                                    location=(0,depth/2-0.01,1.015), rotation=(0,math.pi/2,0))
+hinge_barrel=bpy.context.object
+hinge_barrel.name="Continuous rear hinge"
+hinge_barrel.data.materials.append(mat_metal)
+bev=hinge_barrel.modifiers.new("Hinge edge bevel","BEVEL"); bev.width=0.018; bev.segments=3
+hinge_barrel.modifiers.new("Hinge normals","WEIGHTED_NORMAL")
+
+# Small unbranded front catch, physically attached to the front face.
+catch=cube("Front magnetic catch",(0,-depth/2-0.012,0.94),(0.34,0.045,0.12),mat_metal,0.035)
+
+# Camera: close three-quarter product view, centered with room for the light bloom.
+bpy.ops.object.camera_add(location=(4.25,-6.8,4.55))
+camera=bpy.context.object
+camera.name="Product camera"
+target=Vector((0,0,0.78))
+camera.rotation_euler=(target-camera.location).to_track_quat("-Z","Y").to_euler()
+camera.data.type="ORTHO"
+camera.data.ortho_scale=6.35
+scene.camera=camera
+camera.data.lens=55
+
+def area(name, loc, power, color, size, target=(0,0,0.5), shape="DISK", size_y=None):
+    bpy.ops.object.light_add(type="AREA", location=loc)
+    l=bpy.context.object; l.name=name
+    l.data.energy=power; l.data.color=color; l.data.shape=shape; l.data.size=size
+    if size_y and hasattr(l.data,"size_y"): l.data.size_y=size_y
+    l.rotation_euler=(Vector(target)-l.location).to_track_quat("-Z","Y").to_euler()
+    return l
+
+area("Large cool softbox",(0,-4.5,6.5),780,(0.73,0.82,1.0),5.0)
+area("Warm edge strip",(4.0,1.5,4.2),1050,(1.0,0.77,0.52),3.2)
+area("Blue rim light",(-4.0,2.2,3.3),1250,(0.38,0.62,1.0),3.0)
+area("Front fill",(1.5,-5.0,2.4),250,(1.0,1.0,1.0),3.5)
+
+# Internal light blooms as the lid releases.
+bpy.ops.object.light_add(type="AREA", location=(0,0,0.78))
+core=bpy.context.object
+core.name="Interior reveal light"
+core.data.energy=0
+core.data.color=(1.0,0.84,0.56)
+core.data.shape="DISK"
+core.data.size=1.0
+core.rotation_euler=(0,0,0)
+core.data.keyframe_insert(data_path="energy",frame=1)
+core.data.energy=0; core.data.keyframe_insert(data_path="energy",frame=39)
+core.data.energy=260; core.data.keyframe_insert(data_path="energy",frame=56)
+core.data.energy=1900; core.data.keyframe_insert(data_path="energy",frame=76)
+core.data.energy=5200; core.data.keyframe_insert(data_path="energy",frame=91)
+core.data.energy=5200; core.data.keyframe_insert(data_path="energy",frame=96)
+
+# Opening animation: subtle settling, latch release, then a decisive hinged swing.
+for frame, angle in [(1,0),(35,0),(40,-0.10),(47,-0.55),(58,-1.42),(69,-2.15),(78,-2.32),(96,-2.32)]:
+    hinge.rotation_euler.x=angle
+    hinge.keyframe_insert(data_path="rotation_euler",frame=frame,index=0)
+# Slight camera push-in during the reveal, then whiteout.
+for frame, scale in [(1,6.55),(34,6.55),(55,6.25),(78,5.95),(90,5.85),(96,5.85)]:
+    camera.data.ortho_scale=scale
+    camera.data.keyframe_insert(data_path="ortho_scale",frame=frame)
+
+# A restrained shake at the instant the catch releases.
+for frame, z in [(1,4.55),(39,4.55),(42,4.51),(45,4.58),(48,4.55),(96,4.55)]:
+    camera.location.z=z
+    camera.keyframe_insert(data_path="location",frame=frame,index=2)
+
+# Whiteout is a camera exposure ramp: the whole rendered image blooms, hiding the cut.
+for frame, exposure in [(1,0.0),(78,0.0),(84,1.1),(89,3.0),(93,5.0),(96,5.0)]:
+    scene.view_settings.exposure=exposure
+    scene.view_settings.keyframe_insert(data_path="exposure",frame=frame)
+
+# Gentle ease curves, no stepped interpolation.
+for obj in scene.objects:
+    if obj.animation_data and obj.animation_data.action:
+        for fc in obj.animation_data.action.fcurves:
+            for key in fc.keyframe_points:
+                key.interpolation="BEZIER"
+scene.frame_start=1
+scene.frame_end=FRAMES
+scene.render.image_settings.color_mode="RGB"
+scene.render.filepath=OUT
+scene.render.resolution_percentage=100
+scene.render.image_settings.file_format="PNG"
+scene.render.use_file_extension=True
+scene.render.film_transparent=False
+scene.render.image_settings.color_depth="8"
+scene.render.resolution_x=W
+scene.render.resolution_y=H
+scene.render.resolution_percentage=100
+scene.frame_set(1)
+bpy.ops.render.render(animation=True)
+print("Rendered 3D deck case frames")
