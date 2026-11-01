@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DMデッキルーレット</title>
   <style>
-    :root{color-scheme:light;--bg:#f5f6f8;--panel:#fff;--accent:#e9b94f;--text:#252a35;--muted:#6f7787;}
+    :root{color-scheme:light;--bg:#f5f6f8;--panel:#fff;--accent:#e9b94f;--text:#252a35;--muted:#6f7787;
+}
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;padding:28px 16px 48px;background:radial-gradient(ellipse at top,#fff 0%,transparent 70%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
     main{width:100%;max-width:850px;margin:0 auto}
@@ -25,16 +26,13 @@
     #result.has-result{min-height:58px;margin:22px 0 18px}
     .result-reveal{animation:resultReveal .75s ease-out both}
     @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
-
     .card-stage{position:relative;width:100%;max-width:620px;min-height:250px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;align-items:center;isolation:isolate}
     #cardStage #drawingCard,#cardStage #keyCardImages{grid-column:1;grid-row:1;justify-self:center;margin:0 auto}
     .mana-absorption{position:relative;width:min(100%,440px);height:300px;display:grid;place-items:center;isolation:isolate;overflow:visible}
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
     .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 3.9s linear both}
     .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 3.9s linear both}
-
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
-
     /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
     .drawing-card.deck-civ-colored{
       border:10px solid transparent;
@@ -51,36 +49,36 @@
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
     .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
     @keyframes cardPulse{from{box-shadow:0 0 16px rgb(109 143 255 / 20%)}to{box-shadow:0 0 36px rgb(109 143 255 / 55%)}}
-
-    /* 実物のトレーディングカード用デッキケース */
-    .deck-case{position:absolute;z-index:6;left:50%;top:50%;width:164px;height:116px;transform:translate(-50%,-50%) perspective(650px) rotateX(7deg);filter:drop-shadow(0 12px 16px rgb(0 0 0 / 35%));pointer-events:none}
-    .deck-case.hidden{display:none}
+    /* 抽選開始から中央に見せておく実物風デッキケース */
+    .drawing-card.case-mode{opacity:0;pointer-events:none;animation:none}
+    .deck-case{position:absolute;z-index:2;left:50%;top:50%;width:164px;height:116px;transform:translate(-50%,-50%) perspective(650px) rotateX(7deg);opacity:.88;filter:drop-shadow(0 10px 14px rgb(0 0 0 / 30%));pointer-events:none;transition:opacity .65s ease,filter .8s ease}
     .case-body{position:absolute;left:5px;right:5px;bottom:0;height:83px;border:2px solid #697386;border-radius:9px 9px 13px 13px;background:linear-gradient(145deg,#414958,#171d29 62%,#30394a);box-shadow:inset 0 2px 5px rgb(255 255 255 / 16%),inset 0 -8px 12px rgb(0 0 0 / 45%);overflow:hidden}
-    .case-front-mark{position:absolute;left:0;right:0;top:33px;color:rgb(229 235 247 / 75%);font-size:8px;font-weight:900;letter-spacing:2px}
+    .case-front-mark{position:absolute;left:0;right:0;top:33px;color:rgb(229 235 247 / 72%);font-size:8px;font-weight:900;letter-spacing:2px}
     .case-seam{position:absolute;left:0;right:0;top:8px;height:2px;background:rgb(255 255 255 / 20%);box-shadow:0 2px 3px #080b12}
     .case-lock{position:absolute;left:50%;top:0;width:20px;height:10px;transform:translateX(-50%);border:1px solid #aeb7c7;border-radius:0 0 5px 5px;background:linear-gradient(#b8c2d1,#4b5669)}
-    .case-glow{position:absolute;inset:0;opacity:0;background:linear-gradient(180deg,transparent,var(--case-civ-light,#dceaff),transparent);mix-blend-mode:screen}
-    .case-lid{position:absolute;z-index:2;left:3px;right:3px;top:4px;height:29px;border:2px solid #8792a5;border-radius:8px 8px 3px 3px;transform-origin:50% 100%;background:linear-gradient(155deg,#687386,#252d3b 65%,#485367);box-shadow:inset 0 2px 4px rgb(255 255 255 / 20%),0 3px 5px rgb(0 0 0 / 35%)}
-    .case-light{position:absolute;z-index:1;left:50%;top:18px;width:130px;height:95px;transform:translateX(-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-light,#b9d8ff) 25%,transparent 72%);filter:blur(8px)}
-    .deck-case.charging .case-glow{opacity:.85;animation:caseGlow .9s ease-in-out infinite alternate}
-    .deck-case.charging .case-light{opacity:.9;animation:caseLight .85s ease-out both}
-    .deck-case.opening .case-lid{animation:caseLidOpen .48s cubic-bezier(.2,.8,.2,1) both}
-    .deck-case.opening .case-light{animation:caseLight .5s ease-out both}
-    @keyframes caseGlow{from{opacity:.2}to{opacity:1}}
-    @keyframes caseLight{0%{opacity:0;transform:translateX(-50%) scale(.2)}55%{opacity:1}100%{opacity:.75;transform:translateX(-50%) scale(1.2)}}
-    @keyframes caseLidOpen{0%{transform:rotateX(0);filter:brightness(1)}100%{transform:rotateX(68deg) translateY(-3px);filter:brightness(1.8)}}
+    .case-glow{position:absolute;inset:0;opacity:0;background:var(--case-civ-gradient,linear-gradient(180deg,transparent,rgba(255,255,255,.8),transparent));mix-blend-mode:screen;transition:opacity 1.5s ease}
+    .case-lid{position:absolute;z-index:2;left:3px;right:3px;top:4px;height:29px;border:2px solid #8792a5;border-radius:8px 8px 3px 3px;transform-origin:50% 100%;background:linear-gradient(155deg,#687386,#252d3b 65%,#485367);box-shadow:inset 0 2px 4px rgb(255 255 255 / 20%),0 3px 5px rgb(0 0 0 / 35%);transition:filter .8s ease}
+    .case-light{position:absolute;z-index:1;left:50%;top:18px;width:130px;height:95px;transform:translateX(-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 35%,transparent 72%);filter:blur(8px)}
+    .deck-case.civ-charging{filter:drop-shadow(0 0 9px var(--case-civ-glow,#fff)) drop-shadow(0 0 24px var(--case-civ-glow,#fff))}
+    .deck-case.civ-charging .case-body{border-color:transparent;background:linear-gradient(145deg,#414958,#171d29 62%,#30394a) padding-box,var(--case-civ-gradient) border-box;box-shadow:inset 0 2px 5px rgb(255 255 255 / 20%),inset 0 -8px 12px rgb(0 0 0 / 45%),0 0 12px var(--case-civ-glow),0 0 28px var(--case-civ-glow);transition:box-shadow 2.2s ease,border-color 2.2s ease}
+    .deck-case.civ-charging .case-glow{opacity:.9}
+    .deck-case.civ-charging .case-light{animation:caseLightIn 1.5s ease-out forwards}
+    .deck-case.opening .case-lid{animation:caseLidOpen .58s cubic-bezier(.2,.8,.2,1) both}
+    .deck-case.opening .case-light{animation:caseLightPeak .55s ease-out both}
+    @keyframes caseLightIn{0%{opacity:0;transform:translateX(-50%) scale(.2)}100%{opacity:.65;transform:translateX(-50%) scale(1.15)}}
+    @keyframes caseLightPeak{0%{opacity:.6;transform:translateX(-50%) scale(1)}45%{opacity:1;transform:translateX(-50%) scale(1.55)}100%{opacity:.8;transform:translateX(-50%) scale(1.3)}}
+    @keyframes caseLidOpen{0%{transform:rotateX(0);filter:brightness(1)}100%{transform:rotateX(72deg) translateY(-4px);filter:brightness(2)}}
 
-    #keyCardImages{perspective:900px}
-    #keyCardImages.case-launch img{animation:caseCardLaunch .72s cubic-bezier(.12,.82,.18,1) both}
-    #keyCardImages.case-launch img:nth-child(2){animation-delay:.08s}
-    #keyCardImages.case-launch img:nth-child(3){animation-delay:.16s}
+    /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
+    #keyCardImages.case-launch img{animation:caseCardLaunch .82s cubic-bezier(.12,.82,.18,1) both}
+    #keyCardImages.case-launch img:nth-child(2){animation-delay:.09s}
+    #keyCardImages.case-launch img:nth-child(3){animation-delay:.18s}
     @keyframes caseCardLaunch{
-      0%{opacity:0;transform:translateY(72px) scale(.34) rotateX(32deg) rotateZ(-5deg);filter:brightness(2.2) drop-shadow(0 0 22px white)}
-      48%{opacity:1;transform:translateY(-22px) scale(1.08) rotateX(-8deg) rotateZ(2deg);filter:brightness(1.65) drop-shadow(0 0 18px var(--case-card-glow,#fff))}
-      72%{transform:translateY(5px) scale(.98) rotateX(3deg) rotateZ(-1deg)}
-      100%{opacity:1;transform:translateY(0) scale(1) rotateX(0) rotateZ(0);filter:brightness(1)}
+      0%{opacity:0;transform:translateY(66px) scale(.28) perspective(900px) rotateX(55deg) rotateZ(-8deg);filter:brightness(2.4) drop-shadow(0 0 24px white)}
+      42%{opacity:1;transform:translateY(-28px) scale(1.1) perspective(900px) rotateX(-12deg) rotateZ(3deg);filter:brightness(1.7) drop-shadow(0 0 22px var(--case-card-glow,#fff))}
+      72%{transform:translateY(6px) scale(.98) perspective(900px) rotateX(4deg) rotateZ(-1deg)}
+      100%{opacity:1;transform:translateY(0) scale(1) perspective(900px) rotateX(0) rotateZ(0);filter:brightness(1)}
     }
-
     #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
     .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:64px;height:64px;margin:-32px;display:block;object-fit:contain;opacity:0;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 18px var(--mana-color));will-change:transform,opacity;pointer-events:none}
     .mana-orb.fire{--mana-color:#e53935}
@@ -107,14 +105,12 @@
     @keyframes stageImpact{0%{transform:scale(1)}24%{transform:scale(1.025)}100%{transform:scale(1)}}
     @keyframes runeSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}}
     @keyframes runeSpinReverse{from{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}to{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}}
-
-    #keyCardImages{position:relative;z-index:1;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
+    #keyCardImages{position:relative;z-index:5;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:12px 0}
     #keyCardImages img{display:block;flex:0 1 auto;width:min(180px,42vw);height:auto;max-height:360px;object-fit:contain;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
     #keyCardImages.revealing img{animation:cardFlipIn .9s cubic-bezier(.2,.75,.25,1) both}
     #keyCardImages.revealing img:nth-child(2){animation-delay:.12s}
     #keyCardImages.revealing img:nth-child(3){animation-delay:.24s}
     @keyframes cardFlipIn{0%{opacity:0;transform:perspective(900px) rotateY(180deg) scale(.72);filter:brightness(.35)}55%{opacity:1;transform:perspective(900px) rotateY(0) scale(1.06);filter:brightness(1.8)}100%{opacity:1;transform:perspective(900px) rotateY(0) scale(1);filter:brightness(1)}}
-
     .card-stage.absorption-burst:before{content:"";position:absolute;z-index:1;left:50%;top:50%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgb(255 255 255 / 80%) 12%,rgb(255 220 100 / 55%) 30%,rgb(110 160 255 / 18%) 58%,transparent 72%);pointer-events:none;animation:absorbFlash .55s ease-out both}
     @keyframes absorbFlash{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}24%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.3)}}
     .card-stage.winner:before{content:"";position:absolute;z-index:0;left:50%;top:50%;width:230px;height:230px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgb(255 246 190 / 80%) 0%,rgb(255 204 74 / 42%) 28%,rgb(255 157 41 / 15%) 55%,transparent 72%);animation:lightBurst 1.1s ease-out both}
@@ -124,25 +120,21 @@
     .particle{position:absolute;z-index:3;width:var(--size,6px);height:var(--size,6px);border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffbdc 0%,#ffd45e 55%,#ff9c2d 100%);box-shadow:0 0 9px 2px rgb(255 213 96 / 75%);animation:particleFly var(--duration,1s) ease-out forwards}
     #result.result-reveal{position:relative;color:#8b5a08;text-shadow:0 0 12px rgb(255 226 143 / 80%),0 0 28px rgb(255 190 65 / 45%)}
     @keyframes particleFly{0%{opacity:0;transform:translate(0,0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
-
     .fallback{width:100%;padding:28px 14px;color:var(--muted);line-height:1.7}
     .deck-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;padding:0;margin:18px 0 0;list-style:none;text-align:left}
     .deck-list li{padding:12px 14px;border:1px solid #e1e4eb;border-radius:10px;background:#f8f9fb;overflow-wrap:anywhere}
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
     @media(max-width:480px){body{padding:22px 12px 36px}.panel{padding:16px 12px}.card-stage{min-height:250px}.mana-absorption{height:250px}.mana-orb{width:48px;height:48px;margin:-24px}#keyCardImages img{width:min(155px,42vw)}}
-
     /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
     .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
     @keyframes revealPending{
       from{transform:translate(-50%,-50%) scale(1.035);filter:brightness(1.22);box-shadow:0 0 24px rgb(255 255 255 / 55%),0 0 42px rgb(130 155 255 / 42%)}
       to{transform:translate(-50%,-50%) scale(1.09);filter:brightness(1.62);box-shadow:0 0 34px rgb(255 255 255 / 82%),0 0 66px rgb(255 210 100 / 62%),0 0 90px rgb(130 155 255 / 35%)}
     }
-
     /* 吸収時に短く画面を揺らす */
     .card-stage.absorption-burst{animation:stageImpact .48s ease-out both}
     @keyframes stageImpact{0%,100%{transform:translateX(0)}18%{transform:translateX(-5px)}36%{transform:translateX(5px)}54%{transform:translateX(-3px)}72%{transform:translateX(2px)} }
-
     /* 周回中は文明色の光を強め、軌道を見やすくする */
     .mana-absorption.charging .drawing-card{box-shadow:0 0 24px rgb(109 143 255 / 42%),0 0 52px rgb(160 133 255 / 28%),inset 0 0 24px rgb(255 255 255 / 25%)}
     .mana-absorption.charging .drawing-card:before{box-shadow:inset 0 0 22px rgb(255 255 255 / 72%),0 0 22px rgb(255 255 255 / 48%)}
@@ -157,8 +149,8 @@
       <div id="result" aria-live="polite"></div>
       <div id="cardStage" class="card-stage hidden">
         <div id="drawingCard" class="mana-absorption hidden" aria-label="5文明の力を吸収して抽選中">
-          <div class="drawing-card"><span class="drawing-label">抽選中</span></div>
-          <div class="deck-case hidden" id="deckCase" aria-hidden="true">
+          <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
+          <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
               <div class="case-front-mark">DUEL MASTERS</div>
               <div class="case-seam"></div>
@@ -191,7 +183,6 @@
       <ul id="deckList" class="deck-list"></ul>
     </section>
   </main>
-
   <script>
     const API_BASE = "https://dm-deck-roulette-api.nabkde16ngh.workers.dev";
 
@@ -200,9 +191,9 @@
     const resultElement = document.getElementById("result");
     const deckListElement = document.getElementById("deckList");
     const drawingCard = document.getElementById("drawingCard");
+    const deckCase = document.getElementById("deckCase");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
-    const deckCase = document.getElementById("deckCase");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
     const settingsElement = document.getElementById("settings");
 
@@ -222,7 +213,6 @@
       const raw = deck?.civilization ?? deck?.civilizations ?? deck?.文明
         ?? property?.multi_select ?? property?.select ?? property?.value ?? property;
       if (raw == null) return [];
-
       let values;
       if (Array.isArray(raw)) values = raw;
       else if (typeof raw === "string") values = raw.split(/[、,，/・]/);
@@ -231,19 +221,15 @@
       else if (typeof raw.name === "string") values = [raw.name];
       else if (typeof raw.value === "string") values = [raw.value];
       else return [];
-
       const aliases = new Map([
         ["火", "fire"], ["火文明", "fire"], ["水", "water"], ["水文明", "water"],
         ["自然", "nature"], ["自然文明", "nature"], ["光", "light"], ["光文明", "light"],
         ["闇", "darkness"], ["闇文明", "darkness"], ["ゼロ", "zero"], ["無色", "zero"],
         ["ゼロ/無色", "zero"], ["ゼロ／無色", "zero"]
       ]);
-
       const found = [];
       for (const value of values) {
-        const name = typeof value === "string"
-          ? value
-          : value?.name ?? value?.title ?? value?.plain_text ?? "";
+        const name = typeof value === "string" ? value : value?.name ?? value?.title ?? value?.plain_text ?? "";
         const key = aliases.get(String(name).trim().replace(/\s/g, ""));
         if (key && !found.includes(key)) found.push(key);
       }
@@ -251,43 +237,29 @@
     }
 
     function applyDeckCivilizationFrame(deck) {
-      const face = drawingCard.querySelector(".drawing-card");
       const palette = {
-        fire: "#e53935",
-        water: "#168bd2",
-        nature: "#299b45",
-        light: "#f2c600",
-        darkness: "#743c9b",
-        zero: "#d9e0eb"
+        fire: "#e53935", water: "#168bd2", nature: "#299b45",
+        light: "#f2c600", darkness: "#743c9b", zero: "#d9e0eb"
       };
-
-      const colors = getDeckCivilizations(deck)
-        .map(key => palette[key])
-        .filter(Boolean);
-
-      face.classList.remove("deck-civ-colored");
-      face.style.removeProperty("--deck-civ-gradient");
-      face.style.removeProperty("--deck-civ-glow");
-
+      const colors = getDeckCivilizations(deck).map(key => palette[key]).filter(Boolean);
+      deckCase.classList.remove("civ-charging");
+      deckCase.style.removeProperty("--case-civ-gradient");
+      deckCase.style.removeProperty("--case-civ-glow");
+      keyCardImages.style.removeProperty("--case-card-glow");
       if (colors.length === 0) return;
 
+      // ケース全体に文明色を連続グラデーションで設定し、CSS transitionで徐々に発光させる。
       const gradient = `linear-gradient(135deg, ${colors.join(", ")})`;
-      face.style.setProperty("--deck-civ-gradient", gradient);
-      face.style.setProperty("--deck-civ-glow", colors[0]);
-      face.classList.add("deck-civ-colored");
-
-      const caseLight = colors.length > 1
-        ? `color-mix(in srgb, ${colors.join(", ")} 55%, white)`
-        : colors[0];
-
-      deckCase.style.setProperty("--case-civ-light", caseLight);
+      deckCase.style.setProperty("--case-civ-gradient", gradient);
+      deckCase.style.setProperty("--case-civ-glow", colors[0]);
       keyCardImages.style.setProperty("--case-card-glow", colors[0]);
+      // 次フレームでクラスを付け、色が瞬時に切り替わらずじわじわ立ち上がるようにする。
+      requestAnimationFrame(() => deckCase.classList.add("civ-charging"));
     }
 
     function getKeyCardImageUrls(deck) {
       const candidates = deck?.keyCards ?? deck?.keyCardImages ?? deck?.key_cards ?? deck?.images ?? [];
       if (!Array.isArray(candidates)) return [];
-
       return candidates.map(item => {
         if (typeof item === "string") return item;
         return item?.url ?? item?.imageUrl ?? item?.image_url ?? item?.src ?? item?.["イメージ"] ?? null;
@@ -329,17 +301,18 @@
       cardStage.classList.remove("hidden", "winner", "absorption-burst");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
-
       drawingCard.classList.remove("hidden", "charging", "absorbing");
-
-      deckCase.classList.add("hidden");
-      deckCase.classList.remove("charging", "opening");
-
+      deckCase.classList.remove("opening", "civ-charging");
+      deckCase.style.removeProperty("opacity");
+      deckCase.style.removeProperty("transform");
+      deckCase.style.removeProperty("transition");
+      deckCase.style.removeProperty("--case-civ-gradient");
+      deckCase.style.removeProperty("--case-civ-glow");
+      deckCase.querySelector(".case-lid").style.removeProperty("transform");
       const drawingFace = drawingCard.querySelector(".drawing-card");
       drawingFace.classList.remove("deck-civ-colored", "reveal-pending");
       drawingFace.style.removeProperty("--deck-civ-gradient");
       drawingFace.style.removeProperty("--deck-civ-glow");
-
       drawingCard.querySelectorAll(".mana-orb").forEach(icon => {
         icon.getAnimations().forEach(animation => animation.cancel());
         icon.style.opacity = "0";
@@ -354,15 +327,12 @@
       const duration = 3900;
       const turns = 2.35;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
-
       const canvas = document.createElement("canvas");
       canvas.id = "manaTrailCanvas";
       drawingCard.appendChild(canvas);
-
       const ctx = canvas.getContext("2d");
       const rect = drawingCard.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
       ctx.scale(dpr, dpr);
@@ -372,7 +342,6 @@
         const easedTurn = turns * (0.20 * t + 0.80 * t * t);
         const angle = startAngle + Math.PI * 2 * easedTurn;
         const r = radius * Math.pow(1 - t, 0.88);
-
         return {
           x: rect.width / 2 + Math.cos(angle) * r,
           y: rect.height / 2 + Math.sin(angle) * r
@@ -380,140 +349,94 @@
       };
 
       drawingCard.classList.add("charging");
-
       const animations = icons.map((icon, index) => {
         const frames = [];
         const steps = 120;
-
         for (let step = 0; step <= steps; step++) {
           const t = step / steps;
           const point = pointAt(index, t);
           const scale = 0.88 + 0.18 * t;
           const opacity = Math.min(1, t / 0.10) * Math.min(1, (1 - t) / 0.045);
-
           frames.push({
             transform: `translate(${point.x - rect.width / 2}px, ${point.y - rect.height / 2}px) scale(${scale})`,
             opacity: Math.max(0, opacity),
             offset: t
           });
         }
-
-        return icon.animate(frames, {
-          duration,
-          easing: "linear",
-          fill: "forwards"
-        });
+        return icon.animate(frames, { duration, easing: "linear", fill: "forwards" });
       });
 
-      // 旋回中は短命の光粒子を放出。線で軌道を結ばず、粒子だけで表現する。
+      // 旋回中は短命の光粒子、終盤は幅のあるエネルギー波、
+      // 吸収時は五文明色がカード中心に集まる光を描画する。
+      // 線で軌道を結ばず、粒子やぼかした光だけで表現する。
       const startTime = performance.now();
       const particles = [];
       let lastEmission = 0;
       let trailFrame;
-
       const rand = (min, max) => min + Math.random() * (max - min);
-
       const drawTrails = now => {
         const t = Math.min(1, (now - startTime) / duration);
         const dt = Math.min(0.04, (now - (drawTrails.lastTime || now)) / 1000);
         drawTrails.lastTime = now;
-
         ctx.clearRect(0, 0, rect.width, rect.height);
 
+        // ① 旋回中：アイコンの周囲から小さな粒子を控えめに放出
         if (t < 0.70 && now - lastEmission > 42) {
           lastEmission = now;
-
           icons.forEach((icon, index) => {
             const point = pointAt(index, t);
             const tangent = pointAt(index, Math.max(0, t - 0.012));
             const angle = Math.atan2(point.y - tangent.y, point.x - tangent.x);
             const count = t < 0.28 ? 1 : 2;
-
             for (let n = 0; n < count; n++) {
               const spread = angle + Math.PI + rand(-0.9, 0.9);
-
               particles.push({
-                x: point.x + rand(-7, 7),
-                y: point.y + rand(-7, 7),
+                x: point.x + rand(-7, 7), y: point.y + rand(-7, 7),
                 vx: Math.cos(spread) * rand(10, 34),
                 vy: Math.sin(spread) * rand(10, 34),
-                life: 0,
-                maxLife: rand(0.28, 0.55),
-                size: rand(1.2, 3.2),
-                color: colors[index]
+                life: 0, maxLife: rand(0.28, 0.55),
+                size: rand(1.2, 3.2), color: colors[index]
               });
             }
           });
         }
-
         for (let i = particles.length - 1; i >= 0; i--) {
           const p = particles[i];
-          p.life += dt;
-          p.x += p.vx * dt;
-          p.y += p.vy * dt;
-
+          p.life += dt; p.x += p.vx * dt; p.y += p.vy * dt;
           const alpha = Math.max(0, 1 - p.life / p.maxLife);
-
-          if (alpha <= 0) {
-            particles.splice(i, 1);
-            continue;
-          }
-
+          if (alpha <= 0) { particles.splice(i, 1); continue; }
           ctx.save();
           ctx.globalAlpha = alpha * 0.82;
           ctx.fillStyle = p.color;
-          ctx.shadowColor = p.color;
-          ctx.shadowBlur = 9;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.shadowColor = p.color; ctx.shadowBlur = 9;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2); ctx.fill();
           ctx.restore();
         }
 
-        if (t < 1) {
-          trailFrame = requestAnimationFrame(drawTrails);
-        }
+        // ②・③の控えめで差が分かりにくかった光の波／中心集中表現は廃止。
+        // 粒子の演出から、抽選結果の文明色をまとったカード縁の発光へつなぐ。
+        if (t < 1) trailFrame = requestAnimationFrame(drawTrails);
       };
-
       trailFrame = requestAnimationFrame(drawTrails);
-
       await sleep(3500);
       drawingCard.classList.add("absorbing");
       cardStage.classList.add("absorption-burst");
 
       await Promise.all(animations.map(animation => animation.finished));
-
       if (trailFrame) cancelAnimationFrame(trailFrame);
-
       ctx.clearRect(0, 0, rect.width, rect.height);
       canvas.remove();
-
-      // 五文明アイコンが完全に吸収された後、デッキケースにエネルギーを集める。
-      const drawingFace = drawingCard.querySelector(".drawing-card");
-      drawingFace.classList.add("hidden");
-
-      deckCase.classList.remove("hidden");
-      deckCase.classList.add("charging");
-
+      // アイコンはケースの中心まで渦を巻いて吸収。ケース側の光が強まり、蓋が開く。
+      await sleep(180);
       drawingCard.classList.remove("charging", "absorbing");
-
-      await sleep(520);
-
-      deckCase.classList.add("opening");
-      await sleep(430);
-
-      cardStage.classList.add("absorption-burst");
-      createParticles();
-
-      await sleep(260);
-
-      deckCase.classList.remove("charging");
       cardStage.classList.remove("absorption-burst");
-
       icons.forEach(icon => {
         icon.style.opacity = "0";
         icon.style.transform = "translate(0,0) scale(.7)";
       });
+      deckCase.classList.add("opening");
+      createParticles();
+      await sleep(520);
     }
 
     function createParticles() {
@@ -542,11 +465,7 @@
     }
 
     async function showKeyCards(deck) {
-      drawingCard.classList.add("hidden");
-
-      deckCase.classList.remove("charging", "opening");
-      deckCase.classList.add("hidden");
-
+      // ケースを残したままカードを重ね、飛び出し始めてからケースを退場させる。
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
 
@@ -584,13 +503,16 @@
 
         void keyCardImages.offsetWidth;
         keyCardImages.classList.add("case-launch");
-        keyCardImages.classList.add("revealing");
       }
 
+      // カードがケースから飛び出した後、ケースを奥へ退かせてカードを主役にする。
+      deckCase.classList.remove("opening");
+      deckCase.style.transition = "opacity .35s ease, transform .5s ease";
+      deckCase.style.opacity = "0";
+      deckCase.style.transform = "translate(-50%,-58%) perspective(650px) rotateX(7deg) scale(.82)";
       cardStage.classList.remove("winner");
       void cardStage.offsetWidth;
       cardStage.classList.add("winner");
-
       createParticles();
     }
 
@@ -674,7 +596,6 @@
       resultElement.classList.remove("result-reveal");
       resultElement.textContent = "";
       resultElement.classList.remove("has-result");
-
       showDrawingCard();
 
       try {
@@ -691,23 +612,17 @@
             // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
             const listedDeck = decks.find(item => String(item.id) === String(deck.id));
             const completeDeck = listedDeck ? { ...listedDeck, ...deck } : deck;
-
             // 抽選結果が届いた時点で文明色を適用し、吸収演出中から見えるようにする。
             applyDeckCivilizationFrame(completeDeck);
-
             return { deck: completeDeck };
           },
           error => ({ error })
         );
-
         await playManaSequence();
-
         const outcome = await drawResult;
         if (outcome.error) throw outcome.error;
-
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
-
         applyDeckCivilizationFrame(deck);
 
         // 最新の当選デッキを先頭に追加し、直近3個を保持
@@ -720,18 +635,12 @@
 
         // 埋め込み枠の外側を暗転させることはできないため、
         // カード自体の発光を一段強めて短く溜め、公開へつなげる。
-        const drawingFace = drawingCard.querySelector(".drawing-card");
-        drawingFace.classList.add("reveal-pending");
-
-        await sleep(620);
-
-        drawingFace.classList.remove("reveal-pending");
+        deckCase.classList.add("civ-charging");
+        await sleep(500);
 
         // キーカードを公開し、少し間を置いてデッキ名を発表。
         await showKeyCards(deck);
-
         await sleep(520);
-
         resultElement.textContent = deckName;
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
@@ -742,7 +651,6 @@
         await sleep(900);
       } catch (error) {
         console.error(error);
-
         resultElement.textContent = "抽選に失敗しました";
         keyCardImages.replaceChildren();
         cardStage.classList.remove("winner");
@@ -755,21 +663,17 @@
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
         drawingCard.classList.add("hidden");
-
         spinButton.classList.remove("hidden");
         spinButton.textContent = "抽選スタート";
         spinButton.disabled = decks.length === 0;
-
         statusElement.classList.remove("hidden");
         settingsElement.classList.remove("hidden");
-
         isSpinning = false;
       }
     }
 
     avoidRepeatCheckbox.addEventListener("change", renderDeckList);
     spinButton.addEventListener("click", spin);
-
     loadDecks();
   </script>
 </body>
