@@ -2032,6 +2032,15 @@
       .result-civilizations{gap:2px!important}
     }
 
+
+    /* Reserve real vertical room for the tall case so it is not cropped or crowded. */
+    .card-stage.case-opening-stage{grid-template-rows:320px auto!important}
+    #drawingCard.mana-absorption.opening-cutin{height:320px!important;min-height:320px!important}
+    @media(max-width:480px){
+      .card-stage.case-opening-stage{grid-template-rows:300px auto!important}
+      #drawingCard.mana-absorption.opening-cutin{height:300px!important;min-height:300px!important}
+    }
+
   </style>
 </head>
 <body>
@@ -2208,7 +2217,7 @@
     }
 
     function showDrawingCard() {
-      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold");
+      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch", "result-ready");
@@ -2392,6 +2401,7 @@
     const easeOutCubic = t => 1 - Math.pow(1-t,3);
 
     async function playCaseOpeningSequence() {
+      cardStage.classList.add("case-opening-stage");
       drawingCard.classList.add("opening-cutin");
       void drawingCard.offsetWidth;
       await sleep(220);
@@ -2447,6 +2457,7 @@
       await sleep(420);
       revealFlashElement.classList.remove("active");
       drawingCard.classList.remove("case-blast", "case-impact");
+      cardStage.classList.remove("case-opening-stage");
     }
 
     function createParticles() {
