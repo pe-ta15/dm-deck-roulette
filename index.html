@@ -778,10 +778,7 @@
       deckCase.style.transition = "opacity .28s ease, transform .38s ease";
       deckCase.style.opacity = "0";
       deckCase.style.transform = "translate(-50%,-58%) perspective(650px) rotateX(7deg) scale(.82)";
-      cardStage.classList.remove("winner");
-      void cardStage.offsetWidth;
-      cardStage.classList.add("winner");
-      createParticles();
+      // winnerへの切替は結果名の表示後に親側で行う。
     }
 
     async function loadDecks() {
@@ -988,12 +985,16 @@
         renderDeckList();
 
         const cardLaunch = showKeyCards(deck);
-        await Promise.all([cardLaunch, sleep(900)]);
-        await sleep(260);
+        await Promise.all([cardLaunch, sleep(620)]);
         resultElement.textContent = deckName;
         resultElement.classList.add("has-result");
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
+        // 結果名が見え始めてから演出行を縮める。
+        await sleep(760);
+        cardStage.classList.remove("reveal-hold");
+        cardStage.classList.add("winner");
+        createParticles();
 
         const eligibleCount = candidates.length;
         statusElement.textContent = `抽選完了（対象 ${eligibleCount} デッキ）`;
