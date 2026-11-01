@@ -2240,6 +2240,46 @@
       #spinButton:before{display:none!important}
     }
 
+
+:root{--bg:#fff!important;--panel:#fff!important;--text:#37352f!important;--muted:#787774!important;--accent:#c9a45c!important}
+body{background:#fff!important;color:#37352f!important;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!important}
+.subtitle,#status{color:#787774!important}
+.panel{background:#fff!important;border:1px solid #e9e9e7!important;border-radius:14px!important;box-shadow:0 1px 2px rgba(15,15,15,.035)!important;backdrop-filter:none!important}
+.roulette-panel{padding:18px 16px 20px!important}
+.deck-list li{background:#fbfbfa!important;border-color:#e9e9e7!important;color:#37352f!important}
+/* Neutral frame leaves a visible breathing gap around the case. */
+.card-stage.case-opening-stage{grid-template-rows:344px auto!important;row-gap:10px!important}
+#drawingCard.mana-absorption.opening-cutin{width:min(100%,390px)!important;height:344px!important;min-height:344px!important;padding:9px!important;box-sizing:border-box!important;border:1px solid #e9e9e7!important;border-radius:22px!important;background:linear-gradient(180deg,#fff,#fbfbfa)!important;box-shadow:inset 0 0 0 6px #f7f7f5,0 8px 22px rgba(15,15,15,.055)!important;overflow:visible!important}
+.deck-case,#drawingCard.opening-cutin .deck-case{width:178px!important;height:292px!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%) perspective(1100px) rotateX(10deg) rotateY(-3deg)!important;filter:drop-shadow(0 13px 13px rgba(25,25,25,.17))!important}
+.deck-case .case-hinge{display:none!important}
+.deck-case .case-body{top:72px!important;bottom:4px!important;left:4px!important;right:4px!important;border:5px solid #b9c0ba!important;border-top:0!important;border-radius:5px 5px 13px 13px!important;background:linear-gradient(90deg,#f8f9f8 0%,#d8ddd9 9%,#f4f6f4 22%,#e8ece9 50%,#d4dad5 91%,#fafbfa 100%)!important;box-shadow:inset 7px 0 10px rgba(255,255,255,.9),inset -8px 0 12px rgba(55,65,57,.12),inset 0 -14px 18px rgba(55,65,57,.1),0 5px 10px rgba(25,25,25,.1)!important}
+.deck-case .case-body:before{left:12px!important;right:12px!important;top:0!important;bottom:8px!important;border:2px solid #aeb8b0!important;border-top:0!important;border-radius:0 0 8px 8px!important;background:linear-gradient(90deg,#252b26,#343b35 20%,#202720 50%,#343b35 82%,#252b26)!important;box-shadow:inset 0 0 18px rgba(0,0,0,.55),inset 0 12px 15px rgba(0,0,0,.55)!important}
+.deck-case .case-body:after{left:0!important;right:0!important;top:0!important;height:9px!important;border:1px solid #aeb8b0!important;border-bottom:3px solid #8b968d!important;background:linear-gradient(180deg,#fff,#d8ded9 65%,#aab4ac)!important;box-shadow:0 2px 4px rgba(25,25,25,.16)!important}
+.deck-case .case-cavity{left:17px!important;right:17px!important;top:9px!important;bottom:13px!important;border:2px solid #89968c!important;border-bottom:5px solid #78857b!important;border-radius:3px 3px 7px 7px!important;background:linear-gradient(180deg,#202820,#303a31 72%,#3a453b)!important;box-shadow:inset 0 0 20px rgba(0,0,0,.72),inset 0 10px 14px rgba(0,0,0,.6)!important;overflow:hidden!important}
+/* Portrait card face; stack thickness is visible along the horizontal axis. */
+.deck-case .case-card-stack{position:absolute!important;left:50%!important;bottom:7px!important;width:88%!important;height:164px!important;transform:translateX(-50%) translateZ(3px)!important;border:0!important;border-radius:4px!important;background:transparent!important;box-shadow:none!important;opacity:1!important}
+.deck-case .case-card-stack .card-face{position:absolute!important;left:2px!important;right:15px!important;top:0!important;bottom:0!important;border:1px solid #c7d0c9!important;border-radius:4px!important;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,255,255,0) 38%),radial-gradient(ellipse at 50% 35%,rgba(112,144,119,.22),transparent 58%),repeating-linear-gradient(0deg,rgba(50,69,54,.09) 0 1px,transparent 1px 6px),linear-gradient(135deg,#f4f7f4,#dce5dd 55%,#edf2ee)!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.65),0 2px 5px rgba(0,0,0,.28)!important}
+.deck-case .case-card-stack .card-edge{position:absolute!important;top:3px!important;bottom:3px!important;left:auto!important;width:4px!important;height:auto!important;border-radius:1px!important;background:linear-gradient(90deg,#f7faf7,#aab8ad 55%,#758379)!important;box-shadow:1px 0 2px rgba(0,0,0,.32)!important}
+.deck-case .case-card-stack .card-edge:nth-child(1){right:11px!important}
+.deck-case .case-card-stack .card-edge:nth-child(2){right:6px!important}
+.deck-case .case-card-stack .card-edge:nth-child(3){right:1px!important}
+.deck-case .case-lid{top:0!important;left:2px!important;right:2px!important;height:76px!important;transform-origin:50% 100%!important;transform-style:preserve-3d!important;border:3px solid #b8c1ba!important;border-bottom:5px solid #8b968d!important;border-radius:9px 9px 5px 5px!important;background:linear-gradient(145deg,#fff 0%,#eef1ee 48%,#cbd3cd 100%)!important;box-shadow:inset 0 2px 6px #fff,0 5px 9px rgba(25,25,25,.16)!important}
+.deck-case .case-lid:before{left:8px!important;right:8px!important;top:7px!important;height:52px!important;border:1px solid rgba(255,255,255,.92)!important;border-radius:4px!important;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(210,219,212,.22))!important}
+.deck-case .case-lid:after{left:3px!important;right:3px!important;bottom:-6px!important;height:5px!important;background:linear-gradient(180deg,#c7d0c9,#7f8c82)!important;box-shadow:0 2px 3px rgba(0,0,0,.2)!important}
+.deck-case .case-lid-inner{inset:9px 11px 10px!important;border:1px solid rgba(255,255,255,.82)!important;border-radius:3px!important;background:linear-gradient(145deg,#fafcfb,#dce4de 60%,#bdc9c0)!important}
+.deck-case .case-lock{top:69px!important;z-index:18!important;width:25px!important;height:10px!important;border:1px solid #a4afa6!important;border-radius:3px!important;background:linear-gradient(180deg,#fff,#d4ddd6 58%,#9ba89e)!important;box-shadow:0 2px 4px rgba(0,0,0,.16)!important}
+.deck-case.opening .case-lid{animation:none!important}
+@media(max-width:480px){.card-stage.case-opening-stage{grid-template-rows:318px auto!important;row-gap:8px!important}#drawingCard.mana-absorption.opening-cutin{width:min(100%,350px)!important;height:318px!important;min-height:318px!important;padding:8px!important}.deck-case,#drawingCard.opening-cutin .deck-case{width:164px!important;height:270px!important}.deck-case .case-card-stack{height:150px!important}.deck-case .case-lid{height:70px!important}}
+/* A small pair of jewel marks gives the SUMMONED DECK eyebrow an intentional finish. */
+#result .result-eyebrow{display:flex!important;align-items:center!important;gap:10px!important;color:#8b7950!important;font-size:.64rem!important;font-weight:800!important;letter-spacing:.24em!important}
+#result .result-eyebrow:before,#result .result-eyebrow:after{content:""!important;display:block!important;width:9px!important;height:9px!important;border:1px solid #b79b63!important;border-radius:1px!important;background:linear-gradient(135deg,#fff8df,#c6a45f)!important;transform:rotate(45deg)!important;box-shadow:0 0 0 2px rgba(198,164,95,.1)!important}
+/* Individual faceted civilization seals replace the continuous bar. */
+#result .result-civilizations{display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;width:auto!important;max-width:100%!important;height:auto!important;margin:8px auto 1px!important;padding:8px 12px!important;border:1px solid rgba(183,155,99,.28)!important;border-radius:12px!important;background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(248,247,242,.88))!important;box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(15,15,15,.035)!important}
+#result .civilization-inlay{position:relative!important;display:block!important;flex:0 0 24px!important;width:24px!important;height:28px!important;min-width:24px!important;border:1px solid rgba(255,255,255,.9)!important;border-radius:4px!important;clip-path:polygon(50% 0,88% 22%,88% 78%,50% 100%,12% 78%,12% 22%)!important;transform:none!important;background:linear-gradient(145deg,rgba(255,255,255,.88),transparent 38%),var(--inlay-color)!important;box-shadow:0 1px 3px rgba(0,0,0,.16),0 0 8px color-mix(in srgb,var(--inlay-color) 24%,transparent)!important}
+#result .civilization-inlay:after{content:""!important;position:absolute!important;left:5px!important;right:5px!important;top:5px!important;bottom:5px!important;border:1px solid rgba(255,255,255,.5)!important;border-radius:2px!important;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 70%)!important}
+@media(max-width:480px){#result .result-civilizations{gap:7px!important;padding:7px 10px!important}#result .civilization-inlay{flex-basis:21px!important;width:21px!important;height:25px!important;min-width:21px!important}}
+
   </style>
 </head>
 <body>
@@ -2640,10 +2680,10 @@
       // CSSの静止指定や端末ごとのアニメーション合成差に上書きされないようにする。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.12,values:[18,-1,1]},
-        {at:.34,values:[68,-3,2]},
-        {at:.68,values:[128,-5,3]},
-        {at:1,values:[154,-6,4]}
+        {at:.16,values:[16,-1,1]},
+        {at:.42,values:[58,-2,2]},
+        {at:.76,values:[88,-3,3]},
+        {at:1,values:[100,-3,3]}
       ], 1040, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
