@@ -2041,6 +2041,205 @@
       #drawingCard.mana-absorption.opening-cutin{height:300px!important;min-height:300px!important}
     }
 
+
+    
+    /* ===== Final polish: premium reveal, flat card stack, discreet hinge ===== */
+    body{
+      background:
+        radial-gradient(ellipse at 50% -18%,rgba(255,255,255,.98),transparent 48%),
+        radial-gradient(ellipse at 50% 28%,rgba(210,225,213,.48),transparent 58%),
+        linear-gradient(160deg,#edf2ec 0%,#e4ebe5 48%,#f4f0e6 100%)!important;
+      color:#24342a!important;
+    }
+    h1{
+      color:#263b2e!important;letter-spacing:.09em!important;
+      text-shadow:0 2px 0 rgba(255,255,255,.9),0 8px 24px rgba(49,76,54,.12)!important;
+    }
+    .subtitle{color:#718276!important;letter-spacing:.045em}
+    .panel{
+      border:1px solid rgba(147,169,150,.34)!important;border-radius:24px!important;
+      background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(247,249,245,.88))!important;
+      box-shadow:0 18px 46px rgba(50,73,54,.10),0 2px 0 rgba(255,255,255,.92) inset!important;
+      backdrop-filter:blur(14px);
+    }
+    .roulette-panel{padding:24px 22px 22px!important}
+    /* Case: remove visible hinge hardware. The lid itself remains attached at its rear edge. */
+    .deck-case .case-hinge{display:none!important}
+    .deck-case .case-lid{
+      top:0!important;height:91px!important;left:2px!important;right:2px!important;
+      transform-origin:50% 100%!important;
+      border:3px solid #a5b9a9!important;border-bottom:5px solid #526d58!important;
+      border-radius:10px 10px 5px 5px!important;
+      background:linear-gradient(145deg,#fff 0%,#edf4ee 35%,#c4d7c8 72%,#9fb8a4 100%)!important;
+      box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -8px 12px rgba(91,119,97,.16),0 7px 13px rgba(36,57,40,.24)!important;
+      backface-visibility:visible!important;
+    }
+    .deck-case .case-lid:before{
+      top:9px!important;height:66px!important;left:9px!important;right:9px!important;
+      border:1px solid rgba(255,255,255,.9)!important;border-radius:5px!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(217,232,220,.25) 52%,rgba(139,167,145,.18))!important;
+      box-shadow:inset 0 0 12px rgba(255,255,255,.5)!important;
+    }
+    .deck-case .case-lid-inner{display:block!important;inset:10px 13px 12px!important;border:1px solid rgba(255,255,255,.7)!important;background:linear-gradient(145deg,rgba(255,255,255,.38),rgba(174,199,180,.2))!important}
+    .deck-case .case-lid:after{bottom:-6px!important;height:5px!important;background:linear-gradient(180deg,#a5bca9,#526d58)!important}
+    .deck-case .case-lock{top:83px!important;z-index:18!important;width:29px!important;height:12px!important;border:1px solid #8ca28f!important;border-radius:3px!important}
+    /* Cards are stored flat, layered horizontally, not standing upright. */
+    .deck-case .case-card-stack{
+      left:50%!important;bottom:17px!important;width:84%!important;height:49px!important;
+      transform:translateX(-50%) translateZ(3px)!important;
+      border:1px solid rgba(231,241,232,.88)!important;border-radius:4px!important;
+      background:linear-gradient(180deg,#f9fcf9 0%,#dce9de 72%,#8fa994 73%,#d8e5da 100%)!important;
+      box-shadow:0 7px 9px rgba(0,0,0,.48),inset 0 1px 0 #fff!important;
+    }
+    .deck-case .case-card-stack .card-edge{
+      left:2px!important;right:2px!important;height:3px!important;
+      border-radius:1px!important;background:linear-gradient(90deg,#8da491,#f9fcf9 18%,#d6e3d8 82%,#809985)!important;
+      box-shadow:0 1px 1px rgba(40,62,44,.48)!important;
+    }
+    .deck-case .case-card-stack .card-edge:nth-child(1){top:auto!important;bottom:10px!important}
+    .deck-case .case-card-stack .card-edge:nth-child(2){top:auto!important;bottom:6px!important}
+    .deck-case .case-card-stack .card-edge:nth-child(3){top:auto!important;bottom:2px!important}
+    .deck-case .case-card-stack .card-face{
+      left:3px!important;right:3px!important;top:2px!important;bottom:14px!important;
+      border:1px solid #a9bcae!important;border-radius:3px!important;
+      background:
+        linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,0) 45%),
+        repeating-linear-gradient(90deg,rgba(57,87,64,.1) 0 1px,transparent 1px 8px),
+        linear-gradient(135deg,#e9f1e9,#b9cfbe 55%,#e2ece3)!important;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 1px 2px rgba(0,0,0,.16)!important;
+    }
+    /* Give the reveal a premium collector's-card presentation. */
+    #keyCardImages.result-ready{
+      width:100%!important;gap:clamp(10px,2.5vw,20px)!important;
+      padding:18px 8px 12px!important;perspective:1100px!important;
+    }
+    #cardStage.winner #keyCardImages img{
+      width:min(190px,42vw)!important;max-height:360px!important;
+      border:1px solid rgba(255,255,255,.9)!important;border-radius:13px!important;
+      background:#fff!important;padding:3px!important;
+      box-shadow:0 18px 32px rgba(29,48,34,.24),0 0 0 1px rgba(174,148,92,.35)!important;
+      transform-origin:50% 80%!important;
+      animation:collectorCardReveal .82s cubic-bezier(.16,.84,.22,1) both!important;
+    }
+    #cardStage.winner #keyCardImages img:nth-child(2){animation-delay:.12s!important}
+    #cardStage.winner #keyCardImages img:nth-child(3){animation-delay:.22s!important}
+    @keyframes collectorCardReveal{
+      0%{opacity:0;transform:translateY(34px) rotateX(16deg) rotateZ(-3deg) scale(.82);filter:brightness(1.7)}
+      65%{opacity:1;transform:translateY(-5px) rotateX(-2deg) rotateZ(1deg) scale(1.035);filter:brightness(1.08)}
+      100%{opacity:1;transform:translateY(0) rotateX(0) rotateZ(0) scale(1);filter:brightness(1)}
+    }
+    #result.has-result{
+      overflow:hidden!important;isolation:isolate!important;
+      width:min(calc(100% - 12px),590px)!important;
+      margin:18px auto 12px!important;padding:28px clamp(17px,4vw,34px) 24px!important;
+      gap:12px!important;border:1px solid rgba(180,145,76,.72)!important;
+      border-radius:22px!important;
+      background:
+        radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.98),transparent 58%),
+        linear-gradient(145deg,#fffef9 0%,#f4f0e4 58%,#e8eee6 100%)!important;
+      box-shadow:0 20px 44px rgba(39,58,42,.17),0 0 0 5px rgba(255,255,255,.64),inset 0 1px 0 #fff!important;
+    }
+    #result.has-result:before{
+      inset:8px!important;border:1px solid rgba(181,148,83,.3)!important;border-radius:15px!important;
+      background:linear-gradient(125deg,rgba(255,255,255,.45),transparent 48%,rgba(207,222,207,.22))!important;
+    }
+    #result.has-result:after{
+      bottom:8px!important;width:46%!important;height:1px!important;
+      background:linear-gradient(90deg,transparent,#b28d48 24%,#f6e6b9 50%,#b28d48 76%,transparent)!important;
+    }
+    .result-eyebrow{
+      color:#94743a!important;font-size:clamp(10px,2.4vw,12px)!important;
+      letter-spacing:.25em!important;font-weight:800!important;
+    }
+    .result-eyebrow:before,.result-eyebrow:after{
+      width:clamp(20px,7vw,52px)!important;background:linear-gradient(90deg,transparent,#b28d48)!important;
+    }
+    .deck-name-title{
+      display:block!important;position:relative!important;inset:auto!important;
+      width:100%!important;max-width:100%!important;min-width:0!important;
+      margin:0!important;padding:8px 4px 13px!important;
+      border:0!important;border-bottom:1px solid rgba(177,151,99,.38)!important;
+      border-radius:0!important;background:transparent!important;
+      color:#263b2e!important;-webkit-text-fill-color:#263b2e!important;
+      font-family:Georgia,"Yu Mincho",serif!important;
+      font-size:clamp(1.25rem,4.8vw,2.1rem)!important;font-weight:800!important;
+      line-height:1.32!important;letter-spacing:.045em!important;
+      text-shadow:0 2px 0 #fff,0 7px 20px rgba(69,94,68,.12)!important;
+      box-shadow:none!important;transform:none!important;
+    }
+    .deck-name-title:before,.deck-name-title:after{display:none!important;content:none!important}
+    .result-civilizations{
+      width:min(100%,230px)!important;height:8px!important;gap:3px!important;
+      margin:0 auto!important;padding:0!important;overflow:hidden!important;
+      border-radius:8px!important;background:rgba(115,137,119,.1)!important;
+    }
+    .civilization-inlay{
+      flex:1 1 0!important;width:auto!important;min-width:5px!important;height:6px!important;
+      border:0!important;border-radius:5px!important;transform:none!important;
+      background:linear-gradient(180deg,rgba(255,255,255,.55),transparent 60%),var(--inlay-color)!important;
+      box-shadow:0 0 7px color-mix(in srgb,var(--inlay-color) 28%,transparent)!important;
+    }
+    .civilization-inlay:after{display:none!important}
+    /* Controls are designed as part of the final result state, not browser-default widgets. */
+    #spinButton{
+      position:relative!important;overflow:hidden!important;isolation:isolate!important;
+      min-width:min(280px,100%)!important;min-height:56px!important;padding:14px 34px!important;
+      border:1px solid #c49a4d!important;border-radius:999px!important;
+      color:#2d291c!important;font-size:1rem!important;font-weight:850!important;
+      letter-spacing:.1em!important;
+      background:linear-gradient(115deg,#f8e8b8 0%,#e8c574 34%,#f8e8b8 66%,#d7ad5b 100%)!important;
+      box-shadow:0 9px 20px rgba(142,108,46,.2),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -2px 0 rgba(145,105,36,.12)!important;
+      transition:transform .2s ease,box-shadow .2s ease,filter .2s ease!important;
+    }
+    #spinButton:before{
+      content:"";position:absolute;z-index:-1;top:-50%;left:-35%;width:28%;height:200%;
+      transform:rotate(22deg);background:rgba(255,255,255,.48);filter:blur(5px);
+      transition:left .55s ease;
+    }
+    #spinButton:hover:not(:disabled){transform:translateY(-3px)!important;box-shadow:0 14px 26px rgba(142,108,46,.27),inset 0 1px 0 #fff!important}
+    #spinButton:hover:not(:disabled):before{left:120%}
+    #spinButton:disabled{filter:saturate(.45)!important;opacity:.62!important}
+    #settings{margin:18px auto 2px!important}
+    #settings .checkbox-label{
+      gap:12px!important;padding:13px 18px!important;border:1px solid rgba(147,169,150,.45)!important;
+      border-radius:14px!important;background:linear-gradient(145deg,#fff,#f2f6f1)!important;
+      color:#53675a!important;box-shadow:0 4px 12px rgba(52,73,54,.06)!important;
+      transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
+    }
+    #settings .checkbox-label:has(input:checked){
+      border-color:#b99a5e!important;background:linear-gradient(145deg,#fffdf5,#f3edda)!important;
+      box-shadow:0 5px 15px rgba(166,133,69,.12)!important;
+    }
+    #settings .checkbox-label input{
+      appearance:none!important;width:21px!important;height:21px!important;flex:0 0 21px!important;
+      margin:0!important;border:1.5px solid #9eae9f!important;border-radius:6px!important;
+      background:#fff!important;position:relative!important;cursor:pointer!important;
+    }
+    #settings .checkbox-label input:checked{
+      border-color:#ad8745!important;background:linear-gradient(145deg,#f3dfaa,#d6b568)!important;
+      box-shadow:inset 0 1px 2px rgba(255,255,255,.65),0 2px 5px rgba(142,108,46,.16)!important;
+    }
+    #settings .checkbox-label input:checked:after{
+      content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+      border:solid #51401e;border-width:0 2px 2px 0;transform:rotate(45deg);
+    }
+    #status{color:#718276!important;font-size:.88rem!important;letter-spacing:.035em}
+    #deckListPanel{transition:opacity .25s ease,transform .25s ease}
+    body.is-spinning #spinButton,
+    body.is-spinning #settings,
+    body.is-spinning #status,
+    body.is-spinning #deckListPanel{display:none!important}
+    @media(max-width:480px){
+      .roulette-panel{padding:16px 10px 18px!important}
+      #result.has-result{width:calc(100% - 4px)!important;padding:22px 14px 20px!important}
+      #cardStage.winner #keyCardImages img{width:min(158px,43vw)!important;max-height:31vh!important}
+      #settings .checkbox-label{width:100%!important;justify-content:flex-start!important}
+    }
+    @media(prefers-reduced-motion:reduce){
+      #cardStage.winner #keyCardImages img{animation:none!important}
+      #spinButton:before{display:none!important}
+    }
+
   </style>
 </head>
 <body>
@@ -2086,7 +2285,7 @@
         </label>
       </div>
     </section>
-    <section class="panel">
+    <section class="panel" id="deckListPanel">
       <h2>抽選対象のデッキ</h2>
       <p class="small-note">一覧の「ルーレット」が有効になっているデッキが抽選対象です。</p>
       <ul id="deckList" class="deck-list"></ul>
@@ -2610,6 +2809,7 @@
       if (isSpinning || decks.length === 0) return;
 
       isSpinning = true;
+      document.body.classList.add("is-spinning");
       spinButton.disabled = true;
       spinButton.classList.add("hidden");
       statusElement.classList.add("hidden");
@@ -2722,6 +2922,7 @@
         settingsElement.classList.remove("hidden");
         settingsElement.classList.remove("is-spinning");
         avoidRepeatCheckbox.disabled = false;
+        document.body.classList.remove("is-spinning");
         isSpinning = false;
       }
     }
