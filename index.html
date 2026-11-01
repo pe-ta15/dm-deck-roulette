@@ -2497,6 +2497,123 @@ h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!impo
   #result .civilization-icon{width:14px!important;height:14px!important;flex-basis:14px!important}
 }
 
+  
+/* ===== Desktop alignment, card-back detail, physical folding lid and result spacing ===== */
+/* Give the case real breathing room inside the Notion panel on desktop. */
+body.is-spinning .roulette-panel{
+  padding:34px 28px 30px!important;
+}
+.card-stage.case-opening-stage{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:400px!important;row-gap:0!important;
+  width:100%!important;max-width:620px!important;min-width:0!important;
+  height:400px!important;margin:0 auto!important;padding:0!important;
+  justify-items:center!important;align-items:center!important;
+  transform:none!important;overflow:visible!important;
+}
+#cardStage.case-opening-stage #drawingCard{
+  position:relative!important;grid-column:1!important;grid-row:1!important;
+  justify-self:center!important;align-self:center!important;
+  width:min(100%,460px)!important;height:400px!important;min-height:400px!important;
+  margin:0 auto!important;
+}
+#drawingCard.mana-absorption.opening-cutin{
+  display:grid!important;place-items:center!important;
+  width:100%!important;max-width:460px!important;height:400px!important;min-height:400px!important;
+  margin:0 auto!important;padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;overflow:visible!important;
+}
+#drawingCard.opening-cutin .deck-case{
+  position:absolute!important;left:50%!important;top:50%!important;
+  margin:0!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(18deg) rotateY(-3deg)!important;
+}
+/* The front flap is physically joined to the front edge of the top panel. */
+.deck-case .case-lid{
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  overflow:visible!important;backface-visibility:visible!important;
+}
+.deck-case .case-lid-inner{backface-visibility:visible!important}
+.deck-case .case-lid-front{
+  position:absolute!important;z-index:4!important;
+  left:-3px!important;right:-3px!important;top:calc(100% - 3px)!important;
+  height:46px!important;transform-origin:50% 0%!important;
+  transform:rotateX(90deg)!important;transform-style:preserve-3d!important;
+  border:3px solid #aab9ad!important;border-top:0!important;
+  border-radius:0 0 7px 7px!important;
+  background:linear-gradient(90deg,#aebfb2 0%,#f8fbf8 13%,#dce8df 48%,#b3c5b7 87%,#f9fcf9 100%)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 5px 8px rgba(40,57,43,.22)!important;
+  backface-visibility:visible!important;
+}
+.deck-case .case-lid-front:before{
+  content:"";position:absolute;inset:4px 5px 5px;border:1px solid rgba(255,255,255,.65);
+  border-radius:2px;background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(99,126,106,.12));
+  transform:translateZ(1px);
+}
+.deck-case .case-lid-front:after{
+  content:"";position:absolute;left:50%;bottom:5px;width:30px;height:10px;
+  transform:translateX(-50%) translateZ(2px);border:1px solid #9eafa2;border-radius:3px;
+  background:linear-gradient(180deg,#fff,#d8e2da 65%,#aab9ad);
+  box-shadow:0 1px 3px rgba(0,0,0,.16);
+}
+.deck-case .case-lid-front span{display:none!important}
+.deck-case .case-hinge{display:block!important;z-index:16!important;top:66px!important;height:10px!important;opacity:.9!important}
+/* Show the familiar blue patterned card back as a narrow layer behind the face. */
+.deck-case .case-card-stack{
+  width:88%!important;left:50%!important;overflow:hidden!important;
+  border:2px solid #172c52!important;border-radius:5px!important;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(239,222,160,.9) 0 8%,transparent 9%),
+    repeating-radial-gradient(circle at 50% 48%,transparent 0 7px,rgba(236,211,139,.48) 8px 9px,transparent 10px 14px),
+    linear-gradient(135deg,#172a55 0%,#294d83 45%,#101e43 100%)!important;
+  box-shadow:0 5px 9px rgba(0,0,0,.48),inset 0 0 0 2px rgba(241,220,164,.72)!important;
+}
+.deck-case .case-card-stack:before,.deck-case .case-card-stack:after{display:none!important}
+.deck-case .case-card-stack .card-face{
+  left:7px!important;right:7px!important;top:7px!important;bottom:14px!important;
+  border:1px solid rgba(246,228,177,.88)!important;
+  box-shadow:0 1px 4px rgba(0,0,0,.4)!important;
+}
+/* Desktop result cards must be centered in the same content column as the title. */
+#cardStage.winner{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:min-content!important;row-gap:0!important;
+  width:100%!important;max-width:620px!important;height:auto!important;min-height:0!important;
+  margin:0 auto!important;padding:0!important;justify-items:center!important;
+  transform:none!important;overflow:visible!important;
+}
+#cardStage.winner #keyCardImages{
+  position:relative!important;inset:auto!important;left:auto!important;right:auto!important;
+  grid-column:1!important;grid-row:1!important;justify-self:center!important;
+  display:flex!important;align-items:flex-start!important;justify-content:center!important;
+  width:100%!important;max-width:620px!important;height:auto!important;min-height:0!important;
+  margin:0 auto!important;padding:18px 8px 12px!important;transform:none!important;
+  box-sizing:border-box!important;overflow:visible!important;
+}
+#result.has-result,#result.result-reveal{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  width:100%!important;max-width:620px!important;
+  margin:26px auto 0!important;padding:0 14px 20px!important;
+  box-sizing:border-box!important;
+}
+#result .result-civilizations{
+  gap:8px!important;margin:4px auto 0!important;padding:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+#result .civilization-icon{
+  width:17px!important;height:17px!important;flex-basis:17px!important;
+  border:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;
+  filter:grayscale(1) sepia(.18) saturate(.55) opacity(.58)!important;
+}
+@media(max-width:700px){
+  body.is-spinning .roulette-panel{padding:20px 14px 22px!important}
+  .card-stage.case-opening-stage{grid-template-rows:330px!important;height:330px!important}
+  #cardStage.case-opening-stage #drawingCard,
+  #drawingCard.mana-absorption.opening-cutin{height:330px!important;min-height:330px!important}
+  #drawingCard.opening-cutin .deck-case{transform:translate(-50%,-50%) perspective(980px) rotateX(18deg) rotateY(-3deg) scale(.92)!important}
+  #result.has-result,#result.result-reveal{margin:18px auto 0!important}
+  #result .civilization-icon{width:14px!important;height:14px!important;flex-basis:14px!important}
+}
+
   </style>
 </head>
 <body>
