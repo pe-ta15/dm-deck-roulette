@@ -921,6 +921,182 @@
   
     #keyCardImages.result-ready { opacity:1 !important; pointer-events:auto !important; }
 
+  
+
+    /* ===== DAISO縦型プラスチックデッキケースを基準にした形状・上部開口演出 ===== */
+    .deck-case,
+    #drawingCard.opening-cutin .deck-case,
+    .deck-case.treasure-open {
+      width:178px!important;height:218px!important;top:50%!important;
+      transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-7deg)!important;
+      transform-style:preserve-3d!important;
+      filter:drop-shadow(12px 18px 13px rgba(35,48,39,.28))!important;
+    }
+    /* 本体は幅より高さが大きい、角の丸い縦長の直方体 */
+    .deck-case .case-body {
+      position:absolute!important;left:5px!important;right:5px!important;
+      top:47px!important;bottom:4px!important;
+      border:2px solid #c6d5ca!important;border-top:0!important;
+      border-radius:5px 5px 13px 13px!important;
+      background:linear-gradient(90deg,#f9fcfa 0%,#dce8df 7%,#f7faf8 20%,#eaf1ec 53%,#d2dfd6 92%,#f9fcfa 100%)!important;
+      box-shadow:inset 8px 0 10px rgba(255,255,255,.95),inset -9px 0 12px rgba(100,126,108,.2),inset 0 -14px 18px rgba(100,126,108,.2),4px 5px 0 rgba(115,143,123,.18),0 8px 12px rgba(54,73,60,.18)!important;
+      overflow:visible!important;transform:translateZ(0)!important;
+    }
+    .deck-case .case-body:before {
+      left:13px!important;right:13px!important;top:5px!important;bottom:13px!important;
+      border:1px solid rgba(153,177,160,.82)!important;border-radius:3px 3px 8px 8px!important;
+      background:linear-gradient(90deg,rgba(170,194,177,.5),rgba(239,246,241,.65) 50%,rgba(165,189,172,.48)),linear-gradient(180deg,rgba(174,196,181,.42),rgba(236,244,238,.72) 65%,rgba(166,189,173,.55))!important;
+      box-shadow:inset 0 0 18px rgba(88,116,96,.14),inset 0 6px 10px rgba(255,255,255,.72)!important;
+    }
+    .deck-case .case-body:after {display:none!important}
+    .deck-case .case-cavity {
+      z-index:3!important;left:17px!important;right:17px!important;top:7px!important;bottom:17px!important;
+      border:1px solid rgba(150,174,157,.82)!important;border-radius:4px!important;
+      background:linear-gradient(180deg,#9eb5a5 0%,#dbe8df 16%,#edf4ef 70%,#b9cdbf 100%)!important;
+      box-shadow:inset 0 5px 12px rgba(75,103,83,.22),inset 0 -5px 10px rgba(255,255,255,.72)!important;
+    }
+    /* 背面の蝶番は本体の上端に固定し、左右の軸受けも見せる */
+    .deck-case .case-hinge {
+      z-index:13!important;left:12px!important;right:12px!important;top:40px!important;height:12px!important;
+      border-radius:7px!important;background:linear-gradient(180deg,#fff 0%,#cbd9cf 34%,#8da493 72%,#f8fbf9 100%)!important;
+      box-shadow:0 2px 4px rgba(65,87,71,.3),inset 0 1px 2px #fff!important;
+      transform:translateZ(-2px)!important;
+    }
+    .deck-case .case-hinge:before,.deck-case .case-hinge:after {
+      content:"";position:absolute;top:-3px;width:14px;height:17px;border:1px solid #a9bcae;border-radius:5px;
+      background:linear-gradient(90deg,#fff,#c6d6cb 55%,#91a696);box-shadow:0 2px 3px rgba(65,87,71,.2);
+    }
+    .deck-case .case-hinge:before{left:4px}.deck-case .case-hinge:after{right:4px}
+    /* 蓋は上面を覆う一枚板。下端が背面ヒンジとつながり、閉じた時は水平 */
+    .deck-case .case-lid {
+      z-index:11!important;left:2px!important;right:2px!important;top:-10px!important;height:56px!important;
+      border:2px solid #c5d5ca!important;border-bottom:3px solid #91a997!important;border-radius:9px 9px 5px 5px!important;
+      background:linear-gradient(145deg,#fff 0%,#e8f0ea 42%,#cbdacf 82%,#f9fcfa 100%)!important;
+      box-shadow:inset 0 3px 8px #fff,inset 0 -5px 8px rgba(94,123,102,.2),0 5px 8px rgba(55,76,61,.22)!important;
+      transform-origin:50% 100%!important;transform:rotateX(84deg) translateZ(0)!important;
+      transform-style:preserve-3d!important;backface-visibility:visible!important;
+    }
+    .deck-case .case-lid:before {
+      left:7px!important;right:7px!important;top:5px!important;height:42px!important;
+      border:1px solid rgba(255,255,255,.96)!important;border-radius:4px!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(211,226,216,.42) 58%,rgba(163,186,170,.3))!important;
+      box-shadow:inset 0 0 8px rgba(255,255,255,.8)!important;
+    }
+    .deck-case .case-lid:after {
+      left:1px!important;right:1px!important;bottom:-7px!important;height:7px!important;
+      border-radius:0 0 4px 4px!important;background:linear-gradient(180deg,#f8fcf9,#aebfb3)!important;
+      box-shadow:0 3px 5px rgba(64,84,70,.2)!important;
+    }
+    .deck-case .case-lid-inner {
+      display:block!important;position:absolute!important;inset:5px 8px 8px!important;
+      border:1px solid rgba(255,255,255,.82)!important;border-radius:4px!important;
+      background:linear-gradient(145deg,rgba(235,243,237,.95),rgba(185,203,190,.82))!important;
+      box-shadow:inset 0 0 12px rgba(111,137,119,.16)!important;transform:translateZ(-2px)!important;
+    }
+    .deck-case .case-lock {
+      z-index:14!important;left:50%!important;top:44px!important;width:27px!important;height:10px!important;
+      border:1px solid #b8cbbd!important;border-radius:3px!important;
+      background:linear-gradient(180deg,#fff,#dce8df 65%,#aebfb3)!important;
+      box-shadow:0 2px 4px rgba(65,87,71,.24)!important;
+    }
+    .deck-case .case-lock:after{display:none!important}
+    /* 発光の中心を正面中央ではなく、ケース上部の「口」に合わせる */
+    .deck-case .case-light {
+      z-index:7!important;left:50%!important;top:27%!important;width:150px!important;height:118px!important;
+      background:radial-gradient(ellipse,#fff 0%,#fffdf1 24%,#ffe6a0 49%,rgba(255,214,116,.34) 68%,transparent 84%)!important;
+      filter:blur(16px)!important;
+    }
+    .deck-case .case-mouth-beam {
+      position:absolute;z-index:8;left:50%;top:-116px;width:142px;height:166px;
+      transform:translateX(-50%) scaleY(.12);transform-origin:50% 100%;opacity:0;pointer-events:none;
+      clip-path:polygon(43% 100%,57% 100%,100% 0,0 0);
+      background:linear-gradient(90deg,rgba(255,231,166,0),rgba(255,255,255,.88) 32%,#fff 50%,rgba(255,235,180,.88) 68%,rgba(255,220,140,0));
+      filter:blur(5px) drop-shadow(0 0 15px #fff1c2);
+    }
+    .deck-case .case-rays {
+      position:absolute;z-index:9;left:50%;top:43px;width:250px;height:220px;
+      transform:translate(-50%,-50%) scale(.18);opacity:0;pointer-events:none;
+      background:repeating-conic-gradient(from -8deg at 50% 50%,rgba(255,255,255,.92) 0deg 2deg,transparent 2deg 13deg);
+      -webkit-mask:radial-gradient(ellipse,transparent 0 15%,#000 29% 58%,transparent 78%);
+      mask:radial-gradient(ellipse,transparent 0 15%,#000 29% 58%,transparent 78%);
+    }
+    .deck-case.opening .case-lid {
+      animation: daisoLidFlip 1.18s cubic-bezier(.16,.78,.18,1) both!important;
+    }
+    @keyframes daisoLidFlip {
+      0%{transform:rotateX(84deg) translateZ(0);filter:brightness(1)}
+      13%{transform:rotateX(76deg) translateZ(2px);filter:brightness(1.12)}
+      42%{transform:rotateX(43deg) translateZ(7px);filter:brightness(1.3)}
+      76%{transform:rotateX(5deg) translateZ(13px);filter:brightness(1.7)}
+      90%{transform:rotateX(-3deg) translateZ(15px);filter:brightness(1.45)}
+      100%{transform:rotateX(0deg) translateZ(15px);filter:brightness(1.35)}
+    }
+    .deck-case.opening .case-hinge{filter:brightness(1.7) drop-shadow(0 0 5px #fff0c2)}
+    .deck-case.opening .case-mouth-beam{animation:mouthBeamBurst 1.18s cubic-bezier(.12,.8,.18,1) .38s both}
+    @keyframes mouthBeamBurst {
+      0%{opacity:0;transform:translateX(-50%) scaleY(.08)}
+      24%{opacity:1;transform:translateX(-50%) scaleY(.7)}
+      62%{opacity:.95;transform:translateX(-50%) scaleY(1.12)}
+      100%{opacity:.38;transform:translateX(-50%) scaleY(1)}
+    }
+    .deck-case.opening .case-rays{animation:daisoMouthRays .9s ease-out .42s both}
+    @keyframes daisoMouthRays {
+      0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(-12deg)}
+      25%{opacity:.95}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(1.35) rotate(8deg)}
+    }
+    .deck-case.opening .case-light{animation:daisoInteriorFlash 1.35s ease-out .25s both!important}
+    @keyframes daisoInteriorFlash {
+      0%{opacity:.08;transform:translate(-50%,-50%) scale(.12)}
+      30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
+      66%{opacity:.95;transform:translate(-50%,-50%) scale(1.65)}
+      100%{opacity:.48;transform:translate(-50%,-50%) scale(1.9)}
+    }
+    .deck-case.opening .case-cavity {
+      animation:daisoMouthInterior 1.2s ease-out .18s both!important;
+    }
+    @keyframes daisoMouthInterior {
+      0%{background:linear-gradient(180deg,#9eb5a5,#dbe8df 16%,#edf4ef 70%,#b9cdbf);box-shadow:inset 0 5px 12px rgba(75,103,83,.22)}
+      38%{background:radial-gradient(ellipse at 50% 10%,#fff 0%,#fffdf4 30%,#ffe8aa 66%,#d6c18c 100%);box-shadow:inset 0 0 38px #fff,inset 0 0 72px #ffe6a0,0 0 35px rgba(255,220,145,.85)}
+      100%{background:radial-gradient(ellipse at 50% 10%,#fff 0%,#fffdf4 34%,#fff0c6 72%,#d6c18c 100%);box-shadow:inset 0 0 42px #fff,inset 0 0 80px #ffe6a0,0 0 42px rgba(255,220,145,.75)}
+    }
+    /* 結果画面の操作要素は同じ幅・同じ基準線で整列 */
+    #spinButton,#settings .checkbox-label {
+      display:flex!important;align-items:center!important;justify-content:center!important;
+      width:min(100%,560px)!important;max-width:560px!important;min-height:50px!important;
+      margin:8px auto 0!important;border-radius:12px!important;
+    }
+    #spinButton {
+      padding:12px 20px!important;border:1px solid #d5a94e!important;
+      background:linear-gradient(180deg,#ffe8a6 0%,#edc66f 100%)!important;
+      box-shadow:0 4px 0 #bd8b35,0 7px 15px rgba(106,77,25,.13)!important;
+      font-size:1rem!important;letter-spacing:.035em!important;
+    }
+    #spinButton:disabled {background:#c5cbd1!important;border-color:#b7bec6!important;box-shadow:none!important}
+    #settings {display:flex!important;justify-content:center!important;width:100%!important;margin:8px auto 0!important}
+    #settings .checkbox-label {
+      justify-content:flex-start!important;gap:12px!important;padding:12px 16px!important;
+      border:1px solid #dfe5e0!important;background:linear-gradient(180deg,#fff,#f5f8f5)!important;
+      box-shadow:0 2px 8px rgba(62,82,67,.06)!important;text-align:left!important;
+    }
+    #settings .checkbox-label input {width:19px!important;height:19px!important;margin:0!important;flex:0 0 19px!important}
+    #status {width:min(100%,560px)!important;margin:9px auto 0!important;text-align:center!important}
+    #result.has-result {width:min(100%,560px)!important;max-width:560px!important;margin-left:auto!important;margin-right:auto!important}
+    @media(max-width:480px) {
+      .deck-case,#drawingCard.opening-cutin .deck-case,.deck-case.treasure-open {
+        width:158px!important;height:204px!important;
+        transform:translate(-50%,-50%) perspective(820px) rotateX(7deg) rotateY(-7deg) scale(.96)!important;
+      }
+      .deck-case .case-mouth-beam {width:126px;height:148px;top:-98px}
+      .deck-case .case-rays {width:220px;height:190px}
+      #spinButton,#settings .checkbox-label,#status,#result.has-result {width:100%!important;max-width:560px!important}
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .deck-case.opening .case-lid,.deck-case.opening .case-mouth-beam,
+      .deck-case.opening .case-rays,.deck-case.opening .case-light,
+      .deck-case.opening .case-cavity {animation-duration:.01ms!important;animation-iteration-count:1!important}
+    }
+
   </style>
 </head>
 <body>
@@ -942,6 +1118,7 @@
             <div class="case-lid"><div class="case-lid-inner"></div></div>
             <div class="case-lock"></div>
             <div class="case-light"></div>
+            <div class="case-mouth-beam" aria-hidden="true"></div>
             <div class="case-rays" aria-hidden="true"></div>
             <div class="case-burst"></div>
           </div>
@@ -1246,22 +1423,23 @@
 
     // 同じデッキケースを使い、蓋の解放と光の噴出を短いテンポで連結する。
     async function playCaseOpeningSequence() {
-      // 白いカットインへ切り替え、同じ縦型ケースを中央に据えて期待を溜める。
+      // 五文明の力を受けたケースを正面から見せ、留め具の解放から蓋の回転までを順番に見せる。
       drawingCard.classList.add("opening-cutin");
       void drawingCard.offsetWidth;
-      await sleep(260);
+      await sleep(340);
       deckCase.classList.add("pressure");
-      await sleep(320);
+      await sleep(420);
       deckCase.classList.remove("pressure");
       drawingCard.classList.add("case-impact");
       deckCase.classList.add("opening");
       drawingCard.classList.add("case-blast");
-      // 蓋の跳ね上がり・内部の光・放射光を一斉に解放。
-      await sleep(680);
+
+      // 蓋がヒンジを軸に最後まで開き、上部の口から光が噴き出す時間を確保。
+      await sleep(1280);
       revealFlashElement.classList.remove("active");
       void revealFlashElement.offsetWidth;
       revealFlashElement.classList.add("active");
-      await sleep(860);
+      await sleep(560);
       revealFlashElement.classList.remove("active");
       drawingCard.classList.remove("case-blast");
       drawingCard.classList.remove("case-impact");
