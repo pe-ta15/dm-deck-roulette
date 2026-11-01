@@ -357,6 +357,22 @@
       #result.has-result{margin-top:6px!important;}
     }
 
+
+    /* Initial layout: the hidden animation stage must not reserve a blank row above the button. */
+    #cardStage.hidden{display:none!important;}
+    #cardStage:not(.hidden){display:grid!important;}
+    .roulette-panel{padding-top:8px!important;}
+    #spinButton{margin-top:0!important;}
+    /* A full-screen whiteout bridges the rendered WebM into the live result UI. */
+    #revealFlash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;visibility:hidden;pointer-events:none;}
+    #revealFlash.active{visibility:visible;animation:rouletteWhiteout 1.18s cubic-bezier(.16,.72,.18,1) both;}
+    @keyframes rouletteWhiteout{0%{opacity:1}18%{opacity:1}100%{opacity:0}}
+    #cardStage.reveal-hold{grid-template-rows:228px auto!important;min-height:228px!important;height:auto!important;overflow:visible!important;}
+    #cardStage.reveal-hold #drawingCard{visibility:hidden!important;opacity:0!important;}
+    #cardStage.winner{transition:grid-template-rows .58s cubic-bezier(.2,.75,.25,1),min-height .58s ease;}
+    @media(max-width:480px){
+      #cardStage.reveal-hold{grid-template-rows:210px auto!important;min-height:210px!important;}
+    }
   </style>
 </head>
 <body>
@@ -382,7 +398,7 @@
             <div class="case-burst"></div>
           </div>
           <video id="caseOpeningVideo" preload="auto" muted playsinline aria-hidden="true">
-            <source src="case-opening.webm" type="video/webm">
+            <source src="case-opening.webm?v=3d-case-20261101" type="video/webm">
           </video>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
@@ -392,7 +408,7 @@
         </div>
         <div id="keyCardImages"></div>
       </div>
-      <div id="result" aria-live="polite"></div>
+      <div id="revealFlash" aria-hidden="true"></div>\n      <div id="result" aria-live="polite"></div>
       <button type="button" id="spinButton" disabled>準備中...</button>
       <p id="status" role="status" aria-live="polite">デッキを読み込み中です。</p>
       <div id="settings" class="settings">
@@ -417,7 +433,7 @@
     const deckListElement = document.getElementById("deckList");
     const drawingCard = document.getElementById("drawingCard");
     const deckCase = document.getElementById("deckCase");
-    const caseOpeningVideo = document.getElementById("caseOpeningVideo");
+    const caseOpeningVideo = document.getElementById("caseOpeningVideo");\n    const revealFlashElement = document.getElementById("revealFlash");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
@@ -531,7 +547,7 @@
     }
 
     function showDrawingCard() {
-      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup");
+      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold");\n      revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.style.removeProperty("display");
@@ -872,23 +888,17 @@
         );
         await playManaSequence();
 
-        // 開封演出はWebMのみを使用する。CSSによるケース開封演出には切り替えない。
+        // WebMの実写風3D開封映像。CSSケースへの代替再生は行わない。
         const openingSequence = (async () => {
           drawingCard.classList.add("treasure-scene", "opening-cutin", "video-opening");
           void drawingCard.offsetWidth;
-
-          if (!caseOpeningVideo) {
-            throw new Error("開封動画のvideo要素が見つかりません。");
-          }
-
+          if (!caseOpeningVideo) throw new Error("開封動画のvideo要素が見つかりません。");
           caseOpeningVideo.pause();
           try { caseOpeningVideo.currentTime = 0; } catch (_) {}
 
-          // イベント監視を登録してから読み込みを開始する。
           await new Promise((resolve, reject) => {
             let settled = false;
             let timeoutId;
-
             const cleanup = () => {
               caseOpeningVideo.removeEventListener("canplay", onReady);
               caseOpeningVideo.removeEventListener("loadeddata", onReady);
@@ -902,35 +912,25 @@
               callback(value);
             };
             const onReady = () => finish(resolve);
-            const onError = () => {
-              const mediaError = caseOpeningVideo.error;
-              finish(reject, new Error(
-                `開封動画を読み込めません（MediaError code: ${mediaError?.code ?? "不明"}）。`
-              ));
-            };
-
+            const onError = () => finish(reject, new Error(
+              `開封動画を読み込めません（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`
+            ));
             caseOpeningVideo.addEventListener("canplay", onReady);
             caseOpeningVideo.addEventListener("loadeddata", onReady);
             caseOpeningVideo.addEventListener("error", onError);
             timeoutId = setTimeout(
               () => finish(reject, new Error("開封動画の読み込みがタイムアウトしました。")),
-              15000
+              20000
             );
-
-            if (caseOpeningVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-              finish(resolve);
-            } else {
-              caseOpeningVideo.load();
-            }
+            if (caseOpeningVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) finish(resolve);
+            else caseOpeningVideo.load();
           });
 
-          // 再生終了イベントを先に登録し、終了イベントの取りこぼしを防ぐ。
           const endedPromise = new Promise((resolve, reject) => {
             let settled = false;
             let timeoutId;
             const cleanup = () => {
               caseOpeningVideo.removeEventListener("ended", onEnded);
-              caseOpeningVideo.removeEventListener("timeupdate", onTimeUpdate);
               caseOpeningVideo.removeEventListener("error", onError);
               clearTimeout(timeoutId);
             };
@@ -940,65 +940,39 @@
               cleanup();
               callback(value);
             };
-            const hideOpeningVisual = () => {
+            const revealWhiteout = () => {
               caseOpeningVideo.pause();
               caseOpeningVideo.style.setProperty("display", "none", "important");
               caseOpeningVideo.style.setProperty("visibility", "hidden", "important");
               caseOpeningVideo.style.setProperty("opacity", "0", "important");
               drawingCard.classList.add("video-finished");
               drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
-              drawingCard.style.setProperty("display", "none", "important");
-              drawingCard.style.setProperty("visibility", "hidden", "important");
-              drawingCard.style.setProperty("opacity", "0", "important");
-              cardStage.classList.add("opening-cleanup");
-            };
-            // 動画末尾の黒いフレームが表示される前に、最後の0.8秒を切り上げて演出枠を隠す。
-            const onTimeUpdate = () => {
-              const duration = caseOpeningVideo.duration;
-              if (Number.isFinite(duration) && duration > 0 &&
-                  caseOpeningVideo.currentTime >= duration - 0.8) {
-                hideOpeningVisual();
-                finish(resolve);
-              }
-            };
-            const onEnded = () => {
-              hideOpeningVisual();
+              // ここでは演出行を畳まない。白い光の裏で結果素材を準備する。
+              cardStage.classList.add("reveal-hold");
+              revealFlashElement.classList.remove("active");
+              void revealFlashElement.offsetWidth;
+              revealFlashElement.classList.add("active");
               finish(resolve);
             };
-            const onError = () => finish(
-              reject,
-              new Error(`開封動画の再生中にエラーが発生しました（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`)
-            );
-
+            const onEnded = () => revealWhiteout();
+            const onError = () => finish(reject, new Error(
+              `開封動画の再生中にエラーが発生しました（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`
+            ));
             caseOpeningVideo.addEventListener("ended", onEnded);
-            caseOpeningVideo.addEventListener("timeupdate", onTimeUpdate);
             caseOpeningVideo.addEventListener("error", onError);
-            const duration = Number.isFinite(caseOpeningVideo.duration)
-              ? caseOpeningVideo.duration
-              : 0;
             timeoutId = setTimeout(
               () => finish(reject, new Error("開封動画が時間内に終了しませんでした。")),
-              Math.max(30000, (duration + 10) * 1000)
+              30000
             );
-            if (caseOpeningVideo.ended) finish(resolve);
           });
 
-          // muted動画として再生。失敗した場合はCSS演出に逃がさず、理由を表示する。
           await caseOpeningVideo.play();
           await endedPromise;
-          caseOpeningVideo.pause();
-          // 動画終了直後にCSSケースが一瞬復活するのを防ぐ。
-          drawingCard.classList.add("video-finished");
-          drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
-          // CSSだけに依存せず、動画終了後は演出コンテナ自体を即時に非表示にする。
-          drawingCard.style.setProperty("display", "none", "important");
-          drawingCard.style.setProperty("visibility", "hidden", "important");
-          drawingCard.style.setProperty("opacity", "0", "important");
-          cardStage.classList.add("opening-cleanup");
-          await sleep(120);
         })();
 
         const outcome = await drawResult;
+        await openingSequence;
+        
         await openingSequence;
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
