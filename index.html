@@ -952,11 +952,11 @@
               drawingCard.style.setProperty("opacity", "0", "important");
               cardStage.classList.add("opening-cleanup");
             };
-            // 動画末尾の黒いフレームが表示される前に、最後の0.35秒を切り上げて演出枠を隠す。
+            // 動画末尾の黒いフレームが表示される前に、最後の0.8秒を切り上げて演出枠を隠す。
             const onTimeUpdate = () => {
               const duration = caseOpeningVideo.duration;
               if (Number.isFinite(duration) && duration > 0 &&
-                  caseOpeningVideo.currentTime >= duration - 0.35) {
+                  caseOpeningVideo.currentTime >= duration - 0.8) {
                 hideOpeningVisual();
                 finish(resolve);
               }
