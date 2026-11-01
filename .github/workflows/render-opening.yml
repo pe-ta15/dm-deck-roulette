@@ -28,7 +28,7 @@ jobs:
       - name: Install Blender and FFmpeg
         run: |
           sudo apt-get update
-          sudo apt-get install -y blender ffmpeg
+          sudo apt-get install -y blender ffmpeg libegl1 libgl1 libgles2 libglx-mesa0 libegl-mesa0
       - name: Render realistic 3D WebM
         run: |
           blender --background --python tools/render_case_opening.py
