@@ -531,6 +531,9 @@
       cardStage.classList.remove("hidden", "winner", "absorption-burst");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch");
+      drawingCard.style.removeProperty("display");
+      drawingCard.style.removeProperty("visibility");
+      drawingCard.style.removeProperty("opacity");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
       drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished");
@@ -955,6 +958,10 @@
           // 動画終了直後にCSSケースが一瞬復活するのを防ぐ。
           drawingCard.classList.add("video-finished");
           drawingCard.classList.remove("video-opening", "opening-cutin", "treasure-scene");
+          // CSSだけに依存せず、動画終了後は演出コンテナ自体を即時に非表示にする。
+          drawingCard.style.setProperty("display", "none", "important");
+          drawingCard.style.setProperty("visibility", "hidden", "important");
+          drawingCard.style.setProperty("opacity", "0", "important");
           await sleep(120);
         })();
 
