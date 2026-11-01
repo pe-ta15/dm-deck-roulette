@@ -2280,6 +2280,115 @@ h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!impo
 #result .civilization-inlay:after{content:""!important;position:absolute!important;left:5px!important;right:5px!important;top:5px!important;bottom:5px!important;border:1px solid rgba(255,255,255,.5)!important;border-radius:2px!important;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 70%)!important}
 @media(max-width:480px){#result .result-civilizations{gap:7px!important;padding:7px 10px!important}#result .civilization-inlay{flex-basis:21px!important;width:21px!important;height:25px!important;min-width:21px!important}}
 
+  
+/* ===== User review: readable case, recognizable Duel Masters-style card, restrained civ icons ===== */
+/* Keep the subtitle and the opening stage in separate vertical zones. */
+#cardStage.case-opening-stage{
+  width:100%!important;max-width:620px!important;min-width:0!important;
+  grid-template-rows:380px auto!important;row-gap:12px!important;
+  margin:22px auto 0!important;overflow:visible!important;
+}
+#drawingCard.mana-absorption.opening-cutin{
+  position:relative!important;display:grid!important;place-items:center!important;
+  width:min(100%,390px)!important;height:380px!important;min-height:380px!important;
+  margin:0 auto!important;padding:12px!important;box-sizing:border-box!important;
+  border:1px solid #e9e9e7!important;border-radius:22px!important;
+  background:linear-gradient(180deg,#fff,#fbfbfa)!important;
+  box-shadow:inset 0 0 0 6px #f7f7f5,0 8px 22px rgba(15,15,15,.055)!important;
+  overflow:hidden!important;
+}
+#drawingCard.opening-cutin .deck-case{
+  top:50%!important;left:50%!important;
+}
+.deck-case .case-lid{transform-origin:50% 100%!important}
+/* The lid now stops at 72 degrees: the interior remains visible without standing upright. */
+/* Rebuild the visible face as a portrait trading card, with a title, artwork, type line and rules area. */
+.deck-case .case-card-stack .card-face{
+  position:absolute!important;left:2px!important;right:15px!important;top:0!important;bottom:0!important;
+  display:flex!important;flex-direction:column!important;gap:3px!important;
+  padding:4px!important;overflow:hidden!important;
+  border:2px solid #a98a50!important;border-radius:5px!important;
+  background:linear-gradient(135deg,#f7edcf 0%,#d9c18d 18%,#f3e6c5 52%,#c4a66a 100%)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),inset 0 0 0 3px rgba(104,70,30,.2),0 2px 5px rgba(0,0,0,.32)!important;
+}
+.dm-card-header{
+  display:flex;align-items:center;justify-content:space-between;gap:3px;
+  min-height:15px;padding:1px 3px;border:1px solid rgba(85,57,27,.55);border-radius:2px;
+  color:#241b10;background:linear-gradient(180deg,#fff6dc,#cdb27a);
+  font:800 6px/1.1 system-ui,sans-serif;letter-spacing:-.02em;
+}
+.dm-card-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.dm-card-cost{
+  display:grid;place-items:center;flex:0 0 12px;width:12px;height:12px;border-radius:50%;
+  border:1px solid #9d762e;background:radial-gradient(circle at 35% 25%,#fff8d8,#c49b45 75%);
+  font-size:7px;color:#38250c;
+}
+.dm-card-art{
+  position:relative;flex:1 1 auto;min-height:0;overflow:hidden;
+  border:2px solid #6c5937;border-radius:2px;
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(255,241,174,.95),transparent 19%),
+    radial-gradient(ellipse at 50% 70%,rgba(255,255,255,.35),transparent 42%),
+    linear-gradient(155deg,#182b3d 0%,#486d76 34%,#b17b4d 67%,#332a28 100%);
+  box-shadow:inset 0 0 12px rgba(0,0,0,.48);
+}
+.dm-art-orb{
+  position:absolute;left:50%;top:38%;width:34%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border:2px solid rgba(255,239,180,.9);border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,#fff9d8 0 7%,#f5c66b 24%,#9a4d36 62%,#342a3b 100%);
+  box-shadow:0 0 9px 3px rgba(255,219,126,.58);
+}
+.dm-art-silhouette{
+  position:absolute;left:50%;bottom:-12%;width:56%;height:68%;transform:translateX(-50%);
+  border:2px solid rgba(245,222,164,.72);border-radius:48% 48% 8% 8%;
+  background:linear-gradient(100deg,#17232c,#53616a 45%,#18232b);
+  clip-path:polygon(50% 0,66% 22%,94% 35%,78% 58%,100% 100%,0 100%,22% 58%,6% 35%,34% 22%);
+}
+.dm-art-spark{
+  position:absolute;left:18%;top:18%;width:4px;height:4px;border-radius:50%;
+  background:#fff6d3;box-shadow:38px 10px 0 #fff6d3,58px 34px 0 rgba(255,235,177,.8),18px 54px 0 #fff;
+}
+.dm-card-type{
+  padding:2px 3px;border:1px solid rgba(82,57,29,.5);
+  color:#2c2114;background:linear-gradient(180deg,#f8efd8,#d5bd8b);
+  font:800 5.5px/1 system-ui,sans-serif;text-align:left;
+}
+.dm-card-rules{
+  display:flex;flex-direction:column;gap:3px;min-height:24px;padding:4px;
+  border:1px solid rgba(99,77,43,.45);background:rgba(255,250,231,.88);
+}
+.dm-card-rules i{display:block;height:2px;border-radius:2px;background:rgba(65,54,38,.52)}
+.dm-card-rules i:nth-child(1){width:94%}.dm-card-rules i:nth-child(2){width:78%}.dm-card-rules i:nth-child(3){width:87%}
+.dm-card-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:3px;
+  padding:2px 3px;border:1px solid rgba(79,54,26,.58);
+  color:#f8f1df;background:linear-gradient(90deg,#263b35,#536d60 55%,#273b35);
+  font:700 5px/1 system-ui,sans-serif;
+}
+.dm-card-footer b{font-size:7px;color:#fff4cf}
+/* Existing civilization symbol artwork is reused, subdued for the result plaque. */
+#result .result-civilizations{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:10px!important;width:auto!important;height:auto!important;margin:4px auto 0!important;
+  padding:7px 12px!important;overflow:visible!important;
+  border:1px solid #e9e4d8!important;border-radius:12px!important;
+  background:rgba(255,255,255,.72)!important;
+  box-shadow:inset 0 1px 0 #fff,0 2px 7px rgba(15,15,15,.035)!important;
+}
+#result .civilization-icon{
+  display:block!important;width:25px!important;height:25px!important;flex:0 0 25px!important;
+  object-fit:contain!important;filter:grayscale(.68) saturate(.42) opacity(.78)!important;
+  padding:2px!important;border:1px solid rgba(125,125,115,.18)!important;border-radius:6px!important;
+  background:linear-gradient(145deg,#fff,#f0f0ec)!important;
+  box-shadow:0 1px 2px rgba(20,20,20,.08)!important;
+}
+@media(max-width:480px){
+  #cardStage.case-opening-stage{grid-template-rows:340px auto!important;margin-top:18px!important}
+  #drawingCard.mana-absorption.opening-cutin{height:340px!important;min-height:340px!important;width:min(100%,350px)!important}
+  #result .result-civilizations{gap:7px!important;padding:6px 9px!important}
+  #result .civilization-icon{width:22px!important;height:22px!important;flex-basis:22px!important}
+}
+
   </style>
 </head>
 <body>
@@ -2292,7 +2401,13 @@ h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!impo
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
-              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span><span class="card-face"></span></div></div>
+              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span><div class="card-face" aria-hidden="true">
+                <div class="dm-card-header"><span class="dm-card-name">龍装者の召喚</span><span class="dm-card-cost">7</span></div>
+                <div class="dm-card-art"><i class="dm-art-orb"></i><i class="dm-art-silhouette"></i><i class="dm-art-spark"></i></div>
+                <div class="dm-card-type">クリーチャー</div>
+                <div class="dm-card-rules"><i></i><i></i><i></i></div>
+                <div class="dm-card-footer"><span>W・ブレイカー</span><b>7000</b></div>
+              </div></div></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
@@ -2680,10 +2795,10 @@ h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!impo
       // CSSの静止指定や端末ごとのアニメーション合成差に上書きされないようにする。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.16,values:[16,-1,1]},
-        {at:.42,values:[58,-2,2]},
-        {at:.76,values:[88,-3,3]},
-        {at:1,values:[100,-3,3]}
+        {at:.16,values:[10,-1,1]},
+        {at:.42,values:[34,-2,2]},
+        {at:.76,values:[60,-3,3]},
+        {at:1,values:[72,-3,3]}
       ], 1040, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
@@ -2916,15 +3031,23 @@ h1{color:#37352f!important;letter-spacing:.025em!important;text-shadow:none!impo
         const resultCivs = document.createElement("div");
         resultCivs.className = "result-civilizations";
         resultCivs.setAttribute("aria-label", "使用文明");
-        const civColors = { fire:"#e53935", water:"#168bd2", nature:"#299b45", light:"#f2c600", darkness:"#743c9b", zero:"#aab4c1" };
+        const civilizationIcons = {
+          fire: { src:"icons/fire.png", label:"火文明" },
+          water: { src:"icons/water.png", label:"水文明" },
+          nature: { src:"icons/nature.png", label:"自然文明" },
+          light: { src:"icons/light.png", label:"光文明" },
+          darkness: { src:"icons/darkness.png", label:"闇文明" }
+        };
         const civilizations = getDeckCivilizations(deck);
-        civilizations.forEach((civ, index) => {
-          const facet = document.createElement("span");
-          facet.className = "civilization-inlay";
-          facet.setAttribute("aria-hidden", "true");
-          facet.style.setProperty("--inlay-color", civColors[civ] || "#aab4c1");
-          facet.style.setProperty("--inlay-index", String(index));
-          resultCivs.appendChild(facet);
+        civilizations.forEach(civ => {
+          const icon = document.createElement("img");
+          const item = civilizationIcons[civ];
+          if (!item) return;
+          icon.className = "civilization-icon";
+          icon.src = item.src;
+          icon.alt = item.label;
+          icon.title = item.label;
+          resultCivs.appendChild(icon);
         });
         resultElement.append(resultEyebrow, resultTitle);
         if (civilizations.length > 0) resultElement.appendChild(resultCivs);
