@@ -491,10 +491,12 @@
         const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
         const easedTurn = turns * (0.20 * t + 0.80 * t * t);
         const angle = startAngle + Math.PI * 2 * easedTurn;
-        const r = radius * Math.pow(1 - t, 0.88);
+        // 未定義の radius を参照せず、画面サイズから算出した楕円軌道を使う。
+        // 吸収が進むほどX/Yそれぞれの半径を縮め、アイコンを中央へ集める。
+        const convergence = Math.pow(1 - t, 0.88);
         return {
-          x: rect.width / 2 + Math.cos(angle) * r * (orbitRadiusX / 145),
-          y: rect.height / 2 + Math.sin(angle) * r * (orbitRadiusY / 145)
+          x: rect.width / 2 + Math.cos(angle) * orbitRadiusX * convergence,
+          y: rect.height / 2 + Math.sin(angle) * orbitRadiusY * convergence
         };
       };
 
