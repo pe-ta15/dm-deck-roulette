@@ -233,6 +233,44 @@
       #spinButton{margin-top:6px}
     }
 
+
+    /* ===== Camera-cut treasure reveal + compact winner layout ===== */
+    #drawingCard.mana-absorption{position:relative;isolation:isolate;overflow:hidden;border-radius:18px;}
+    #drawingCard.mana-absorption.camera-cut .mana-orb{opacity:0!important;transition:opacity .18s ease}
+    #drawingCard.mana-absorption.camera-cut .drawing-card{opacity:0!important;visibility:hidden}
+    #drawingCard.mana-absorption.camera-cut .deck-case{transition:transform .62s cubic-bezier(.2,.78,.18,1),filter .5s ease;}
+    /* Camera 1: close frontal detail of the magnetic clasp */
+    #drawingCard.mana-absorption.camera-1 .deck-case{top:53%;transform:translate(-50%,-50%) perspective(900px) rotateX(3deg) rotateY(0deg) scale(1.58);filter:drop-shadow(0 20px 24px rgba(0,0,0,.7));}
+    #drawingCard.mana-absorption.camera-1 .case-lock{transform:translate(-50%,2px) scale(1.2);}
+    /* Camera 2: clear upper three-quarter view; lid swings away from the viewer */
+    #drawingCard.mana-absorption.camera-2 .deck-case{top:58%;transform:translate(-50%,-50%) perspective(760px) rotateX(34deg) rotateY(-9deg) scale(1.72);filter:drop-shadow(0 24px 26px rgba(0,0,0,.72));}
+    #drawingCard.mana-absorption.camera-2 .case-lid{transform-origin:50% 0%;}
+    /* Camera 3: tight view into the open cavity, not an underside view */
+    #drawingCard.mana-absorption.camera-3 .deck-case{top:66%;transform:translate(-50%,-50%) perspective(680px) rotateX(39deg) rotateY(0deg) scale(2.05);filter:drop-shadow(0 28px 30px rgba(0,0,0,.78));}
+    #drawingCard.mana-absorption.camera-3 .case-cavity{background:radial-gradient(ellipse at 50% 42%,#fff 0%,rgba(255,250,224,.98) 12%,var(--case-civ-glow,#d9e8ff) 30%,rgba(255,255,255,.4) 48%,#090e18 82%);box-shadow:inset 0 0 34px #fff,inset 0 0 70px var(--case-civ-glow,#fff);}
+    #drawingCard.mana-absorption.camera-3 .case-light{opacity:1;top:55%;width:180px;height:150px;filter:blur(20px);animation:treasureCorePulse .52s ease-in-out infinite alternate;}
+    #drawingCard.mana-absorption.camera-3 .case-spectrum{opacity:1;transform:scale(1.25);filter:blur(17px);}
+    @keyframes treasureCorePulse{from{transform:translate(-50%,-50%) scale(.82);opacity:.72}to{transform:translate(-50%,-50%) scale(1.3);opacity:1}}
+    /* The close-up viewport is a deliberate cut: no full-case overview during opening. */
+    #drawingCard.mana-absorption.camera-cut:after{content:"";position:absolute;z-index:1;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 42%,rgba(4,7,14,.42) 100%);}
+    #drawingCard.mana-absorption.camera-3:before{content:"";position:absolute;z-index:0;inset:-20%;background:radial-gradient(ellipse at 50% 66%,rgba(255,255,255,.96),var(--case-civ-glow,#d9e8ff) 24%,transparent 66%);filter:blur(16px);animation:treasureBloom .9s ease-out both;}
+    @keyframes treasureBloom{0%{opacity:0;transform:scale(.35)}45%{opacity:1;transform:scale(1.18)}100%{opacity:.88;transform:scale(1)}}
+    /* Winner state collapses the now-hidden case row; no 214px blank slot remains. */
+    #cardStage.winner{grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;}
+    #cardStage.winner #drawingCard{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
+    #cardStage.winner #keyCardImages{grid-row:1!important;padding:0!important;margin:0 auto!important;min-height:0!important;align-self:start;}
+    #keyCardImages{padding:0!important;margin:0 auto!important;min-height:0!important;}
+    #keyCardImages img{margin:0!important;}
+    #result{display:none!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;line-height:1.08!important;}
+    #result.has-result{display:grid!important;min-height:0!important;height:auto!important;margin:2px auto 0!important;padding:0 4px!important;line-height:1.08!important;}
+    #result.result-reveal{display:grid!important;margin-top:2px!important;padding:0 4px!important;}
+    @media(max-width:480px){
+      #drawingCard.mana-absorption.camera-1 .deck-case{transform:translate(-50%,-50%) perspective(850px) rotateX(3deg) rotateY(0) scale(1.42);}
+      #drawingCard.mana-absorption.camera-2 .deck-case{transform:translate(-50%,-50%) perspective(700px) rotateX(34deg) rotateY(-9deg) scale(1.52);}
+      #drawingCard.mana-absorption.camera-3 .deck-case{transform:translate(-50%,-50%) perspective(620px) rotateX(39deg) rotateY(0) scale(1.78);}
+      #cardStage.winner{grid-template-rows:0 min-content!important;}
+    }
+
   </style>
 </head>
 <body>
@@ -409,6 +447,7 @@
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "camera-1", "camera-2", "camera-3");
       deckCase.classList.add("camera-1");
+      drawingCard.classList.remove("camera-cut", "camera-1", "camera-2", "camera-3");
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -743,6 +782,7 @@
 
         // 宝箱型の期待演出：正面で解錠を見せ、斜め上から蓋を開き、俯瞰で光とカードを見せる。
         deckCase.classList.add("civ-charging");
+        drawingCard.classList.add("camera-cut", "camera-1");
         void deckCase.offsetWidth;
         deckCase.classList.add("pressure");
         await sleep(760);
@@ -751,22 +791,29 @@
         // 1つ目の画：正面寄り。留め具が外れ、ケースが開く直前の間を作る。
         deckCase.classList.remove("camera-2", "camera-3");
         deckCase.classList.add("camera-1");
+        drawingCard.classList.remove("camera-2", "camera-3");
+        drawingCard.classList.add("camera-1");
         await sleep(420);
 
         // 2つ目の画：斜め上から、厚みのある蓋が奥の蝶番を軸に開く様子を見せる。
         deckCase.classList.add("camera-2");
-        await sleep(360);
+        drawingCard.classList.remove("camera-1", "camera-3");
+        drawingCard.classList.add("camera-2");
+        await sleep(520);
         deckCase.classList.add("opening");
         createParticles();
-        await sleep(920);
+        await sleep(1120);
 
         // 3つ目の画：開口部を見下ろす。内部の光を見せてからカードを宝物のように射出。
         deckCase.classList.add("camera-3");
-        await sleep(420);
+        drawingCard.classList.remove("camera-1", "camera-2");
+        drawingCard.classList.add("camera-3");
+        await sleep(760);
         const cardLaunch = showKeyCards(deck);
         await Promise.all([cardLaunch, sleep(1120)]);
         await sleep(260);
         resultElement.textContent = deckName;
+        resultElement.classList.add("has-result");
         void resultElement.offsetWidth;
         resultElement.classList.add("result-reveal");
 
@@ -777,6 +824,7 @@
       } catch (error) {
         console.error(error);
         resultElement.textContent = "抽選に失敗しました";
+        resultElement.classList.add("has-result");
         keyCardImages.replaceChildren();
         cardStage.classList.remove("winner");
 
