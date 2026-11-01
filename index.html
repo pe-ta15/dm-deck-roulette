@@ -301,6 +301,14 @@
       .mana-absorption:before,.mana-absorption:after{width:142px!important;height:142px!important;}
     }
 
+    /* 透過WebM開封カットイン。動画未配置・再生失敗時は既存CSS演出へ戻す */
+    #caseOpeningVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:30;display:none;pointer-events:none;background:transparent;}
+    #drawingCard.video-opening #caseOpeningVideo{display:block;}
+    #drawingCard.video-opening .deck-case{visibility:hidden!important;}
+    #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
+    #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+    #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
+
     /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
     #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important;}
     #drawingCard.opening-cutin:before,#drawingCard.opening-cutin:after{opacity:0!important;}
@@ -365,6 +373,9 @@
             <div class="case-light"></div>
             <div class="case-burst"></div>
           </div>
+          <video id="caseOpeningVideo" preload="auto" muted playsinline aria-hidden="true">
+            <source src="case-opening.webm" type="video/webm">
+          </video>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
           <img class="mana-orb nature" src="icons/nature.png" alt="" aria-hidden="true">
@@ -398,6 +409,7 @@
     const deckListElement = document.getElementById("deckList");
     const drawingCard = document.getElementById("drawingCard");
     const deckCase = document.getElementById("deckCase");
+    const caseOpeningVideo = document.getElementById("caseOpeningVideo");
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
@@ -516,7 +528,11 @@
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
-      drawingCard.classList.remove("treasure-scene", "opening-cutin");
+      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening");
+      if (caseOpeningVideo) {
+        caseOpeningVideo.pause();
+        caseOpeningVideo.currentTime = 0;
+      }
       deckCase.style.removeProperty("opacity");
       deckCase.style.removeProperty("transform");
       deckCase.style.removeProperty("transition");
@@ -849,13 +865,56 @@
           deckCase.classList.remove("civ-charging");
           deckCase.classList.add("treasure-open");
           void deckCase.offsetWidth;
-          deckCase.classList.add("pressure");
-          await sleep(620);
-          deckCase.classList.remove("pressure");
-          deckCase.classList.add("opening");
           createParticles();
-          // 蓋が開ききったあと、白金色の内部発光を十分に見せてから結果へ。
-          await sleep(1650);
+
+          // 透過WebMが存在し、再生できる場合は固定カットインとして使用。
+          // ファイル未配置・コーデック非対応・再生拒否時はCSS製の開封演出へ切り替える。
+          let videoPlayed = false;
+          if (caseOpeningVideo && caseOpeningVideo.querySelector("source")) {
+            try {
+              caseOpeningVideo.currentTime = 0;
+              caseOpeningVideo.load();
+              await Promise.race([
+                new Promise((resolve, reject) => {
+                  const onReady = () => { cleanup(); resolve(); };
+                  const onError = () => { cleanup(); reject(new Error("開封動画を読み込めません")); };
+                  const cleanup = () => {
+                    caseOpeningVideo.removeEventListener("canplay", onReady);
+                    caseOpeningVideo.removeEventListener("error", onError);
+                  };
+                  caseOpeningVideo.addEventListener("canplay", onReady, { once: true });
+                  caseOpeningVideo.addEventListener("error", onError, { once: true });
+                }),
+                sleep(2200).then(() => { throw new Error("開封動画の読み込みがタイムアウトしました"); })
+              ]);
+              drawingCard.classList.add("video-opening");
+              await caseOpeningVideo.play();
+              videoPlayed = true;
+              await Promise.race([
+                new Promise(resolve => caseOpeningVideo.addEventListener("ended", resolve, { once: true })),
+                sleep(7000)
+              ]);
+              caseOpeningVideo.pause();
+              drawingCard.classList.remove("video-opening");
+            } catch (videoError) {
+              console.info("透過WebMを再生できないためCSS演出に切り替えます:", videoError);
+              caseOpeningVideo.pause();
+              caseOpeningVideo.currentTime = 0;
+              drawingCard.classList.remove("video-opening");
+            }
+          }
+
+          if (!videoPlayed) {
+            deckCase.classList.add("pressure");
+            await sleep(620);
+            deckCase.classList.remove("pressure");
+            deckCase.classList.add("opening");
+            // 蓋が開ききったあと、白金色の内部発光を見せてから結果へ。
+            await sleep(1650);
+          } else {
+            // 動画の最後の白金色フラッシュから結果表示へつなぐ短い間。
+            await sleep(120);
+          }
         })();
 
         const outcome = await drawResult;
