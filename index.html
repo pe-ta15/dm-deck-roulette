@@ -3149,6 +3149,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   inset:7px 8px 8px!important;border:1px solid rgba(255,255,255,.8)!important;
   border-radius:3px!important;background:linear-gradient(145deg,#fafcfb,#dce4de 60%,#bdc9c0)!important;
 }
+/* WAAPI drives the lid angle; disable the older CSS keyframe on the more-specific opening selector. */
+.deck-case.opening .case-lid{animation:none!important}
 /* Front skirt is a real continuation of the top panel, with a soft fabric fold at its upper edge. */
 .deck-case .case-lid-front{
   position:absolute!important;z-index:4!important;left:-3px!important;right:-3px!important;
