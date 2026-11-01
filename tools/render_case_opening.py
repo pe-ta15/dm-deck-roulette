@@ -147,6 +147,40 @@ core.data.energy=1900; core.data.keyframe_insert(data_path="energy",frame=76)
 core.data.energy=5200; core.data.keyframe_insert(data_path="energy",frame=91)
 core.data.energy=5200; core.data.keyframe_insert(data_path="energy",frame=96)
 
+# Light leaks forcefully through the opening seam as the lid releases.
+beam_mat=bpy.data.materials.new("Soft champagne-white energy beams")
+beam_mat.diffuse_color=(1.0,0.91,0.70,0.22)
+beam_mat.use_nodes=True
+beam_nodes=beam_mat.node_tree.nodes
+beam_bs=beam_nodes.get("Principled BSDF")
+beam_bs.inputs["Base Color"].default_value=(1.0,0.88,0.62,1)
+if "Emission Color" in beam_bs.inputs:
+    beam_bs.inputs["Emission Color"].default_value=(1.0,0.83,0.52,1)
+if "Emission Strength" in beam_bs.inputs:
+    beam_bs.inputs["Emission Strength"].default_value=2.2
+beam_bs.inputs["Roughness"].default_value=0.28
+if "Alpha" in beam_bs.inputs:
+    beam_bs.inputs["Alpha"].default_value=0.20
+if hasattr(beam_mat, "surface_render_method"):
+    beam_mat.surface_render_method="DITHERED"
+
+for index, (x, y, tilt) in enumerate([(-0.42,0.0,-0.24),(0.0,0.0,0.0),(0.42,0.0,0.24)]):
+    bpy.ops.mesh.primitive_cone_add(vertices=48, radius1=0.72, radius2=0.035, depth=2.5,
+                                    location=(x,y,2.15), rotation=(0,tilt,0))
+    beam=bpy.context.object
+    beam.name=f"Opening light beam {index+1}"
+    beam.data.materials.append(beam_mat)
+    beam.scale=(0.001,0.001,0.001)
+    beam.keyframe_insert(data_path="scale",frame=39)
+    beam.scale=(0.72,0.72,0.55)
+    beam.keyframe_insert(data_path="scale",frame=45)
+    beam.scale=(1.0,1.0,1.0)
+    beam.keyframe_insert(data_path="scale",frame=57)
+    beam.scale=(1.18,1.18,1.12)
+    beam.keyframe_insert(data_path="scale",frame=70)
+    beam.scale=(1.18,1.18,1.12)
+    beam.keyframe_insert(data_path="scale",frame=96)
+
 # Opening animation: subtle settling, latch release, then a decisive hinged swing.
 for frame, angle in [(1,0),(35,0),(40,-0.10),(47,-0.55),(58,-1.42),(69,-2.15),(78,-2.32),(96,-2.32)]:
     hinge.rotation_euler.x=angle
