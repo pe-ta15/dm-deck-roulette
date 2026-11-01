@@ -918,6 +918,9 @@
       }
     }
 
+  
+    #keyCardImages.result-ready { opacity:1 !important; pointer-events:auto !important; }
+
   </style>
 </head>
 <body>
@@ -1093,7 +1096,7 @@
       cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
-      keyCardImages.classList.remove("revealing", "case-launch");
+      keyCardImages.classList.remove("revealing", "case-launch", "result-ready");
       drawingCard.style.removeProperty("display");
       drawingCard.style.removeProperty("visibility");
       drawingCard.style.removeProperty("opacity");
@@ -1334,6 +1337,7 @@
 
       // カードがケースから飛び出した後、ケースを奥へ退かせてカードを主役にする。
       await sleep(900);
+      keyCardImages.classList.add("result-ready");
       keyCardImages.classList.remove("case-launch");
       deckCase.style.transition = "opacity .28s ease, transform .38s ease";
       deckCase.style.opacity = "0";
