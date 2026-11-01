@@ -1829,13 +1829,6 @@
       background:rgba(255,255,255,.62)!important;
       box-shadow:inset 0 1px 2px rgba(69,77,63,.06),0 2px 8px rgba(75,87,69,.06)!important;
     }
-    .civilization-gem {
-      display:block;width:17px;height:17px;flex:0 0 17px;border-radius:50%;
-      background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.98) 0 8%,var(--gem-color) 34%,color-mix(in srgb,var(--gem-color) 68%,#172018) 100%);
-      border:1px solid rgba(255,255,255,.88);
-      box-shadow:0 1px 3px rgba(30,40,31,.2),0 0 9px color-mix(in srgb,var(--gem-color) 44%,transparent),inset 0 0 3px rgba(255,255,255,.6);
-      transform:translateY(calc((var(--gem-index,0) % 2) * 1px));
-    }
     @media(max-width:480px) {
       .deck-case,#drawingCard.opening-cutin .deck-case{width:210px!important;height:220px!important}
       .deck-case .case-body{top:62px!important}
@@ -1843,11 +1836,209 @@
       .deck-case .case-lock{top:62px!important}
       .case-card-stack{height:54px}
       #result.has-result{padding:18px 13px 15px!important;margin-top:10px!important}
-      .civilization-gem{width:15px;height:15px;flex-basis:15px}
     }
     @media(prefers-reduced-motion:reduce) {
       .deck-case.mouth-eruption .case-mouth-beam,.deck-case.mouth-eruption .case-rays,.deck-case.mouth-eruption .case-energy-plume,
       .deck-case.mouth-eruption .case-light{animation-duration:.01ms!important;animation-iteration-count:1!important}
+    }
+
+
+    /* ===== Revision: one-piece hinged portrait deck case + editorial result styling ===== */
+    .deck-case,
+    #drawingCard.opening-cutin .deck-case {
+      width:178px!important;height:292px!important;
+      top:50%!important;
+      transform:translate(-50%,-50%) perspective(1100px) rotateX(10deg) rotateY(-3deg)!important;
+      transform-style:preserve-3d!important;
+      filter:drop-shadow(0 24px 22px rgba(39,53,43,.24))!important;
+    }
+    @media(max-width:480px) {
+      .deck-case,#drawingCard.opening-cutin .deck-case{width:164px!important;height:270px!important}
+    }
+    /* Case body is a deep, narrow rectangular shell. Its upper rim meets the hinge exactly. */
+    .deck-case .case-body {
+      top:72px!important;bottom:4px!important;left:4px!important;right:4px!important;
+      border:5px solid #9aab9d!important;border-top:0!important;
+      border-radius:5px 5px 13px 13px!important;
+      overflow:visible!important;
+      background:linear-gradient(90deg,#f8fbf8 0%,#b7c9bb 7%,#eaf1eb 19%,#d5e2d8 48%,#b5c8b9 91%,#fbfdfb 100%)!important;
+      box-shadow:inset 8px 0 11px rgba(255,255,255,.86),inset -9px 0 13px rgba(73,100,79,.2),inset 0 -17px 20px rgba(75,101,80,.2),0 8px 14px rgba(43,62,47,.17)!important;
+      transform-style:preserve-3d!important;
+    }
+    .deck-case .case-body:before {
+      left:12px!important;right:12px!important;top:0!important;bottom:8px!important;
+      border:2px solid rgba(130,155,137,.9)!important;border-top:0!important;
+      border-radius:0 0 8px 8px!important;
+      background:linear-gradient(90deg,#101a13,#17271b 18%,#0b160f 50%,#1b2c20 84%,#101a13)!important;
+      box-shadow:inset 0 0 22px #020704,inset 0 14px 18px rgba(0,0,0,.82)!important;
+    }
+    .deck-case .case-body:after {
+      left:0!important;right:0!important;top:0!important;height:9px!important;
+      border:1px solid #829987!important;border-bottom:3px solid #526b58!important;
+      background:linear-gradient(180deg,#f5faf5,#a9bead 65%,#718b77)!important;
+      box-shadow:0 3px 5px rgba(24,40,27,.3)!important;
+    }
+    .deck-case .case-cavity {
+      left:17px!important;right:17px!important;top:9px!important;bottom:13px!important;
+      border:2px solid rgba(130,155,137,.92)!important;border-bottom:5px solid #718a76!important;
+      border-radius:3px 3px 7px 7px!important;
+      background:linear-gradient(180deg,#061008,#101d13 70%,#1a2b1e)!important;
+      box-shadow:inset 0 0 25px #000,inset 0 12px 18px rgba(0,0,0,.88),0 0 0 1px rgba(255,255,255,.16)!important;
+      overflow:hidden!important;
+    }
+    /* A real-looking vertical deck: repeated card edges, visible top faces, and a tight stack. */
+    .case-card-stack {
+      position:absolute!important;left:50%!important;bottom:8px!important;
+      width:83%!important;height:158px!important;
+      transform:translateX(-50%) translateZ(2px)!important;
+      border:0!important;border-radius:4px 4px 2px 2px!important;
+      background:linear-gradient(90deg,#263b2b 0%,#d9e6da 8%,#f8fcf8 20%,#c8d9ca 50%,#eaf2eb 82%,#263b2b 100%)!important;
+      box-shadow:0 7px 10px rgba(0,0,0,.55),inset 0 0 9px rgba(255,255,255,.58)!important;
+      opacity:1!important;
+    }
+    .case-card-stack .card-edge {
+      position:absolute;left:3px;right:3px;height:3px;border-radius:2px;
+      background:linear-gradient(90deg,#dce8de,#fff,#9fb5a3);
+      box-shadow:0 1px 2px rgba(0,0,0,.48);
+    }
+    .case-card-stack .card-edge:nth-child(1){top:8px}
+    .case-card-stack .card-edge:nth-child(2){top:13px}
+    .case-card-stack .card-edge:nth-child(3){top:18px}
+    .case-card-stack .card-face {
+      position:absolute;left:5px;right:5px;top:25px;bottom:7px;
+      border:1px solid rgba(239,248,240,.88);border-radius:3px;
+      background:
+        linear-gradient(155deg,rgba(255,255,255,.76),rgba(255,255,255,0) 38%),
+        repeating-linear-gradient(0deg,rgba(33,58,39,.16) 0 1px,transparent 1px 5px),
+        linear-gradient(120deg,#d9e8dc,#91ad98 52%,#dce9df);
+      box-shadow:inset 0 0 0 2px rgba(255,255,255,.2),inset 0 -10px 14px rgba(37,69,45,.18);
+    }
+    /* Hinge is fixed to the back rim; lid pivots from its bottom edge and cannot visually detach. */
+    .deck-case .case-hinge {
+      position:absolute!important;z-index:15!important;
+      left:9px!important;right:9px!important;top:67px!important;height:12px!important;
+      border:1px solid #657e69!important;border-radius:7px!important;
+      background:linear-gradient(180deg,#f5faf5 0%,#a9bfad 34%,#627d68 72%,#344d39 100%)!important;
+      box-shadow:0 2px 4px rgba(21,39,25,.42),inset 0 1px 1px #fff!important;
+    }
+    .deck-case .case-hinge:before,.deck-case .case-hinge:after {
+      content:"";position:absolute;top:1px;width:17px;height:8px;border-radius:5px;
+      border:1px solid rgba(255,255,255,.72);
+      background:linear-gradient(180deg,#f5faf5,#829b87 55%,#3c5842);
+      box-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
+    .deck-case .case-hinge:before{left:8px}
+    .deck-case .case-hinge:after{right:8px}
+    .deck-case .case-lid {
+      position:absolute!important;z-index:14!important;
+      left:3px!important;right:3px!important;top:48px!important;height:28px!important;
+      transform-origin:50% 100%!important;
+      transform:translateY(0) translateZ(0) rotateX(0deg)!important;
+      transform-style:preserve-3d!important;backface-visibility:visible!important;
+      border:3px solid #a5b9a9!important;border-bottom:4px solid #526d58!important;
+      border-radius:7px 7px 4px 4px!important;
+      background:linear-gradient(145deg,#fff 0%,#e5eee7 44%,#afc5b3 100%)!important;
+      box-shadow:inset 0 2px 6px #fff,0 3px 7px rgba(36,57,40,.22)!important;
+    }
+    .deck-case .case-lid:before {
+      left:7px!important;right:7px!important;top:4px!important;height:13px!important;
+      border:1px solid rgba(255,255,255,.8)!important;border-radius:3px!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(153,180,158,.22))!important;
+    }
+    .deck-case .case-lid:after {
+      left:4px!important;right:4px!important;bottom:-5px!important;height:4px!important;
+      background:linear-gradient(180deg,#8fa995,#435e49)!important;
+      box-shadow:0 2px 3px rgba(0,0,0,.28)!important;
+    }
+    .deck-case .case-lid-inner {
+      inset:4px 8px 5px!important;border:1px solid rgba(255,255,255,.78)!important;
+      border-radius:3px!important;background:linear-gradient(145deg,#f8fcf8,#c5d9c9 55%,#91ad98)!important;
+    }
+    .deck-case .case-lock {
+      top:69px!important;z-index:18!important;width:25px!important;height:10px!important;
+      border:1px solid #8ca28f!important;border-radius:3px!important;
+      background:linear-gradient(180deg,#fff,#b6cbb9 58%,#6f8a75)!important;
+    }
+    .deck-case.opening .case-lid{animation:none!important}
+    .deck-case.opening .case-body{animation:none!important}
+    .deck-case.opening .case-body:after{animation:none!important;opacity:0!important}
+    .deck-case.mouth-eruption .case-light{animation:mouthCoreFlare .9s ease-out both!important}
+    /* Results: a designed collector's plaque, not a row of colored dots. */
+    #result.has-result {
+      position:relative!important;isolation:isolate!important;
+      display:flex!important;flex-direction:column!important;align-items:center!important;
+      gap:10px!important;width:min(calc(100% - 18px),560px)!important;
+      margin:18px auto 8px!important;padding:27px 22px 23px!important;
+      border:1px solid rgba(190,157,91,.62)!important;border-radius:24px!important;
+      background:
+        radial-gradient(ellipse at 50% -12%,rgba(255,255,255,.98),transparent 62%),
+        linear-gradient(145deg,#fffdf7 0%,#f5f0e3 47%,#e9eddf 100%)!important;
+      box-shadow:0 18px 38px rgba(52,65,49,.16),0 2px 0 rgba(255,255,255,.96) inset,0 0 0 5px rgba(255,255,255,.58)!important;
+      overflow:visible!important;
+    }
+    #result.has-result:before {
+      content:"";position:absolute;z-index:-1;inset:7px;border:1px solid rgba(184,151,87,.26);
+      border-radius:17px;pointer-events:none;
+      background:linear-gradient(120deg,rgba(255,255,255,.42),transparent 42%,rgba(211,222,204,.22));
+    }
+    #result.has-result:after {
+      content:"";position:absolute;z-index:-1;left:50%;bottom:-5px;width:38%;height:2px;
+      transform:translateX(-50%);border-radius:2px;
+      background:linear-gradient(90deg,transparent,#c6a45f 22%,#fff0bd 50%,#c6a45f 78%,transparent);
+      box-shadow:0 0 12px rgba(198,164,95,.35);
+    }
+    .result-eyebrow {
+      display:flex!important;align-items:center!important;gap:12px!important;
+      color:#8d7548!important;font-size:.62rem!important;font-weight:800!important;
+      letter-spacing:.3em!important;text-shadow:0 1px #fff!important;
+    }
+    .result-eyebrow:before,.result-eyebrow:after {
+      content:"";display:block;width:clamp(24px,8vw,58px);height:1px;
+      background:linear-gradient(90deg,transparent,#b99a5e);
+    }
+    .result-eyebrow:after{transform:scaleX(-1)}
+    .deck-name-title {
+      position:relative!important;width:100%!important;padding:9px 12px 13px!important;
+      border:0!important;border-bottom:1px solid rgba(177,151,99,.36)!important;border-radius:0!important;
+      color:#28382d!important;-webkit-text-fill-color:#28382d!important;
+      background:transparent!important;box-shadow:none!important;
+      font-family:Georgia,"Yu Mincho",serif!important;
+      font-size:clamp(1.35rem,4.7vw,2.05rem)!important;font-weight:800!important;
+      letter-spacing:.055em!important;line-height:1.28!important;
+      text-shadow:0 1px 0 #fff,0 5px 18px rgba(69,94,68,.13)!important;
+      filter:none!important;
+    }
+    .result-civilizations {
+      display:flex!important;align-items:center!important;justify-content:center!important;
+      gap:3px!important;width:auto!important;max-width:100%!important;height:15px!important;
+      margin:2px auto 0!important;padding:0 8px!important;
+      border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+    }
+    .civilization-inlay {
+      position:relative!important;display:block!important;flex:0 0 23px!important;
+      width:23px!important;height:7px!important;
+      transform:skewX(-28deg) translateY(calc((var(--inlay-index,0) % 2) * 1px));
+      border:1px solid rgba(255,255,255,.78)!important;border-radius:1px!important;
+      background:linear-gradient(180deg,rgba(255,255,255,.82),transparent 38%),var(--inlay-color)!important;
+      box-shadow:0 1px 2px rgba(39,51,39,.22),0 0 5px color-mix(in srgb,var(--inlay-color) 26%,transparent)!important;
+    }
+    .civilization-inlay:after {
+      content:"";position:absolute;inset:1px 2px;border-top:1px solid rgba(255,255,255,.52);
+      opacity:.8;
+    }
+    @media(max-width:480px) {
+      #result.has-result{padding:22px 15px 19px!important;gap:8px!important}
+      .civilization-inlay{flex-basis:19px!important;width:19px!important;height:6px!important}
+      .result-civilizations{gap:2px!important}
+    }
+
+
+    /* Reserve real vertical room for the tall case so it is not cropped or crowded. */
+    .card-stage.case-opening-stage{grid-template-rows:320px auto!important}
+    #drawingCard.mana-absorption.opening-cutin{height:320px!important;min-height:320px!important}
+    @media(max-width:480px){
+      .card-stage.case-opening-stage{grid-template-rows:300px auto!important}
+      #drawingCard.mana-absorption.opening-cutin{height:300px!important;min-height:300px!important}
     }
 
   </style>
@@ -1862,7 +2053,7 @@
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
-              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><i></i><i></i><i></i></div></div>
+              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span><span class="card-face"></span></div></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
@@ -2026,7 +2217,7 @@
     }
 
     function showDrawingCard() {
-      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold");
+      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch", "result-ready");
@@ -2210,6 +2401,7 @@
     const easeOutCubic = t => 1 - Math.pow(1-t,3);
 
     async function playCaseOpeningSequence() {
+      cardStage.classList.add("case-opening-stage");
       drawingCard.classList.add("opening-cutin");
       void drawingCard.offsetWidth;
       await sleep(220);
@@ -2249,11 +2441,11 @@
       // CSSの静止指定や端末ごとのアニメーション合成差に上書きされないようにする。
       await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.12,values:[16,-2,4]},
-        {at:.34,values:[72,-13,12]},
-        {at:.68,values:[132,-30,24]},
-        {at:1,values:[148,-34,27]}
-      ], 1120, v => "rotateX("+v[0]+"deg) translateY("+v[1]+"px) translateZ("+v[2]+"px)", easeOutCubic);
+        {at:.12,values:[18,-1,1]},
+        {at:.34,values:[68,-3,2]},
+        {at:.68,values:[128,-5,3]},
+        {at:1,values:[154,-6,4]}
+      ], 1040, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
       // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
       deckCase.classList.add("mouth-eruption");
@@ -2265,6 +2457,7 @@
       await sleep(420);
       revealFlashElement.classList.remove("active");
       drawingCard.classList.remove("case-blast", "case-impact");
+      cardStage.classList.remove("case-opening-stage");
     }
 
     function createParticles() {
@@ -2486,13 +2679,12 @@
         const civColors = { fire:"#e53935", water:"#168bd2", nature:"#299b45", light:"#f2c600", darkness:"#743c9b", zero:"#aab4c1" };
         const civilizations = getDeckCivilizations(deck);
         civilizations.forEach((civ, index) => {
-          const gem = document.createElement("span");
-          gem.className = "civilization-gem";
-          gem.setAttribute("aria-hidden", "true");
-          const color = civColors[civ] || "#aab4c1";
-          gem.style.setProperty("--gem-color", color);
-          gem.style.setProperty("--gem-index", String(index));
-          resultCivs.appendChild(gem);
+          const facet = document.createElement("span");
+          facet.className = "civilization-inlay";
+          facet.setAttribute("aria-hidden", "true");
+          facet.style.setProperty("--inlay-color", civColors[civ] || "#aab4c1");
+          facet.style.setProperty("--inlay-index", String(index));
+          resultCivs.appendChild(facet);
         });
         resultElement.append(resultEyebrow, resultTitle);
         if (civilizations.length > 0) resultElement.appendChild(resultCivs);
