@@ -305,6 +305,8 @@
     #caseOpeningVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:30;display:none;pointer-events:none;background:transparent;}
     #drawingCard.video-opening #caseOpeningVideo{display:block;}
     #drawingCard.video-opening .deck-case{visibility:hidden!important;}
+    /* WebM終了後もCSS製ケースを再表示しない */
+    #drawingCard.video-finished .deck-case{display:none!important;visibility:hidden!important;}
     #drawingCard.video-opening .mana-orb,#drawingCard.video-opening .drawing-card{display:none!important;}
     #drawingCard.video-opening{overflow:hidden!important;background:transparent!important;border:0!important;box-shadow:none!important;}
     #drawingCard.video-opening:before,#drawingCard.video-opening:after{display:none!important;}
@@ -528,7 +530,7 @@
       keyCardImages.classList.remove("revealing", "case-launch");
       drawingCard.classList.remove("hidden", "charging", "absorbing");
       deckCase.classList.remove("opening", "civ-charging", "pressure", "treasure-open");
-      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening");
+      drawingCard.classList.remove("treasure-scene", "opening-cutin", "video-opening", "video-finished");
       if (caseOpeningVideo) {
         caseOpeningVideo.pause();
         caseOpeningVideo.currentTime = 0;
@@ -947,6 +949,8 @@
           await caseOpeningVideo.play();
           await endedPromise;
           caseOpeningVideo.pause();
+          // 動画終了直後にCSSケースが一瞬復活するのを防ぐ。
+          drawingCard.classList.add("video-finished");
           drawingCard.classList.remove("video-opening");
           await sleep(120);
         })();
