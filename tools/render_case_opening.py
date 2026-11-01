@@ -22,10 +22,10 @@ scene.render.fps=FPS
 scene.render.image_settings.file_format="PNG"
 scene.render.film_transparent=False
 scene.view_settings.view_transform="AgX"
-scene.world.color=(0.006,0.009,0.016)
+scene.world.color=(1.0,1.0,1.0)
 scene.world.use_nodes=True
-scene.world.node_tree.nodes["Background"].inputs["Color"].default_value=(0.006,0.009,0.016,1)
-scene.world.node_tree.nodes["Background"].inputs["Strength"].default_value=0.28
+scene.world.node_tree.nodes["Background"].inputs["Color"].default_value=(1.0,1.0,1.0,1)
+scene.world.node_tree.nodes["Background"].inputs["Strength"].default_value=0.8
 
 def material(name, color, metallic=0.0, roughness=0.4):
     m=bpy.data.materials.new(name)
@@ -35,6 +35,10 @@ def material(name, color, metallic=0.0, roughness=0.4):
     bs.inputs["Base Color"].default_value=(*color,1)
     bs.inputs["Metallic"].default_value=metallic
     bs.inputs["Roughness"].default_value=roughness
+    if "Transmission Weight" in bs.inputs:
+        bs.inputs["Transmission Weight"].default_value=0.28 if "milky" in name.lower() else 0.0
+    if "Coat Weight" in bs.inputs:
+        bs.inputs["Coat Weight"].default_value=0.22 if "milky" in name.lower() else 0.0
     return m
 
 def cube(name, loc, scale, mat, bevel=0.04):
@@ -52,11 +56,11 @@ def cube(name, loc, scale, mat, bevel=0.04):
         mod2=o.modifiers.new("Weighted corner normals","WEIGHTED_NORMAL")
     return o
 
-mat_shell=material("Matte charcoal polymer",(0.022,0.029,0.039),0.08,0.29)
-mat_edge=material("Soft-touch edge",(0.045,0.055,0.069),0.12,0.32)
-mat_inner=material("Deep black interior",(0.003,0.005,0.009),0.0,0.52)
-mat_metal=material("Subtle graphite hinge",(0.12,0.145,0.17),0.72,0.24)
-mat_floor=material("Studio floor",(0.009,0.013,0.021),0.12,0.34)
+mat_shell=material("Milky translucent white polypropylene",(0.82,0.87,0.86),0.0,0.22)
+mat_edge=material("Translucent milky edge",(0.91,0.94,0.92),0.0,0.24)
+mat_inner=material("Soft grey inner cavity",(0.25,0.29,0.28),0.0,0.38)
+mat_metal=material("Pale translucent hinge",(0.67,0.72,0.70),0.25,0.25)
+mat_floor=material("Seamless white studio floor",(0.96,0.97,0.96),0.0,0.5)
 
 # Studio floor and low, seamless dark environment.
 cube("Studio floor",(0,0,-0.18),(200,200,0.25),mat_floor,0.08)
@@ -122,10 +126,10 @@ def area(name, loc, power, color, size, target=(0,0,0.5), shape="DISK", size_y=N
     l.rotation_euler=(Vector(target)-l.location).to_track_quat("-Z","Y").to_euler()
     return l
 
-area("Large cool softbox",(0,-4.5,6.5),780,(0.73,0.82,1.0),5.0)
-area("Warm edge strip",(4.0,1.5,4.2),1050,(1.0,0.77,0.52),3.2)
-area("Blue rim light",(-4.0,2.2,3.3),1250,(0.38,0.62,1.0),3.0)
-area("Front fill",(1.5,-5.0,2.4),250,(1.0,1.0,1.0),3.5)
+area("Large softbox",(0,-4.5,6.5),1050,(1.0,1.0,1.0),5.0)
+area("Soft warm edge strip",(4.0,1.5,4.2),700,(1.0,0.91,0.78),3.2)
+area("Neutral rim light",(-4.0,2.2,3.3),650,(0.88,0.94,1.0),3.0)
+area("Front fill",(1.5,-5.0,2.4),500,(1.0,1.0,1.0),3.5)
 
 # Internal light blooms as the lid releases.
 bpy.ops.object.light_add(type="AREA", location=(0,0,0.78))
@@ -158,7 +162,7 @@ for frame, z in [(1,4.55),(39,4.55),(42,4.51),(45,4.58),(48,4.55),(96,4.55)]:
     camera.keyframe_insert(data_path="location",frame=frame,index=2)
 
 # Whiteout is a camera exposure ramp: the whole rendered image blooms, hiding the cut.
-for frame, exposure in [(1,0.0),(78,0.0),(84,1.1),(89,3.0),(93,5.0),(96,5.0)]:
+for frame, exposure in [(1,0.0),(76,0.0),(82,1.0),(88,2.8),(92,5.0),(96,5.0)]:
     scene.view_settings.exposure=exposure
     scene.view_settings.keyframe_insert(data_path="exposure",frame=frame)
 
