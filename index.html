@@ -682,6 +682,245 @@
     @keyframes clearTitleImpact{0%{opacity:0;transform:translateY(16px) scale(.78);filter:brightness(1.5)}58%{opacity:1;transform:translateY(-2px) scale(1.045);filter:brightness(1.12)}100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}}
     @media(max-width:480px){#cardStage.winner #keyCardImages img{width:min(132px,calc((100% - 14px)/2))!important;max-height:min(205px,31vh)!important}#result.has-result{margin-top:9px!important;padding:11px 8px 13px!important}.deck-name-title{padding:10px 12px!important;font-size:clamp(1.18rem,5vw,1.7rem)!important}}
 
+  
+    /* ===== 3D hinged hard case + stable result composition ===== */
+    .deck-case,
+    #drawingCard.opening-cutin .deck-case,
+    .deck-case.treasure-open {
+      width: 178px !important;
+      height: 218px !important;
+      top: 50% !important;
+      perspective: 900px !important;
+      transform: translate(-50%,-50%) rotateY(-7deg) scale(1) !important;
+      transform-style: preserve-3d !important;
+      filter: drop-shadow(13px 18px 13px rgba(58,76,65,.24)) !important;
+    }
+    /* 前面の不要な横線は削除。ケースの厚みは左右側壁と底面の陰影で表現 */
+    .case-seam { display:none !important; }
+    .case-body {
+      left: 5px !important; right: 5px !important;
+      top: 45px !important; bottom: 4px !important;
+      border: 2px solid rgba(190,207,196,.98) !important;
+      border-top: 0 !important;
+      border-radius: 5px 5px 16px 16px !important;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(209,224,214,.9) 8%,rgba(246,250,247,.96) 22%,rgba(224,235,228,.78) 50%,rgba(190,207,196,.9) 92%,#fff 100%) !important;
+      box-shadow:
+        inset 8px 0 12px rgba(255,255,255,.95),
+        inset -10px 0 13px rgba(111,137,119,.22),
+        inset 0 -15px 19px rgba(111,137,119,.2),
+        5px 4px 0 rgba(146,165,151,.22),
+        0 8px 12px rgba(73,91,79,.16) !important;
+      transform: translateZ(0) !important;
+      overflow: visible !important;
+    }
+    .case-body:before {
+      left: 14px !important; right: 14px !important;
+      top: 5px !important; bottom: 13px !important;
+      border: 1px solid rgba(166,188,173,.86) !important;
+      border-radius: 3px 3px 9px 9px !important;
+      background:
+        linear-gradient(90deg,rgba(175,197,181,.48),rgba(238,245,240,.55) 48%,rgba(164,187,170,.48)),
+        linear-gradient(180deg,rgba(179,199,185,.45),rgba(232,241,235,.7) 65%,rgba(171,191,177,.55)) !important;
+      box-shadow: inset 0 0 18px rgba(103,130,111,.16),inset 0 6px 10px rgba(255,255,255,.78) !important;
+    }
+    .case-body:after { display:none !important; }
+    .case-cavity {
+      left: 17px !important; right: 17px !important;
+      top: 8px !important; bottom: 17px !important;
+      border: 1px solid rgba(162,184,169,.72) !important;
+      border-radius: 4px !important;
+      background: linear-gradient(180deg,rgba(166,188,174,.48),rgba(225,237,229,.64) 60%,rgba(163,186,170,.55)) !important;
+      box-shadow: inset 0 0 18px rgba(88,116,96,.18),inset 0 7px 12px rgba(255,255,255,.62) !important;
+    }
+    .case-spectrum { left:24px !important; right:24px !important; top:54px !important; bottom:24px !important; }
+    /* 蓋は箱の背面上端にある一本の軸へ接続。閉じた状態では上面を覆う板になる */
+    .case-hinge {
+      z-index: 12 !important;
+      left: 12px !important; right: 12px !important;
+      top: 36px !important; height: 12px !important;
+      border-radius: 7px !important;
+      background: linear-gradient(180deg,#fff 0%,#c9d8ce 35%,#82998a 72%,#f5faf6 100%) !important;
+      box-shadow: 0 2px 4px rgba(72,94,78,.3),inset 0 1px 2px #fff !important;
+      transform: translateZ(4px) !important;
+    }
+    .case-hinge:before,.case-hinge:after {
+      content:""; position:absolute; top:-3px; width:15px; height:17px;
+      border:1px solid #a8bcae; border-radius:5px;
+      background:linear-gradient(90deg,#fff,#c6d6cb 55%,#91a696);
+      box-shadow:0 2px 3px rgba(65,87,71,.2);
+    }
+    .case-hinge:before { left:5px; }
+    .case-hinge:after { right:5px; }
+    .case-lid {
+      z-index: 11 !important;
+      left: 2px !important; right: 2px !important;
+      top: 36px !important; height: 48px !important;
+      border: 2px solid rgba(190,207,196,.98) !important;
+      border-bottom: 3px solid rgba(151,174,158,.96) !important;
+      border-radius: 9px 9px 5px 5px !important;
+      background: linear-gradient(145deg,#fff 0%,#e4eee7 38%,#cbdace 78%,#f9fcfa 100%) !important;
+      box-shadow: inset 0 3px 8px #fff,inset 0 -5px 8px rgba(107,135,115,.2),0 5px 8px rgba(72,94,78,.2) !important;
+      transform-origin: 50% 0% !important;
+      transform: rotateX(68deg) translateZ(7px) !important;
+      transform-style: preserve-3d !important;
+      backface-visibility: visible !important;
+    }
+    .case-lid:before {
+      left:7px !important; right:7px !important; top:5px !important;
+      height:35px !important;
+      border:1px solid rgba(255,255,255,.96) !important;
+      border-radius:4px !important;
+      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(211,226,216,.42) 58%,rgba(163,186,170,.3)) !important;
+      box-shadow:inset 0 0 8px rgba(255,255,255,.8) !important;
+    }
+    .case-lid:after {
+      left:1px !important; right:1px !important; bottom:-7px !important;
+      height:7px !important; border-radius:0 0 4px 4px !important;
+      background:linear-gradient(180deg,#f8fcf9,#aebfb3) !important;
+      box-shadow:0 3px 5px rgba(64,84,70,.2) !important;
+    }
+    .case-lid-inner {
+      display:block !important;
+      position:absolute !important; inset:5px 8px 8px !important;
+      border:1px solid rgba(255,255,255,.82) !important;
+      border-radius:4px !important;
+      background:linear-gradient(145deg,rgba(235,243,237,.95),rgba(185,203,190,.82)) !important;
+      box-shadow:inset 0 0 12px rgba(111,137,119,.16) !important;
+      transform:translateZ(-2px) !important;
+    }
+    .case-lock {
+      z-index:13 !important; top:77px !important;
+      width:26px !important; height:9px !important;
+      border:1px solid #b8cbbd !important; border-radius:3px !important;
+      background:linear-gradient(180deg,#fff,#dce8df 65%,#aebfb3) !important;
+      box-shadow:0 2px 4px rgba(65,87,71,.2) !important;
+    }
+    .case-lock:after { display:none !important; }
+    .deck-case.opening .case-lid {
+      animation: physicallyHingedLid 1.18s cubic-bezier(.16,.78,.18,1) both !important;
+    }
+    @keyframes physicallyHingedLid {
+      0% { transform:rotateX(68deg) translateZ(7px); filter:brightness(1); }
+      12% { transform:rotateX(61deg) translateZ(8px); filter:brightness(1.08); }
+      38% { transform:rotateX(32deg) translateZ(12px); filter:brightness(1.25); }
+      72% { transform:rotateX(-12deg) translateZ(17px); filter:brightness(1.55); }
+      88% { transform:rotateX(-22deg) translateZ(18px); filter:brightness(1.35); }
+      100% { transform:rotateX(-18deg) translateZ(18px); filter:brightness(1.3); }
+    }
+    .deck-case.opening .case-hinge { filter:brightness(1.35); }
+    .deck-case.opening .case-body { animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both !important; }
+    /* カットインの見出し演出は完全撤去。ケース自体と文明光だけで期待を作る */
+    .case-cutin-caption { display:none !important; }
+    /* 開封から結果まで同じカード領域を使い、上下移動・レイアウト再配置を発生させない */
+    #cardStage:not(.hidden) {
+      position:relative !important;
+      display:block !important;
+      width:100% !important; max-width:620px !important;
+      height:236px !important; min-height:236px !important;
+      margin:0 auto !important; overflow:visible !important;
+    }
+    #drawingCard.mana-absorption {
+      position:absolute !important;
+      left:50% !important; top:50% !important;
+      width:100% !important; max-width:460px !important;
+      height:228px !important; min-height:228px !important;
+      transform:translate(-50%,-50%) !important;
+    }
+    #keyCardImages {
+      position:absolute !important;
+      left:0 !important; right:0 !important; top:0 !important;
+      width:100% !important; height:100% !important;
+      min-height:0 !important; margin:0 auto !important; padding:0 !important;
+      display:flex !important; justify-content:center !important;
+      align-items:center !important; align-content:center !important;
+      gap:10px !important; overflow:visible !important;
+      opacity:0; pointer-events:none;
+    }
+    #keyCardImages.case-launch { opacity:1 !important; pointer-events:auto !important; }
+    #keyCardImages img {
+      position:relative !important; display:block !important;
+      flex:0 1 148px !important;
+      width:min(148px,calc((100% - 20px)/2)) !important;
+      max-width:100% !important; height:auto !important;
+      max-height:218px !important; object-fit:contain !important;
+      margin:0 !important;
+    }
+    /* カードは中心位置から静かに現れ、下から跳ね上がらない */
+    #keyCardImages.case-launch img {
+      animation:stableCardAppear .48s ease-out both !important;
+    }
+    #keyCardImages.case-launch img:nth-child(2) { animation-delay:.06s !important; }
+    #keyCardImages.case-launch img:nth-child(3) { animation-delay:.12s !important; }
+    @keyframes stableCardAppear {
+      from { opacity:0; transform:scale(.94); filter:brightness(1.35); }
+      to { opacity:1; transform:scale(1); filter:brightness(1); }
+    }
+    #cardStage.winner {
+      display:block !important; height:236px !important; min-height:236px !important;
+      grid-template-rows:none !important; overflow:visible !important;
+    }
+    #cardStage.winner #drawingCard { display:none !important; }
+    #cardStage.winner #keyCardImages {
+      position:absolute !important; inset:0 !important; width:100% !important;
+      height:100% !important; opacity:1 !important; pointer-events:auto !important;
+      display:flex !important; justify-content:center !important; align-items:center !important;
+      padding:0 !important; margin:0 auto !important;
+    }
+    #cardStage.winner #keyCardImages img {
+      flex:0 1 148px !important; width:min(148px,calc((100% - 20px)/2)) !important;
+      max-height:218px !important; transform:none !important;
+      animation:none !important;
+    }
+    #result.has-result {
+      display:flex !important; flex-direction:column !important;
+      align-items:center !important; justify-content:center !important;
+      gap:9px !important; width:100% !important; max-width:620px !important;
+      min-height:0 !important; height:auto !important;
+      margin:10px auto 8px !important; padding:14px 12px 16px !important;
+      border:1px solid #d8c28f !important; border-radius:16px !important;
+      background:linear-gradient(145deg,#fff 0%,#fff9e9 55%,#fff 100%) !important;
+      box-shadow:0 7px 22px rgba(90,72,35,.1),inset 0 1px 0 #fff !important;
+      color:#302719 !important; text-shadow:none !important;
+    }
+    .result-eyebrow { color:#79602c !important; font-size:.76rem !important; letter-spacing:.16em !important; }
+    .deck-name-title {
+      display:block !important; width:fit-content !important; max-width:100% !important;
+      padding:10px clamp(14px,4vw,28px) !important;
+      border:2px solid #b98d3c !important; border-radius:12px !important;
+      background:linear-gradient(110deg,#fff9e8,#f1d17c 35%,#fff5d6 62%,#e9c36b) !important;
+      color:#33240d !important; -webkit-text-fill-color:#33240d !important;
+      font-size:clamp(1.25rem,4.8vw,2.05rem) !important;
+      font-weight:900 !important; letter-spacing:.025em !important;
+      line-height:1.25 !important; text-align:center !important;
+      overflow-wrap:anywhere !important; word-break:normal !important;
+      text-shadow:0 1px 0 #fff,0 2px 2px rgba(75,49,10,.16) !important;
+      filter:drop-shadow(0 3px 5px rgba(111,79,24,.16)) !important;
+      animation:none !important;
+    }
+    #result.result-reveal .deck-name-title { animation:clearTitleImpact .55s ease-out both !important; }
+    @media(max-width:480px) {
+      #cardStage:not(.hidden),#cardStage.winner { height:218px !important; min-height:218px !important; }
+      #drawingCard.mana-absorption { height:210px !important; min-height:210px !important; }
+      .deck-case,#drawingCard.opening-cutin .deck-case,.deck-case.treasure-open {
+        width:150px !important; height:194px !important;
+      }
+      #keyCardImages img,#cardStage.winner #keyCardImages img {
+        flex-basis:126px !important; width:min(126px,calc((100% - 14px)/2)) !important;
+        max-height:202px !important;
+      }
+      #result.has-result { margin-top:8px !important; padding:11px 9px 13px !important; }
+      .deck-name-title { font-size:clamp(1.15rem,5vw,1.65rem) !important; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      #keyCardImages.case-launch img,#result.result-reveal .deck-name-title {
+        animation-duration:.01ms !important; animation-iteration-count:1 !important;
+      }
+    }
+
+  
+    #keyCardImages.result-ready { opacity:1 !important; pointer-events:auto !important; }
+
   </style>
 </head>
 <body>
@@ -695,7 +934,6 @@
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
               <div class="case-cavity"></div>
-              <div class="case-seam"></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
@@ -707,7 +945,6 @@
             <div class="case-rays" aria-hidden="true"></div>
             <div class="case-burst"></div>
           </div>
-          <div class="case-cutin-caption" aria-hidden="true">運命の一箱</div>
           <img class="mana-orb fire" src="icons/fire.png" alt="" aria-hidden="true">
           <img class="mana-orb light" src="icons/light.png" alt="" aria-hidden="true">
           <img class="mana-orb nature" src="icons/nature.png" alt="" aria-hidden="true">
@@ -859,7 +1096,7 @@
       cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
-      keyCardImages.classList.remove("revealing", "case-launch");
+      keyCardImages.classList.remove("revealing", "case-launch", "result-ready");
       drawingCard.style.removeProperty("display");
       drawingCard.style.removeProperty("visibility");
       drawingCard.style.removeProperty("opacity");
@@ -1100,6 +1337,7 @@
 
       // カードがケースから飛び出した後、ケースを奥へ退かせてカードを主役にする。
       await sleep(900);
+      keyCardImages.classList.add("result-ready");
       keyCardImages.classList.remove("case-launch");
       deckCase.style.transition = "opacity .28s ease, transform .38s ease";
       deckCase.style.opacity = "0";
