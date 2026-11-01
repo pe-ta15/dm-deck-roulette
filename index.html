@@ -858,103 +858,97 @@
         );
         await playManaSequence();
 
-        // 開封映像は抽選結果の到着タイミング・文明・デッキ内容に依存させず、毎回同じ順序で再生。
-        // API結果の待機と開封演出を並行させ、演出自体は抽選結果に左右されない。
+        // 開封演出はWebMのみを使用する。CSSによるケース開封演出には切り替えない。
         const openingSequence = (async () => {
-          drawingCard.classList.add("treasure-scene", "opening-cutin");
-          deckCase.classList.remove("civ-charging");
-          deckCase.classList.add("treasure-open");
-          void deckCase.offsetWidth;
-          createParticles();
+          drawingCard.classList.add("treasure-scene", "opening-cutin", "video-opening");
+          void drawingCard.offsetWidth;
 
-          // 透過WebMを優先して再生し、失敗時だけCSS演出へ切り替える。
-          let videoPlayed = false;
-          if (caseOpeningVideo && caseOpeningVideo.querySelector("source")) {
-            try {
-              caseOpeningVideo.pause();
-              caseOpeningVideo.currentTime = 0;
+          if (!caseOpeningVideo) {
+            throw new Error("開封動画のvideo要素が見つかりません。");
+          }
 
-              // load()より先にイベント監視を登録し、読み込み完了イベントを取りこぼさない。
-              await new Promise((resolve, reject) => {
-                let settled = false;
-                let timeout;
-                const cleanup = () => {
-                  caseOpeningVideo.removeEventListener("canplay", onReady);
-                  caseOpeningVideo.removeEventListener("error", onError);
-                  clearTimeout(timeout);
-                };
-                const finish = (callback, value) => {
-                  if (settled) return;
-                  settled = true;
-                  cleanup();
-                  callback(value);
-                };
-                const onReady = () => finish(resolve);
-                const onError = () => finish(reject, new Error("開封動画を読み込めません。ファイル形式またはパスを確認してください。"));
+          caseOpeningVideo.pause();
+          try { caseOpeningVideo.currentTime = 0; } catch (_) {}
 
-                caseOpeningVideo.addEventListener("canplay", onReady);
-                caseOpeningVideo.addEventListener("error", onError);
-                timeout = setTimeout(() => finish(reject, new Error("開封動画の読み込みがタイムアウトしました。")), 12000);
+          // イベント監視を登録してから読み込みを開始する。
+          await new Promise((resolve, reject) => {
+            let settled = false;
+            let timeoutId;
 
-                if (caseOpeningVideo.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-                  finish(resolve);
-                } else {
-                  caseOpeningVideo.load();
-                }
-              });
+            const cleanup = () => {
+              caseOpeningVideo.removeEventListener("canplay", onReady);
+              caseOpeningVideo.removeEventListener("loadeddata", onReady);
+              caseOpeningVideo.removeEventListener("error", onError);
+              clearTimeout(timeoutId);
+            };
+            const finish = (callback, value) => {
+              if (settled) return;
+              settled = true;
+              cleanup();
+              callback(value);
+            };
+            const onReady = () => finish(resolve);
+            const onError = () => {
+              const mediaError = caseOpeningVideo.error;
+              finish(reject, new Error(
+                `開封動画を読み込めません（MediaError code: ${mediaError?.code ?? "不明"}）。`
+              ));
+            };
 
-              drawingCard.classList.add("video-opening");
-              void drawingCard.offsetWidth;
-              await caseOpeningVideo.play();
+            caseOpeningVideo.addEventListener("canplay", onReady);
+            caseOpeningVideo.addEventListener("loadeddata", onReady);
+            caseOpeningVideo.addEventListener("error", onError);
+            timeoutId = setTimeout(
+              () => finish(reject, new Error("開封動画の読み込みがタイムアウトしました。")),
+              15000
+            );
 
-              // ended監視を登録してから終了を待つ。動画の長さに応じて待機時間を決める。
-              await new Promise((resolve, reject) => {
-                let settled = false;
-                let timeout;
-                const cleanup = () => {
-                  caseOpeningVideo.removeEventListener("ended", onEnded);
-                  caseOpeningVideo.removeEventListener("error", onError);
-                  clearTimeout(timeout);
-                };
-                const finish = (callback, value) => {
-                  if (settled) return;
-                  settled = true;
-                  cleanup();
-                  callback(value);
-                };
-                const onEnded = () => finish(resolve);
-                const onError = () => finish(reject, new Error("開封動画の再生中にエラーが発生しました。"));
-                caseOpeningVideo.addEventListener("ended", onEnded);
-                caseOpeningVideo.addEventListener("error", onError);
-                const duration = Number.isFinite(caseOpeningVideo.duration) ? caseOpeningVideo.duration : 0;
-                timeout = setTimeout(() => finish(reject, new Error("開封動画が時間内に終了しませんでした。")), Math.max(20000, (duration + 5) * 1000));
-                if (caseOpeningVideo.ended) finish(resolve);
-              });
-
-              videoPlayed = true;
-              caseOpeningVideo.pause();
-              // 動画終了後にCSSケースが再表示されないようにする。
-              deckCase.style.opacity = "0";
-              drawingCard.classList.remove("video-opening");
-            } catch (videoError) {
-              console.warn("WebMを再生できなかったためCSS演出に切り替えます。", videoError);
-              caseOpeningVideo.pause();
-              try { caseOpeningVideo.currentTime = 0; } catch (_) {}
-              drawingCard.classList.remove("video-opening");
-              deckCase.style.removeProperty("opacity");
+            if (caseOpeningVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+              finish(resolve);
+            } else {
+              caseOpeningVideo.load();
             }
-          }
+          });
 
-          if (!videoPlayed) {
-            deckCase.classList.add("pressure");
-            await sleep(620);
-            deckCase.classList.remove("pressure");
-            deckCase.classList.add("opening");
-            // 蓋が開ききったあと、白金色の内部発光を見せてから結果へ。
-            await sleep(1650);
-          } else {
-            await sleep(120);
-          }
+          // 再生終了イベントを先に登録し、終了イベントの取りこぼしを防ぐ。
+          const endedPromise = new Promise((resolve, reject) => {
+            let settled = false;
+            let timeoutId;
+            const cleanup = () => {
+              caseOpeningVideo.removeEventListener("ended", onEnded);
+              caseOpeningVideo.removeEventListener("error", onError);
+              clearTimeout(timeoutId);
+            };
+            const finish = (callback, value) => {
+              if (settled) return;
+              settled = true;
+              cleanup();
+              callback(value);
+            };
+            const onEnded = () => finish(resolve);
+            const onError = () => finish(
+              reject,
+              new Error(`開封動画の再生中にエラーが発生しました（MediaError code: ${caseOpeningVideo.error?.code ?? "不明"}）。`)
+            );
+
+            caseOpeningVideo.addEventListener("ended", onEnded);
+            caseOpeningVideo.addEventListener("error", onError);
+            const duration = Number.isFinite(caseOpeningVideo.duration)
+              ? caseOpeningVideo.duration
+              : 0;
+            timeoutId = setTimeout(
+              () => finish(reject, new Error("開封動画が時間内に終了しませんでした。")),
+              Math.max(30000, (duration + 10) * 1000)
+            );
+            if (caseOpeningVideo.ended) finish(resolve);
+          });
+
+          // muted動画として再生。失敗した場合はCSS演出に逃がさず、理由を表示する。
+          await caseOpeningVideo.play();
+          await endedPromise;
+          caseOpeningVideo.pause();
+          drawingCard.classList.remove("video-opening");
+          await sleep(120);
         })();
 
         const outcome = await drawResult;
