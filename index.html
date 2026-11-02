@@ -3455,6 +3455,28 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     .deck-case.opening .case-lid{animation:none!important}
     @media(max-width:480px){.deck-case .case-rear-gusset{left:10px!important;right:10px!important}}
 
+
+    /* Rear fabric connection correction:
+       The lid meets the case body at y=72px, so the fold axis is the lid's LOWER edge,
+       not its upper edge. The gusset is a short flexible bridge sharing that same axis. */
+    .deck-case .case-lid{
+      transform-origin:50% 100%!important;
+      transform-style:preserve-3d!important;
+    }
+    .deck-case .case-rear-gusset{
+      top:62px!important;
+      height:12px!important;
+      transform-origin:50% 100%!important;
+      z-index:15!important;
+      clip-path:none!important;
+      border:2px solid #a8b9ac!important;
+      border-radius:2px!important;
+      background:linear-gradient(180deg,#f8fbf8 0%,#dce8df 48%,#aebfb2 100%)!important;
+      box-shadow:inset 0 1px 3px rgba(255,255,255,.9),0 1px 4px rgba(42,61,46,.2)!important;
+      opacity:0!important;
+      backface-visibility:visible!important;
+    }
+    .deck-case.opening .case-rear-gusset{opacity:1!important}
 </style>
 </head>
 <body>
@@ -3866,7 +3888,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           {at:.90,values:[-130,-3,8]},{at:1,values:[-138,-3,8]}
         ], 1180, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic),
         animateTransform(deckCase.querySelector(".case-rear-gusset"), [
-          {at:0,values:[0]},{at:.18,values:[-8]},{at:.52,values:[-38]},{at:1,values:[-68]}
+          {at:0,values:[0]},{at:.18,values:[-10]},{at:.52,values:[-42]},{at:1,values:[-69]}
         ], 1180, v => "rotateX("+v[0]+"deg)", easeOutCubic)
       ]);
 
