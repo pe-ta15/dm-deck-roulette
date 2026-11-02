@@ -3567,6 +3567,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       transform-style:preserve-3d!important;backface-visibility:visible!important;
       overflow:visible!important;border-radius:10px 10px 4px 4px!important;
     }
+    /* The opening-state selector was historically more specific; pin its hinge too. */
+    .deck-case.opening .case-lid{transform-origin:50% 100%!important}
     .deck-case .case-lid-inner{
       inset:0!important;transform:translateZ(2px)!important;backface-visibility:hidden!important;
     }
