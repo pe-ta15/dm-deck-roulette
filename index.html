@@ -4264,6 +4264,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         const cardLaunch = showKeyCards(deck);
         await Promise.all([cardLaunch, sleep(620)]);
+        // showKeyCardsはケースの退場トランジションを開始して戻るため、
+        // opacity/transformの両方が完了するまで待ってから結果タイトルを生成する。
+        await sleep(420);
         // 結果名を出す前に演出行を除去し、カード上部の一瞬の空白を防ぐ。
         cardStage.classList.add("winner");
         resultElement.replaceChildren();
