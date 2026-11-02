@@ -3384,7 +3384,37 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   .deck-case .case-lid{height:70px!important}
   .deck-case .case-lid-front{height:52px!important}
 }
-/* The lid is driven by JS around the rear fabric fold, not by legacy keyframes. */
+/*     /* ===== Fabric-wrap lid: separate visible outer and inner faces =====
+       Keep the carrier transparent; opaque paint belongs to the two faces.
+       This prevents the carrier background from hiding the reverse face. */
+    .deck-case .case-lid{
+      background:transparent!important;border:0!important;box-shadow:none!important;
+      overflow:visible!important;transform-style:preserve-3d!important;
+      transform-origin:50% 0%!important;backface-visibility:visible!important;
+    }
+    .deck-case .case-lid:before,.deck-case .case-lid:after{content:none!important;display:none!important}
+    .deck-case .case-lid-inner{
+      position:absolute!important;z-index:4!important;inset:0!important;display:block!important;
+      border:3px solid #a5b9a9!important;border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#edf4ee 38%,#c4d7c8 76%,#9fb8a4 100%)!important;
+      box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -5px 9px rgba(91,119,97,.13),0 5px 8px rgba(49,70,55,.12)!important;
+      transform:translateZ(2px)!important;backface-visibility:hidden!important;
+    }
+    .deck-case .case-lid-underside{
+      position:absolute!important;z-index:3!important;inset:0!important;display:block!important;
+      border:3px solid #a8b9ac!important;border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
+      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
+      transform:rotateY(180deg) translateZ(2px)!important;backface-visibility:hidden!important;
+      pointer-events:none!important;
+    }
+    .deck-case .case-lid-front{z-index:5!important;backface-visibility:visible!important}
+    .deck-case.opening .case-lid{animation:none!important}
+    @media(max-width:480px){
+      .deck-case .case-lid-inner,.deck-case .case-lid-underside{border-radius:8px 8px 2px 2px!important}
+    }
+
+    /* The lid is driven by JS around the rear fabric fold; final geometry below */, not by legacy keyframes. */
 </style>
 </head>
 <body>
@@ -3789,16 +3819,15 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
       // 布製の蓋は背面上端を支点に後方へ開く。前面フラップは親パネルに追従し、
       // 上面パネルの裏面がケース背面との間から見える向きまで一体で回転する。
-      await animateTransform(lid, [
+            await animateTransform(lid, [
         {at:0,values:[0,0,0]},
-        {at:.10,values:[-8,0,1]},
-        {at:.34,values:[-38,-1,3]},
-        {at:.68,values:[-78,-2,7]},
-        {at:.88,values:[-102,-2,9]},
-        {at:1,values:[-105,-2,8]}
-      ], 1120, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
+        {at:.12,values:[-12,0,1]},
+        {at:.36,values:[-48,-1,3]},
+        {at:.70,values:[-105,-2,6]},
+        {at:.90,values:[-130,-3,8]},
+        {at:1,values:[-138,-3,8]}
+      ], 1180, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic);
 
-      // 蓋が開き切って内部が見えてから、口の位置を起点に文明色の光を射出。
       deckCase.classList.add("mouth-eruption");
       await sleep(180);
       await sleep(420);
