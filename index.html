@@ -3853,24 +3853,24 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       display:block!important;
       z-index:20!important;
       left:50%!important;
-      top:-264px!important;
-      width:252px!important;
-      height:324px!important;
-      transform:translateX(-50%) scaleY(.08)!important;
+      top:-250px!important;
+      width:244px!important;
+      height:322px!important;
       transform-origin:50% 100%!important;
-      clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)!important;
+      clip-path:polygon(0 0,100% 0,61% 100%,39% 100%)!important;
       background:
         linear-gradient(90deg,
           rgba(255,232,174,0) 0%,
-          rgba(255,246,213,.62) 16%,
-          rgba(255,255,255,.96) 38%,
+          rgba(255,246,213,.48) 13%,
+          rgba(255,255,255,.92) 32%,
           #fff 50%,
-          rgba(255,255,255,.96) 62%,
-          rgba(255,239,190,.62) 84%,
+          rgba(255,255,255,.92) 68%,
+          rgba(255,239,190,.48) 87%,
           rgba(255,224,150,0) 100%)!important;
-      filter:blur(7px) drop-shadow(0 0 16px rgba(255,249,222,.95))
-        drop-shadow(0 0 34px rgba(255,215,130,.82))!important;
+      filter:blur(6px) drop-shadow(0 0 18px rgba(255,249,222,.98))
+        drop-shadow(0 0 38px rgba(255,215,130,.88))!important;
       mix-blend-mode:screen!important;
+      will-change:transform,opacity,filter;
       animation:singleMouthBeamBurst .72s cubic-bezier(.12,.82,.18,1) both!important;
     }
     .deck-case.mouth-eruption .case-rays,
@@ -3880,11 +3880,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       opacity:0!important;
     }
     @keyframes singleMouthBeamBurst{
-      0%{opacity:0;transform:translateX(-50%) scaleY(.08);filter:blur(16px) brightness(1.4)}
-      14%{opacity:1;transform:translateX(-50%) scaleY(.78);filter:blur(8px) brightness(2.2)}
-      38%{opacity:1;transform:translateX(-50%) scaleY(1);filter:blur(6px) brightness(2)}
-      72%{opacity:.78;transform:translateX(-50%) scaleY(1.12);filter:blur(10px) brightness(1.6)}
-      100%{opacity:0;transform:translateX(-50%) scaleY(1.22);filter:blur(18px) brightness(1.2)}
+      0%{opacity:0;transform:translateX(-50%) scaleY(.035);filter:blur(18px) brightness(1.5)}
+      9%{opacity:1;transform:translateX(-50%) scaleY(.72);filter:blur(8px) brightness(2.35)}
+      30%{opacity:1;transform:translateX(-50%) scaleY(1.02);filter:blur(6px) brightness(2.15)}
+      66%{opacity:.82;transform:translateX(-50%) scaleY(1.1);filter:blur(10px) brightness(1.7)}
+      100%{opacity:0;transform:translateX(-50%) scaleY(1.18);filter:blur(19px) brightness(1.25)}
     }
 
     /* Give the result plaque enough inner space so its ornaments and text
@@ -3910,7 +3910,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
     @media(max-width:480px){
       .deck-case.mouth-eruption .case-mouth-beam{
-        top:-224px!important;width:218px!important;height:278px!important;
+        top:-218px!important;width:218px!important;height:278px!important;
       }
       #result.has-result,
       #result.result-reveal{
@@ -4322,17 +4322,17 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       deckCase.classList.add("opening");
 
       // 蓋は上面カバーと前面フラップが一体になった連続構造。
-      // 背面上端の布状接続部を固定側の折り返しとして、蓋全体をそこから後方へ開く。
+      // 下端の折り軸を保ち、正の回転角で自由端を奥側へ倒す。
       // 前面フラップと蓋の裏面は親パネルに追従し、部品が外れたように見せない。
-            await Promise.all([
+      await Promise.all([
         animateTransform(lid, [
-          {at:0,values:[0,0,0]},{at:.12,values:[-12,0,1]},
-          {at:.36,values:[-48,-1,3]},{at:.70,values:[-105,-2,6]},
-          {at:.90,values:[-130,-3,8]},{at:1,values:[-138,-3,8]}
+          {at:0,values:[0,0,0]},{at:.12,values:[12,0,1]},
+          {at:.36,values:[48,-1,3]},{at:.70,values:[105,-2,6]},
+          {at:.90,values:[130,-3,8]},{at:1,values:[138,-3,8]}
         ], 1180, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic),
-        // 布状接続部は蓋と同じ下端の折り軸・同じ角度で追従させ、接続線をずらさない。
+        // 布状接続部も同じ正の角度で追従させ、背面の連続性を保つ。
         animateTransform(deckCase.querySelector(".case-rear-gusset"), [
-          {at:0,values:[0]},{at:.12,values:[-12]},{at:.36,values:[-48]},{at:.70,values:[-105]},{at:.90,values:[-130]},{at:1,values:[-138]}
+          {at:0,values:[0]},{at:.12,values:[12]},{at:.36,values:[48]},{at:.70,values:[105]},{at:.90,values:[130]},{at:1,values:[138]}
         ], 1180, v => "rotateX("+v[0]+"deg)", easeOutCubic)
       ]);
 
