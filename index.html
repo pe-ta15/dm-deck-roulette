@@ -3554,6 +3554,69 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       .deck-case .case-lid{height:70px!important}
       .deck-case .case-rear-gusset{top:60px!important;height:10px!important;left:10px!important;right:10px!important}
     }
+
+    
+    /* Canonical deck-case construction:
+       The lid is one continuous cover (top panel + attached front flap).
+       Its rear edge is the fixed fabric fold at the upper back of the case.
+       The rear fabric bridge stays connected while the cover rotates. */
+    .deck-case{
+      transform:translate(-50%,-50%) perspective(1100px) rotateX(0deg) rotateY(0deg) scale(1)!important;
+      transform-style:preserve-3d!important;
+    }
+    .deck-case .case-body{
+      transform-style:preserve-3d!important;
+    }
+    .deck-case .case-lid{
+      top:0!important;
+      height:74px!important;
+      transform-origin:50% 0%!important;
+      transform-style:preserve-3d!important;
+      backface-visibility:visible!important;
+      overflow:visible!important;
+      border-radius:10px 10px 4px 4px!important;
+    }
+    .deck-case .case-lid-inner{
+      inset:0!important;
+      transform:translateZ(2px)!important;
+      backface-visibility:hidden!important;
+    }
+    .deck-case .case-lid-underside{
+      inset:0!important;
+      transform:rotateX(180deg) translateZ(2px)!important;
+      transform-origin:50% 50%!important;
+      backface-visibility:hidden!important;
+    }
+    .deck-case .case-lid-front{
+      top:calc(100% - 2px)!important;
+      transform-origin:50% 0%!important;
+      transform:rotateX(90deg)!important;
+      backface-visibility:visible!important;
+    }
+    .deck-case .case-rear-gusset{
+      top:0!important;
+      height:14px!important;
+      left:12px!important;
+      right:12px!important;
+      transform-origin:50% 0%!important;
+      transform:rotateX(0deg)!important;
+      border:2px solid #a8b9ac!important;
+      border-radius:3px!important;
+      background:
+        repeating-linear-gradient(0deg,rgba(105,132,111,.10) 0 1px,transparent 1px 3px),
+        linear-gradient(90deg,#9fb5a3 0%,#f7faf7 13%,#e5eee7 50%,#c4d5c8 87%,#9fb5a3 100%)!important;
+      box-shadow:inset 0 0 8px rgba(255,255,255,.72),0 2px 6px rgba(42,61,46,.18)!important;
+      opacity:0!important;
+      pointer-events:none!important;
+    }
+    .deck-case.opening .case-rear-gusset{opacity:1!important}
+    .deck-case .case-hinge{display:none!important}
+    .deck-case .case-lock{display:none!important}
+    @media(max-width:480px){
+      .deck-case .case-lid{height:70px!important}
+      .deck-case .case-rear-gusset{height:12px!important;left:10px!important;right:10px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -3956,8 +4019,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       drawingCard.classList.add("case-impact", "case-blast");
       deckCase.classList.add("opening");
 
-      // 布製の蓋は背面上端を支点に後方へ開く。前面フラップは親パネルに追従し、
-      // 上面パネルの裏面がケース背面との間から見える向きまで一体で回転する。
+      // 蓋は上面カバーと前面フラップが一体になった連続構造。
+      // 背面上端の布状接続部を固定側の折り返しとして、蓋全体をそこから後方へ開く。
+      // 前面フラップと蓋の裏面は親パネルに追従し、部品が外れたように見せない。
             await Promise.all([
         animateTransform(lid, [
           {at:0,values:[0,0,0]},{at:.12,values:[-12,0,1]},
@@ -3965,7 +4029,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           {at:.90,values:[-130,-3,8]},{at:1,values:[-138,-3,8]}
         ], 1180, v => "translateY("+v[1]+"px) translateZ("+v[2]+"px) rotateX("+v[0]+"deg)", easeOutCubic),
         animateTransform(deckCase.querySelector(".case-rear-gusset"), [
-          {at:0,values:[0]},{at:.18,values:[-10]},{at:.52,values:[-42]},{at:1,values:[-69]}
+          {at:0,values:[0]},{at:.18,values:[-8]},{at:.52,values:[-34]},{at:1,values:[-62]}
         ], 1180, v => "rotateX("+v[0]+"deg)", easeOutCubic)
       ]);
 
