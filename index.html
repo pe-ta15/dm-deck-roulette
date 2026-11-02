@@ -3835,6 +3835,84 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       #result.result-reveal{margin-bottom:10px!important}
     }
 
+
+
+    /* ===== Single upward mouth beam + breathing room in result plaque ===== */
+    /* The lid has finished opening when mouth-eruption is applied.
+       Use one beam only; suppress the two overlapping plume layers that read as
+       separate, staggered light columns. */
+    .deck-case.mouth-eruption .case-mouth-beam{
+      display:block!important;
+      z-index:20!important;
+      left:50%!important;
+      top:-264px!important;
+      width:252px!important;
+      height:324px!important;
+      transform:translateX(-50%) scaleY(.08)!important;
+      transform-origin:50% 100%!important;
+      clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)!important;
+      background:
+        linear-gradient(90deg,
+          rgba(255,232,174,0) 0%,
+          rgba(255,246,213,.62) 16%,
+          rgba(255,255,255,.96) 38%,
+          #fff 50%,
+          rgba(255,255,255,.96) 62%,
+          rgba(255,239,190,.62) 84%,
+          rgba(255,224,150,0) 100%)!important;
+      filter:blur(7px) drop-shadow(0 0 16px rgba(255,249,222,.95))
+        drop-shadow(0 0 34px rgba(255,215,130,.82))!important;
+      mix-blend-mode:screen!important;
+      animation:singleMouthBeamBurst .72s cubic-bezier(.12,.82,.18,1) both!important;
+    }
+    .deck-case.mouth-eruption .case-rays,
+    .deck-case.mouth-eruption .case-energy-plume{
+      display:none!important;
+      animation:none!important;
+      opacity:0!important;
+    }
+    @keyframes singleMouthBeamBurst{
+      0%{opacity:0;transform:translateX(-50%) scaleY(.08);filter:blur(16px) brightness(1.4)}
+      14%{opacity:1;transform:translateX(-50%) scaleY(.78);filter:blur(8px) brightness(2.2)}
+      38%{opacity:1;transform:translateX(-50%) scaleY(1);filter:blur(6px) brightness(2)}
+      72%{opacity:.78;transform:translateX(-50%) scaleY(1.12);filter:blur(10px) brightness(1.6)}
+      100%{opacity:0;transform:translateX(-50%) scaleY(1.22);filter:blur(18px) brightness(1.2)}
+    }
+
+    /* Give the result plaque enough inner space so its ornaments and text
+       never sit against the frame. Keep the outer gap compact and consistent. */
+    #result.has-result,
+    #result.result-reveal{
+      padding:18px clamp(18px,4vw,32px) 20px!important;
+      gap:11px!important;
+    }
+    #result .result-eyebrow{
+      margin:0 auto 3px!important;
+      padding:2px 6px!important;
+      line-height:1.5!important;
+    }
+    #result .deck-name-title{
+      padding:13px clamp(16px,3.5vw,26px)!important;
+      margin:0 auto!important;
+      box-sizing:border-box!important;
+    }
+    #result .result-civilizations{
+      margin:3px auto 0!important;
+      padding:5px 8px!important;
+    }
+    @media(max-width:480px){
+      .deck-case.mouth-eruption .case-mouth-beam{
+        top:-224px!important;width:218px!important;height:278px!important;
+      }
+      #result.has-result,
+      #result.result-reveal{
+        padding:15px 16px 17px!important;
+        gap:9px!important;
+      }
+      #result .deck-name-title{padding:11px 14px!important}
+      #result .result-civilizations{padding:4px 6px!important}
+    }
+
 </style>
 </head>
 <body>
