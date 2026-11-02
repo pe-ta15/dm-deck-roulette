@@ -3637,6 +3637,81 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       #cardStage #keyCardImages.result-ready{width:100%!important;padding-left:8px!important;padding-right:8px!important}
     }
 
+    /* ===== Stable result handoff: clear stale title and lock card geometry ===== */
+    /* The previous result is cleared in showDrawingCard(); keep all reveal phases
+       on the same stage coordinate system so winner cannot reflow the card group. */
+    #cardStage.case-opening-stage,
+    #cardStage.winner{
+      position:relative!important;
+      height:410px!important;
+      min-height:410px!important;
+      box-sizing:border-box!important;
+    }
+    #cardStage #keyCardImages.case-launch,
+    #cardStage #keyCardImages.result-ready,
+    #cardStage.winner #keyCardImages{
+      position:absolute!important;
+      left:50%!important;
+      top:50%!important;
+      right:auto!important;
+      bottom:auto!important;
+      inset:auto!important;
+      grid-column:auto!important;
+      grid-row:auto!important;
+      justify-self:auto!important;
+      align-self:auto!important;
+      width:min(100%,560px)!important;
+      height:auto!important;
+      min-height:0!important;
+      max-height:none!important;
+      margin:0!important;
+      padding:0 8px!important;
+      display:flex!important;
+      flex-flow:row wrap!important;
+      justify-content:center!important;
+      align-items:center!important;
+      align-content:center!important;
+      gap:10px!important;
+      transform:translate(-50%,-50%)!important;
+      box-sizing:border-box!important;
+      overflow:visible!important;
+    }
+    #cardStage.winner #keyCardImages img,
+    #cardStage #keyCardImages.case-launch img,
+    #cardStage #keyCardImages.result-ready img{
+      position:relative!important;
+      flex:0 1 148px!important;
+      width:min(148px,calc((100% - 20px)/2))!important;
+      max-width:100%!important;
+      height:auto!important;
+      max-height:min(238px,34vh)!important;
+      margin:0!important;
+      object-fit:contain!important;
+    }
+    #cardStage.winner #keyCardImages img{
+      animation:none!important;
+      transform:none!important;
+    }
+    @media(max-width:480px){
+      #cardStage.case-opening-stage,
+      #cardStage.winner{height:410px!important;min-height:410px!important}
+      #cardStage #keyCardImages.case-launch,
+      #cardStage #keyCardImages.result-ready,
+      #cardStage.winner #keyCardImages{
+        width:100%!important;
+        padding-left:8px!important;
+        padding-right:8px!important;
+        gap:8px!important;
+      }
+      #cardStage.winner #keyCardImages img,
+      #cardStage #keyCardImages.case-launch img,
+      #cardStage #keyCardImages.result-ready img{
+        flex-basis:132px!important;
+        width:min(132px,calc((100% - 16px)/2))!important;
+        max-height:min(205px,31vh)!important;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -3813,6 +3888,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
     function showDrawingCard() {
       cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage");
+      // 前回の当選タイトルを新しい抽選の開始時点で必ず消す。
+      // has-result / result-reveal が残ると、前回のタイトル装飾が開封演出中に再表示される。
+      resultElement.replaceChildren();
+      resultElement.classList.remove("has-result", "result-reveal");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch", "result-ready");
@@ -4128,8 +4207,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         keyCardImages.classList.add("case-launch");
       }
 
-      // カードがケースから飛び出した後、ケースを奥へ退かせてカードを主役にする。
-      await sleep(900);
+      // 最長のカード演出（920ms）と3枚目の遅延（180ms）が終わるまで待つ。
+      // 演出途中でcase-launchを外すと、transformが解除されカード位置が跳ねる。
+      await sleep(1120);
       keyCardImages.classList.add("result-ready");
       keyCardImages.classList.remove("case-launch");
       deckCase.style.transition = "opacity .28s ease, transform .38s ease";
