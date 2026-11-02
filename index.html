@@ -3597,6 +3597,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
 
+    /* The case contains card backs only. Never render the decorative sample card face/title. */
+    .deck-case .case-card-stack .card-face{display:none!important;visibility:hidden!important}
+
     /* Stable reveal stage: the card occupies the case's visual slot throughout the handoff.
        Removing the case must not remove a 410px layout row and reflow the winning card. */
     #cardStage.case-opening-stage,
@@ -3646,13 +3649,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
-              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span><div class="card-face" aria-hidden="true">
-                <div class="dm-card-header"><span class="dm-card-name">龍装者の召喚</span><span class="dm-card-cost">7</span></div>
-                <div class="dm-card-art"><i class="dm-art-orb"></i><i class="dm-art-silhouette"></i><i class="dm-art-spark"></i></div>
-                <div class="dm-card-type">クリーチャー</div>
-                <div class="dm-card-rules"><i></i><i></i><i></i></div>
-                <div class="dm-card-footer"><span>W・ブレイカー</span><b>7000</b></div>
-              </div></div></div>
+              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span></div></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
