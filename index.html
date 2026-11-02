@@ -4278,6 +4278,30 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       animation:none;
     }
 
+    /* Result identity and civilization labels remain independent of layout rules. */
+    #result .result-eyebrow {
+      display:inline-flex;align-items:center;justify-content:center;margin:0;padding:3px 10px;
+      border:1px solid rgba(185,137,48,.28);border-radius:999px;
+      background:linear-gradient(180deg,#fff9e8,#f8edcf);color:#98702b;
+      font-size:.68rem;font-weight:900;letter-spacing:.2em;line-height:1.5;
+    }
+    #result .deck-name-title {
+      display:block;max-width:100%;margin:0;padding:12px clamp(16px,3.5vw,26px);
+      border:1px solid rgba(201,157,76,.42);border-radius:14px;
+      background:linear-gradient(135deg,#fffdf6,#fff3d5);color:#60400e;
+      font-size:clamp(1.25rem,4.2vw,1.85rem);font-weight:900;line-height:1.25;
+      overflow-wrap:anywhere;box-shadow:0 5px 16px rgba(143,105,36,.12),inset 0 1px 0 #fff;
+    }
+    #result .result-civilizations {
+      display:flex;align-items:center;justify-content:center;gap:7px;margin:0;padding:6px 10px;
+      border-radius:999px;background:rgba(255,255,255,.76);
+      box-shadow:inset 0 0 0 1px rgba(181,157,111,.2);
+    }
+    #result .civilization-icon {
+      display:block;width:clamp(22px,5vw,30px);height:clamp(22px,5vw,30px);
+      object-fit:contain;filter:drop-shadow(0 1px 2px rgba(45,35,20,.18));
+    }
+
     /* ===== Canonical translucent deck-case interior ===== */
     .deck-case .case-cavity {
       position:absolute;
