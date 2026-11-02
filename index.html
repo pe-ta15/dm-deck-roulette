@@ -4449,7 +4449,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     @media(prefers-reduced-motion:reduce){#cardStage.result-visible #keyCardImages img{animation:none!important}}
 
 
-    /* 文明アイコンが用意されていない無色文明・画像読込失敗時の文字表示 */
+    /* 文明アイコンの画像読込失敗時の代替文字表示 */
     #cardStage.result-visible #result .civilization-text{
       display:inline-flex!important;align-items:center!important;justify-content:center!important;
       min-width:42px!important;min-height:28px!important;padding:4px 10px!important;
@@ -5110,11 +5110,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           water: { src:"icons/water.png", label:"水文明" },
           nature: { src:"icons/nature.png", label:"自然文明" },
           light: { src:"icons/light.png", label:"光文明" },
-          darkness: { src:"icons/darkness.png", label:"闇文明" },
-          zero: { label:"無色" }
+          darkness: { src:"icons/darkness.png", label:"闇文明" }
         };
         const civilizations = getDeckCivilizations(deck);
         civilizations.forEach(civ => {
+          // 無色は専用アイコン・文字を表示せず、文明アイコン列から除外する
+          if (civ === "zero") return;
           const item = civilizationIcons[civ];
           if (!item) return;
           if (!item.src) {
