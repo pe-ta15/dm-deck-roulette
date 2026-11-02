@@ -4437,7 +4437,18 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
     @media(prefers-reduced-motion:reduce){#cardStage.result-visible #keyCardImages img{animation:none!important}}
 
-</style>
+
+    /* 文明アイコンが用意されていない無色文明・画像読込失敗時の文字表示 */
+    #cardStage.result-visible #result .civilization-text{
+      display:inline-flex!important;align-items:center!important;justify-content:center!important;
+      min-width:42px!important;min-height:28px!important;padding:4px 10px!important;
+      border:1px solid rgba(150,157,164,.48)!important;border-radius:999px!important;
+      background:linear-gradient(180deg,#fff,#eef0f2)!important;color:#59616a!important;
+      font-size:.76rem!important;font-weight:850!important;line-height:1.2!important;
+      white-space:nowrap!important;
+    }
+
+  </style>
 </head>
 <body>
   <main>
@@ -5088,21 +5099,35 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           water: { src:"icons/water.png", label:"水文明" },
           nature: { src:"icons/nature.png", label:"自然文明" },
           light: { src:"icons/light.png", label:"光文明" },
-          darkness: { src:"icons/darkness.png", label:"闇文明" }
+          darkness: { src:"icons/darkness.png", label:"闇文明" },
+          zero: { label:"無色" }
         };
         const civilizations = getDeckCivilizations(deck);
         civilizations.forEach(civ => {
-          const icon = document.createElement("img");
           const item = civilizationIcons[civ];
           if (!item) return;
+          if (!item.src) {
+            const label = document.createElement("span");
+            label.className = "civilization-text";
+            label.textContent = item.label;
+            resultCivs.appendChild(label);
+            return;
+          }
+          const icon = document.createElement("img");
           icon.className = "civilization-icon";
           icon.src = item.src;
           icon.alt = item.label;
           icon.title = item.label;
+          icon.addEventListener("error", () => {
+            const fallback = document.createElement("span");
+            fallback.className = "civilization-text";
+            fallback.textContent = item.label;
+            icon.replaceWith(fallback);
+          }, { once: true });
           resultCivs.appendChild(icon);
         });
         resultElement.append(resultEyebrow, resultTitle);
-        if (civilizations.length > 0) resultElement.appendChild(resultCivs);
+        if (resultCivs.childElementCount > 0) resultElement.appendChild(resultCivs);
         await showKeyCards(deck);
         // 結果名が見え始めてから演出行を縮める。
         await sleep(760);
