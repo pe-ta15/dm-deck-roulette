@@ -3504,6 +3504,56 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       opacity:1!important;
       visibility:visible!important;
     }
+
+    /* Rebuilt rear fabric fold: the lid's lower edge meets the body rim.
+       The underside is a reverse-facing panel, not a coplanar duplicate. */
+    .deck-case{perspective:1100px!important;transform-style:preserve-3d!important}
+    .deck-case .case-body{transform-style:preserve-3d!important}
+    .deck-case .case-lid{
+      top:0!important;height:74px!important;
+      transform-origin:50% 100%!important;
+      transform-style:preserve-3d!important;
+      backface-visibility:visible!important;
+      overflow:visible!important;
+      z-index:14!important;
+    }
+    .deck-case .case-lid-inner{
+      inset:0!important;
+      transform:translateZ(2px)!important;
+      backface-visibility:hidden!important;
+    }
+    .deck-case .case-lid-underside{
+      position:absolute!important;inset:0!important;display:block!important;
+      z-index:3!important;
+      transform:rotateY(180deg) translateZ(2px)!important;
+      transform-origin:50% 50%!important;
+      backface-visibility:hidden!important;
+      opacity:1!important;visibility:visible!important;
+      border:3px solid #a8b9ac!important;
+      border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
+      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
+      pointer-events:none!important;
+    }
+    .deck-case .case-rear-gusset{
+      position:absolute!important;left:12px!important;right:12px!important;
+      top:62px!important;height:12px!important;display:block!important;
+      z-index:15!important;
+      transform-origin:50% 100%!important;
+      transform:rotateX(0deg)!important;
+      border:2px solid #a8b9ac!important;border-radius:2px!important;
+      background:linear-gradient(180deg,#f8fbf8 0%,#dce8df 48%,#aebfb2 100%)!important;
+      box-shadow:inset 0 1px 3px rgba(255,255,255,.9),0 1px 4px rgba(42,61,46,.2)!important;
+      opacity:0!important;backface-visibility:visible!important;
+      pointer-events:none!important;
+    }
+    .deck-case.opening .case-rear-gusset{opacity:1!important}
+    .deck-case .case-lid-front{backface-visibility:visible!important}
+    .deck-case .case-hinge,.deck-case .case-lock{display:none!important}
+    @media(max-width:480px){
+      .deck-case .case-lid{height:70px!important}
+      .deck-case .case-rear-gusset{top:60px!important;height:10px!important;left:10px!important;right:10px!important}
+    }
 </style>
 </head>
 <body>
