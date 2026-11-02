@@ -4063,6 +4063,31 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       animation-play-state:running!important;
     }
 
+
+    /* ===== Synchronized result reveal and real card-back in the case ===== */
+    .deck-case .case-card-stack{
+      overflow:hidden!important;border:2px solid rgba(255,255,255,.92)!important;
+      border-radius:5px!important;box-shadow:0 2px 8px rgba(30,45,34,.3),inset 0 0 0 1px rgba(255,255,255,.65)!important;
+      background:rgba(255,255,255,.42)!important;
+    }
+    .deck-case .case-card-stack>img{
+      display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+      object-fit:cover!important;opacity:.76!important;filter:brightness(1.42) saturate(.72) contrast(.9)!important;mix-blend-mode:screen!important;
+    }
+    .deck-case .case-card-stack:after{
+      content:""!important;display:block!important;position:absolute!important;inset:0!important;
+      background:rgba(255,255,255,.18)!important;pointer-events:none!important;
+    }
+    #cardStage #keyCardImages.result-sync,#result.result-sync{
+      animation:resultSynchronizedReveal .72s cubic-bezier(.16,.82,.22,1) both!important;
+      transform-origin:center center!important;will-change:opacity,transform,filter!important;
+    }
+    @keyframes resultSynchronizedReveal{
+      0%{opacity:0;transform:scale(.82);filter:brightness(1.5)}
+      62%{opacity:1;transform:scale(1.035);filter:brightness(1.12)}
+      100%{opacity:1;transform:scale(1);filter:brightness(1)}
+    }
+
 </style>
 </head>
 <body>
@@ -4075,7 +4100,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
-              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><span class="card-edge"></span><span class="card-edge"></span><span class="card-edge"></span></div></div>
+              <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><img src="assets/card-back.webp" alt=""></div></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
@@ -4242,10 +4267,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       // 前回の当選タイトルを新しい抽選の開始時点で必ず消す。
       // has-result / result-reveal が残ると、前回のタイトル装飾が開封演出中に再表示される。
       resultElement.replaceChildren();
-      resultElement.classList.remove("has-result", "result-reveal", "result-pending");
+      resultElement.classList.remove("has-result", "result-reveal", "result-pending", "result-sync");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
-      keyCardImages.classList.remove("revealing", "case-launch", "result-ready", "result-pending");
+      keyCardImages.classList.remove("revealing", "case-launch", "result-ready", "result-pending", "result-sync");
       drawingCard.style.removeProperty("display");
       drawingCard.style.removeProperty("visibility");
       drawingCard.style.removeProperty("opacity");
@@ -4517,13 +4542,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     async function showKeyCards(deck) {
-      // ケースが完全に退場するまでは、カード画像を画面に出さない。
       keyCardImages.replaceChildren();
-      keyCardImages.classList.remove("case-launch", "result-ready");
+      keyCardImages.classList.remove("case-launch", "result-ready", "result-sync");
       keyCardImages.classList.add("result-pending");
 
       const imageUrls = getKeyCardImageUrls(deck);
-
       if (imageUrls.length === 0) {
         const fallback = document.createElement("div");
         fallback.className = "fallback";
@@ -4535,14 +4558,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           img.src = url;
           img.alt = `${getDeckName(deck)} のキーカード ${index + 1}`;
           img.loading = "eager";
-
+          img.decoding = "async";
           img.addEventListener("error", () => {
             img.alt = "画像を読み込めませんでした";
             img.style.display = "none";
-
-            const visibleImages = [...keyCardImages.querySelectorAll("img")]
-              .some(image => image.style.display !== "none");
-
+            const visibleImages = [...keyCardImages.querySelectorAll("img")].some(image => image.style.display !== "none");
             if (!visibleImages) {
               const fallback = document.createElement("div");
               fallback.className = "fallback";
@@ -4550,42 +4570,58 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
               keyCardImages.appendChild(fallback);
             }
           }, { once: true });
-
           keyCardImages.appendChild(img);
         });
       }
 
-      // 画像のデコード完了を待ち、カードだけが後から現れる状態を防ぐ。
-      // 読み込み失敗画像は既存のerror処理に任せ、待機を無期限にしない。
       const imageDecodeReady = Promise.all(
-        [...keyCardImages.querySelectorAll("img")].map(img =>
-          typeof img.decode === "function"
-            ? img.decode().catch(() => {})
-            : Promise.resolve()
-        )
+        [...keyCardImages.querySelectorAll("img")].map(img => {
+          if (img.complete) return typeof img.decode === "function" ? img.decode().catch(() => {}) : Promise.resolve();
+          return new Promise(resolve => {
+            img.addEventListener("load", resolve, { once: true });
+            img.addEventListener("error", resolve, { once: true });
+          }).then(() => typeof img.decode === "function" ? img.decode().catch(() => {}) : undefined);
+        })
       );
 
-      // ケース退場と画像準備を並行させ、両方が整ってから結果を一斉に公開する。
       deckCase.style.transition = "opacity .32s ease";
       deckCase.style.opacity = "0";
-      await Promise.all([sleep(380), Promise.race([imageDecodeReady, sleep(1800)])]);
+      await Promise.all([sleep(380), Promise.race([imageDecodeReady, sleep(2200)])]);
 
-      // ケース用ステージを結果表示へ切り替える。
       cardStage.classList.add("winner");
-      cardStage.classList.remove("case-opening-stage");
+      cardStage.classList.remove("case-opening-stage", "result-reveal");
       keyCardImages.classList.remove("result-pending");
       keyCardImages.classList.add("result-ready");
-
-      // カードとデッキ名に同じ開始クラスを同一フレームで付与する。
-      resultElement.classList.remove("result-pending");
+      resultElement.classList.remove("result-pending", "result-reveal");
       resultElement.classList.add("has-result");
+
+      keyCardImages.style.setProperty("display", "flex", "important");
+      keyCardImages.style.setProperty("visibility", "visible", "important");
+      keyCardImages.style.setProperty("opacity", "1", "important");
+      keyCardImages.style.setProperty("animation", "none", "important");
+      keyCardImages.querySelectorAll("img").forEach(img => {
+        img.style.setProperty("display", "block", "important");
+        img.style.setProperty("visibility", "visible", "important");
+        img.style.setProperty("opacity", "1", "important");
+        img.style.setProperty("animation", "none", "important");
+        img.style.setProperty("transform", "none", "important");
+      });
       void cardStage.offsetWidth;
       void resultElement.offsetWidth;
-      cardStage.classList.add("result-reveal");
-      resultElement.classList.add("result-reveal");
+      keyCardImages.classList.add("result-sync");
+      resultElement.classList.add("result-sync");
 
-      // 共通アニメーションの完了まで待つ。
-      await sleep(560);
+      const revealAnimations = [keyCardImages, resultElement].map(element =>
+        element.animate(
+          [
+            { opacity: 0, transform: "scale(.82)", filter: "brightness(1.5)" },
+            { opacity: 1, transform: "scale(1.035)", filter: "brightness(1.12)", offset: .62 },
+            { opacity: 1, transform: "scale(1)", filter: "brightness(1)" }
+          ],
+          { duration: 720, easing: "cubic-bezier(.16,.82,.22,1)", fill: "both" }
+        )
+      );
+      await Promise.all(revealAnimations.map(animation => animation.finished.catch(() => {})));
     }
 
     async function loadDecks() {
