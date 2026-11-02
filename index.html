@@ -4263,6 +4263,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     function showDrawingCard() {
+      // 前回の結果表示で使ったWeb Animationsを解除し、次回抽選へ持ち越さない。
+      [keyCardImages, resultElement].forEach(element => element.getAnimations().forEach(animation => animation.cancel()));
       cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage");
       // 前回の当選タイトルを新しい抽選の開始時点で必ず消す。
       // has-result / result-reveal が残ると、前回のタイトル装飾が開封演出中に再表示される。
