@@ -4016,6 +4016,23 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       animation:unifiedDeckTitle .56s cubic-bezier(.2,.8,.2,1) both!important;
     }
 
+
+    /* One reveal clock for the winning cards and the deck title. */
+    #cardStage.winner #keyCardImages img,
+    #result.result-reveal .deck-name-title{
+      animation:sharedResultEntrance .56s cubic-bezier(.2,.8,.2,1) both!important;
+      animation-delay:0s!important;
+    }
+    #cardStage.winner #keyCardImages img:nth-child(2),
+    #cardStage.winner #keyCardImages img:nth-child(3){
+      animation-delay:0s!important;
+    }
+    @keyframes sharedResultEntrance{
+      0%{opacity:0;transform:translateY(18px) scale(.94);filter:brightness(1.35) blur(2px)}
+      62%{opacity:1;transform:translateY(-2px) scale(1.025);filter:brightness(1.08) blur(0)}
+      100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1) blur(0)}
+    }
+
 </style>
 </head>
 <body>
@@ -4508,25 +4525,36 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         });
       }
 
-      // まずケースだけを退場させる。カード・タイトルはまだ非表示。
+      // 画像のデコード完了を待ち、カードだけが後から現れる状態を防ぐ。
+      // 読み込み失敗画像は既存のerror処理に任せ、待機を無期限にしない。
+      const imageDecodeReady = Promise.all(
+        [...keyCardImages.querySelectorAll("img")].map(img =>
+          typeof img.decode === "function"
+            ? img.decode().catch(() => {})
+            : Promise.resolve()
+        )
+      );
+
+      // ケース退場と画像準備を並行させ、両方が整ってから結果を一斉に公開する。
       deckCase.style.transition = "opacity .32s ease";
       deckCase.style.opacity = "0";
-      await sleep(380);
+      await Promise.all([sleep(380), Promise.race([imageDecodeReady, sleep(1800)])]);
 
-      // ケース用の固定ステージを解除し、カードを通常の文書配置へ移す。
-      // winnerクラスによりケース自体も非表示になる。
+      // ケース用ステージを結果表示へ切り替える。
       cardStage.classList.add("winner");
       cardStage.classList.remove("case-opening-stage");
       keyCardImages.classList.remove("result-pending");
       keyCardImages.classList.add("result-ready");
 
-      // カード画像とデッキ名を同じフレームで表示開始する。
+      // カードとデッキ名に同じ開始クラスを同一フレームで付与する。
       resultElement.classList.remove("result-pending");
       resultElement.classList.add("has-result");
+      void cardStage.offsetWidth;
       void resultElement.offsetWidth;
+      cardStage.classList.add("result-reveal");
       resultElement.classList.add("result-reveal");
 
-      // カードとデッキ名の登場アニメーションが同時に進む。
+      // 共通アニメーションの完了まで待つ。
       await sleep(560);
     }
 
