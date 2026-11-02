@@ -3841,6 +3841,14 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     /* The lid has finished opening when mouth-eruption is applied.
        Use one beam only; suppress the two overlapping plume layers that read as
        separate, staggered light columns. */
+    /* Keep every outward plume dark while the lid is still rotating.
+       The single beam starts only when the fully-open lid enters mouth-eruption. */
+    .deck-case.opening:not(.mouth-eruption) .case-mouth-beam,
+    .deck-case.opening:not(.mouth-eruption) .case-rays,
+    .deck-case.opening:not(.mouth-eruption) .case-energy-plume{
+      animation:none!important;
+      opacity:0!important;
+    }
     .deck-case.mouth-eruption .case-mouth-beam{
       display:block!important;
       z-index:20!important;
