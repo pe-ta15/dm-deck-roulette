@@ -4136,7 +4136,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       await sleep(420);
       revealFlashElement.classList.remove("active");
       drawingCard.classList.remove("case-blast", "case-impact");
-      cardStage.classList.remove("case-opening-stage");
+      // カード射出からwinner確定までステージ寸法を維持する。
+      // ここでcase-opening-stageを外すと、カードが重なったまま親の高さ・幅が再計算される。
     }
 
     function createParticles() {
@@ -4349,6 +4350,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         await sleep(420);
         // 結果名を出す前に演出行を除去し、カード上部の一瞬の空白を防ぐ。
         cardStage.classList.add("winner");
+        // winner側にも同じ410pxのステージ寸法を定義済み。切替を同一フレームで行う。
+        cardStage.classList.remove("case-opening-stage");
         resultElement.replaceChildren();
         const resultEyebrow = document.createElement("span");
         resultEyebrow.className = "result-eyebrow";
