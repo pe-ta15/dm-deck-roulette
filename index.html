@@ -4005,6 +4005,17 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }
     }
 
+
+    /* Reveal the deck title on the exact same frame as the key-card images. */
+    #result.result-pending{
+      visibility:hidden!important;
+      opacity:0!important;
+      animation:none!important;
+    }
+    #result.result-reveal .deck-name-title{
+      animation:unifiedDeckTitle .56s cubic-bezier(.2,.8,.2,1) both!important;
+    }
+
 </style>
 </head>
 <body>
@@ -4184,7 +4195,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       // 前回の当選タイトルを新しい抽選の開始時点で必ず消す。
       // has-result / result-reveal が残ると、前回のタイトル装飾が開封演出中に再表示される。
       resultElement.replaceChildren();
-      resultElement.classList.remove("has-result", "result-reveal");
+      resultElement.classList.remove("has-result", "result-reveal", "result-pending");
       revealFlashElement.classList.remove("active");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("revealing", "case-launch", "result-ready", "result-pending");
@@ -4509,7 +4520,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       keyCardImages.classList.remove("result-pending");
       keyCardImages.classList.add("result-ready");
 
-      // カードの登場演出が終わってから、呼び出し元がデッキ名を生成する。
+      // カード画像とデッキ名を同じフレームで表示開始する。
+      resultElement.classList.remove("result-pending");
+      resultElement.classList.add("has-result");
+      void resultElement.offsetWidth;
+      resultElement.classList.add("result-reveal");
+
+      // カードとデッキ名の登場アニメーションが同時に進む。
       await sleep(560);
     }
 
@@ -4637,12 +4654,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         renderDeckList();
 
-        // ケースの退場とカードの中央配置が完了するまで待ってから、デッキ名を表示する。
-        await showKeyCards(deck);
+        // デッキ名と文明表示はカードと同時に出せるよう、ケース退場前にDOMへ準備する。
+        // result-pendingにより、ケースが残っている間は見えない。
         resultElement.replaceChildren();
+        resultElement.classList.remove("has-result", "result-reveal");
+        resultElement.classList.add("result-pending");
         const resultEyebrow = document.createElement("span");
         resultEyebrow.className = "result-eyebrow";
-        resultEyebrow.textContent = "今回の当選デッキ";
         resultEyebrow.textContent = "SUMMONED DECK";
         const resultTitle = document.createElement("span");
         resultTitle.className = "deck-name-title";
@@ -4670,9 +4688,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         });
         resultElement.append(resultEyebrow, resultTitle);
         if (civilizations.length > 0) resultElement.appendChild(resultCivs);
-        resultElement.classList.add("has-result");
-        void resultElement.offsetWidth;
-        resultElement.classList.add("result-reveal");
+        await showKeyCards(deck);
         // 結果名が見え始めてから演出行を縮める。
         await sleep(760);
         cardStage.classList.remove("reveal-hold");
@@ -4684,6 +4700,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         await sleep(900);
       } catch (error) {
         console.error(error);
+        resultElement.classList.remove("result-pending");
         resultElement.textContent = "抽選に失敗しました";
         resultElement.classList.add("has-result");
         keyCardImages.replaceChildren();
