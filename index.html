@@ -4354,16 +4354,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       width:min(100%,620px)!important;max-width:620px!important;
       min-height:0!important;height:auto!important;margin:18px auto 8px!important;
       padding:clamp(12px,2.5vw,22px)!important;overflow:visible!important;
-      border:1px solid #e8e3d7!important;border-radius:22px!important;
-      background:linear-gradient(155deg,#fff 0%,#fffefa 58%,#f8f5ed 100%)!important;
-      box-shadow:0 12px 32px rgba(64,51,28,.10),inset 0 1px 0 #fff!important;
+      border:1px solid #e5e7eb!important;border-radius:18px!important;
+      background:#fff!important;box-shadow:0 4px 16px rgba(25,35,45,.06)!important;
       isolation:isolate!important;
     }
+    /* 結果カードには演出用の色付き光を残さず、白一色にする */
     #cardStage.result-visible:before{
-      z-index:-1!important;width:100%!important;height:100%!important;
-      left:50%!important;top:50%!important;border-radius:inherit!important;
-      background:radial-gradient(ellipse at 50% 0%,rgba(255,221,137,.24),transparent 68%)!important;
-      animation:none!important;
+      display:none!important;content:none!important;animation:none!important;
     }
     #cardStage.result-visible:after{display:none!important;content:none!important}
     #cardStage.result-visible #drawingCard{display:none!important}
@@ -4414,9 +4411,16 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       opacity:1!important;transform:none!important;animation:none!important;
     }
     #cardStage.result-visible #result .result-civilizations{
-      display:flex!important;align-items:center!important;justify-content:center!important;flex-wrap:wrap!important;
-      gap:8px!important;margin:0!important;padding:5px 10px!important;border-radius:999px!important;
-      background:rgba(255,255,255,.78)!important;box-shadow:inset 0 0 0 1px rgba(181,157,111,.2)!important;
+      position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;
+      flex-wrap:wrap!important;gap:8px!important;
+      width:auto!important;max-width:100%!important;min-width:0!important;
+      height:auto!important;min-height:0!important;max-height:none!important;
+      margin:2px auto 0!important;padding:0!important;overflow:visible!important;
+      border:0!important;border-radius:0!important;background:transparent!important;
+      box-shadow:none!important;
+    }
+    #cardStage.result-visible #result .result-civilizations:after{
+      display:none!important;content:none!important;
     }
     #cardStage.result-visible #result .civilization-icon{
       display:block!important;width:clamp(22px,4.5vw,29px)!important;height:clamp(22px,4.5vw,29px)!important;
