@@ -3921,6 +3921,90 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       #result .result-civilizations{padding:4px 6px!important}
     }
 
+
+    /* ===== Unified case stage: keep absorption and opening on one coordinate plane ===== */
+    body.is-spinning #cardStage,
+    body.is-spinning #cardStage.case-opening-stage,
+    body.is-spinning #cardStage.absorption-burst{
+      position:relative!important;
+      display:block!important;
+      width:min(100%,680px)!important;
+      max-width:680px!important;
+      height:410px!important;
+      min-height:410px!important;
+      margin:16px auto 0!important;
+      padding:0!important;
+      box-sizing:border-box!important;
+      transform:none!important;
+      overflow:hidden!important;
+    }
+    body.is-spinning #cardStage #drawingCard,
+    body.is-spinning #cardStage.case-opening-stage #drawingCard,
+    body.is-spinning #drawingCard.mana-absorption,
+    body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+      position:relative!important;
+      inset:auto!important;
+      left:auto!important;
+      top:auto!important;
+      display:block!important;
+      width:min(100%,560px)!important;
+      max-width:560px!important;
+      height:410px!important;
+      min-height:410px!important;
+      margin:0 auto!important;
+      padding:0!important;
+      box-sizing:border-box!important;
+      transform:none!important;
+      border:0!important;
+      border-radius:0!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      overflow:hidden!important;
+    }
+    body.is-spinning #drawingCard .deck-case,
+    body.is-spinning #drawingCard.opening-cutin .deck-case{
+      position:absolute!important;
+      left:50%!important;
+      top:50%!important;
+      margin:0!important;
+      transform:translate(-50%,-50%) perspective(1050px) rotateX(8deg) rotateY(-3deg)!important;
+    }
+    @media(max-width:700px){
+      body.is-spinning #cardStage,
+      body.is-spinning #cardStage.case-opening-stage,
+      body.is-spinning #cardStage.absorption-burst{
+        width:100%!important;
+        height:410px!important;
+        min-height:410px!important;
+        margin:12px auto 0!important;
+      }
+      body.is-spinning #cardStage #drawingCard,
+      body.is-spinning #cardStage.case-opening-stage #drawingCard,
+      body.is-spinning #drawingCard.mana-absorption,
+      body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+        width:min(100%,370px)!important;
+        height:410px!important;
+        min-height:410px!important;
+      }
+      body.is-spinning #drawingCard .deck-case,
+      body.is-spinning #drawingCard.opening-cutin .deck-case{
+        transform:translate(-50%,-50%) perspective(980px) rotateX(8deg) rotateY(-3deg) scale(.92)!important;
+      }
+    }
+    @media(max-width:480px){
+      body.is-spinning #cardStage,
+      body.is-spinning #cardStage.case-opening-stage,
+      body.is-spinning #cardStage.absorption-burst{
+        height:390px!important;min-height:390px!important;
+      }
+      body.is-spinning #cardStage #drawingCard,
+      body.is-spinning #cardStage.case-opening-stage #drawingCard,
+      body.is-spinning #drawingCard.mana-absorption,
+      body.is-spinning #drawingCard.mana-absorption.opening-cutin{
+        height:390px!important;min-height:390px!important;
+      }
+    }
+
 </style>
 </head>
 <body>
