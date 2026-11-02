@@ -4033,6 +4033,36 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1) blur(0)}
     }
 
+
+    /* Final result visibility: reveal cards with the title and winner light, not with controls. */
+    body.is-spinning #cardStage.winner,
+    body.is-spinning #cardStage.winner #keyCardImages,
+    body.is-spinning #cardStage.winner #keyCardImages img{
+      display:block!important;
+      visibility:visible!important;
+      opacity:1!important;
+    }
+    body.is-spinning #cardStage.winner #keyCardImages{
+      display:flex!important;
+      pointer-events:auto!important;
+    }
+    body.is-spinning #cardStage.winner #keyCardImages img{
+      animation:none!important;
+      transform:none!important;
+      filter:none!important;
+    }
+    body.is-spinning #result.has-result,
+    body.is-spinning #result.result-reveal,
+    body.is-spinning #result.result-reveal .deck-name-title{
+      visibility:visible!important;
+      opacity:1!important;
+    }
+    /* The radial winner flash and card images begin on the same winner-class frame. */
+    body.is-spinning #cardStage.winner:before,
+    body.is-spinning #cardStage.winner:after{
+      animation-play-state:running!important;
+    }
+
 </style>
 </head>
 <body>
