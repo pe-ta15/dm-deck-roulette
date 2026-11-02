@@ -3712,6 +3712,129 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }
     }
 
+
+
+    /* ===== Result layout: case first, then centered cards and deck title ===== */
+    /* ケース表示中はカード画像をDOM上に準備していても見せない。 */
+    #cardStage #keyCardImages.result-pending{
+      visibility:hidden!important;
+      opacity:0!important;
+    }
+
+    /* 結果状態は固定座標を使わず、通常の縦方向レイアウトに統一する。 */
+    #cardStage.winner{
+      position:relative!important;
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr)!important;
+      grid-template-rows:auto!important;
+      row-gap:0!important;
+      width:100%!important;
+      max-width:620px!important;
+      height:auto!important;
+      min-height:0!important;
+      margin:0 auto!important;
+      padding:0!important;
+      overflow:visible!important;
+      box-sizing:border-box!important;
+    }
+    #cardStage.winner #drawingCard{
+      display:none!important;
+      visibility:hidden!important;
+      width:0!important;
+      height:0!important;
+      min-height:0!important;
+      margin:0!important;
+      padding:0!important;
+    }
+    #cardStage.winner #keyCardImages,
+    #cardStage.winner #keyCardImages.result-ready{
+      position:relative!important;
+      inset:auto!important;
+      top:auto!important;
+      right:auto!important;
+      bottom:auto!important;
+      left:auto!important;
+      grid-column:1!important;
+      grid-row:auto!important;
+      justify-self:stretch!important;
+      align-self:auto!important;
+      display:flex!important;
+      flex-flow:row wrap!important;
+      justify-content:center!important;
+      align-items:flex-start!important;
+      align-content:flex-start!important;
+      width:100%!important;
+      max-width:100%!important;
+      height:auto!important;
+      min-height:0!important;
+      max-height:none!important;
+      margin:0 auto!important;
+      padding:0 8px 12px!important;
+      gap:10px!important;
+      transform:none!important;
+      opacity:1!important;
+      visibility:visible!important;
+      overflow:visible!important;
+      box-sizing:border-box!important;
+      z-index:1!important;
+    }
+    #cardStage.winner #keyCardImages img{
+      position:relative!important;
+      inset:auto!important;
+      display:block!important;
+      flex:0 1 148px!important;
+      width:min(148px,calc((100% - 20px)/2))!important;
+      max-width:100%!important;
+      height:auto!important;
+      max-height:min(238px,34vh)!important;
+      margin:0!important;
+      object-fit:contain!important;
+      transform:none!important;
+      animation:keyCardResultReveal .56s cubic-bezier(.2,.8,.2,1) both!important;
+    }
+    #cardStage.winner #keyCardImages img:nth-child(2){animation-delay:.07s!important}
+    #cardStage.winner #keyCardImages img:nth-child(3){animation-delay:.14s!important}
+    @keyframes keyCardResultReveal{
+      from{opacity:0;transform:translateY(18px) scale(.94)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    /* カード→デッキ名、デッキ名→ボタンの間隔を同程度にする。 */
+    #result.has-result,
+    #result.result-reveal{
+      position:relative!important;
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:center!important;
+      justify-content:center!important;
+      width:100%!important;
+      height:auto!important;
+      min-height:0!important;
+      margin:0 auto 12px!important;
+      padding:0 8px!important;
+      gap:8px!important;
+      line-height:1.15!important;
+      overflow:visible!important;
+      box-sizing:border-box!important;
+    }
+    #spinButton{margin-top:0!important}
+    .roulette-panel:has(#result.has-result) #spinButton{margin-top:0!important}
+
+    @media(max-width:480px){
+      #cardStage.winner #keyCardImages,
+      #cardStage.winner #keyCardImages.result-ready{
+        gap:8px!important;
+        padding:0 6px 10px!important;
+      }
+      #cardStage.winner #keyCardImages img{
+        flex-basis:132px!important;
+        width:min(132px,calc((100% - 16px)/2))!important;
+        max-height:min(205px,31vh)!important;
+      }
+      #result.has-result,
+      #result.result-reveal{margin-bottom:10px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -4166,9 +4289,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     async function showKeyCards(deck) {
-      // ケースを残したままカードを重ね、飛び出し始めてからケースを退場させる。
+      // ケースが完全に退場するまでは、カード画像を画面に出さない。
       keyCardImages.replaceChildren();
-      keyCardImages.classList.remove("revealing", "case-launch");
+      keyCardImages.classList.remove("case-launch", "result-ready");
+      keyCardImages.classList.add("result-pending");
 
       const imageUrls = getKeyCardImageUrls(deck);
 
@@ -4201,22 +4325,22 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
           keyCardImages.appendChild(img);
         });
-
-        // 蓋が開き始める短い瞬間だけ待ち、開放の勢いにカード射出を同期させる。
-        await sleep(105);
-        void keyCardImages.offsetWidth;
-        keyCardImages.classList.add("case-launch");
       }
 
-      // 最長のカード演出（920ms）と3枚目の遅延（180ms）が終わるまで待つ。
-      // 演出途中でcase-launchを外すと、transformが解除されカード位置が跳ねる。
-      await sleep(1120);
-      keyCardImages.classList.add("result-ready");
-      keyCardImages.classList.remove("case-launch");
-      deckCase.style.transition = "opacity .28s ease, transform .38s ease";
+      // まずケースだけを退場させる。カード・タイトルはまだ非表示。
+      deckCase.style.transition = "opacity .32s ease";
       deckCase.style.opacity = "0";
-      deckCase.style.transform = "translate(-50%,-58%) perspective(650px) rotateX(7deg) scale(.82)";
-      // winnerへの切替は結果名の表示後に親側で行う。
+      await sleep(380);
+
+      // ケース用の固定ステージを解除し、カードを通常の文書配置へ移す。
+      // winnerクラスによりケース自体も非表示になる。
+      cardStage.classList.add("winner");
+      cardStage.classList.remove("case-opening-stage");
+      keyCardImages.classList.remove("result-pending");
+      keyCardImages.classList.add("result-ready");
+
+      // カードの登場演出が終わってから、呼び出し元がデッキ名を生成する。
+      await sleep(560);
     }
 
     async function loadDecks() {
@@ -4343,15 +4467,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         renderDeckList();
 
-        const cardLaunch = showKeyCards(deck);
-        await Promise.all([cardLaunch, sleep(620)]);
-        // showKeyCardsはケースの退場トランジションを開始して戻るため、
-        // opacity/transformの両方が完了するまで待ってから結果タイトルを生成する。
-        await sleep(420);
-        // 結果名を出す前に演出行を除去し、カード上部の一瞬の空白を防ぐ。
-        cardStage.classList.add("winner");
-        // winner側にも同じ410pxのステージ寸法を定義済み。切替を同一フレームで行う。
-        cardStage.classList.remove("case-opening-stage");
+        // ケースの退場とカードの中央配置が完了するまで待ってから、デッキ名を表示する。
+        await showKeyCards(deck);
         resultElement.replaceChildren();
         const resultEyebrow = document.createElement("span");
         resultEyebrow.className = "result-eyebrow";
