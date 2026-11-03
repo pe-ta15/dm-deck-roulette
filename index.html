@@ -2849,10 +2849,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   position:relative!important;z-index:1!important;animation:cardRiseFromMouth 1s cubic-bezier(.16,.82,.22,1) both!important;
 }
 
-#keyCardImages.case-launch img:nth-child(2){animation-delay:.09s!important}
-
-#keyCardImages.case-launch img:nth-child(3){animation-delay:.18s!important}
-
 @keyframes cardRiseFromMouth{
   0%{opacity:0;transform:translate3d(0,18px,0) rotateX(12deg) scale(.72);filter:brightness(.7) blur(1px)}
   32%{opacity:1;transform:translate3d(0,-8px,24px) rotateX(4deg) scale(.88);filter:brightness(1.35) drop-shadow(0 0 18px #fff)}
@@ -2860,8 +2856,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   86%{transform:translate3d(0,2px,36px) scale(.99)}
   100%{opacity:1;transform:translate3d(0,0,30px) scale(1);filter:brightness(1) drop-shadow(0 8px 16px rgba(0,0,0,.25))}
 }
-
-#keyCardImages.result-ready:before{display:none!important;content:none!important}
 
 @media(prefers-reduced-motion:reduce){
   #keyCardImages.case-launch img{animation-duration:.01ms!important;animation-iteration-count:1!important}
