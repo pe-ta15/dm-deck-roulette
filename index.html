@@ -945,6 +945,106 @@
       }
     }
 
+
+    /* ===== Final geometry/material correction: compact 5:7 cavity, no dark case surfaces ===== */
+    .deck-case,
+    .deck-case.civ-charging,
+    .deck-case.pressure,
+    .deck-case.opening,
+    .deck-case.treasure-open,
+    #drawingCard.opening-cutin .deck-case {
+      filter:drop-shadow(0 8px 12px rgba(116,132,122,.12))!important;
+    }
+    .deck-case .case-body,
+    .deck-case.treasure-open .case-body {
+      left:4px!important;right:4px!important;top:54px!important;bottom:5px!important;
+      border:2px solid rgba(216,228,220,.98)!important;border-top:0!important;
+      background:linear-gradient(90deg,#fff 0%,#f0f5f1 18%,#fbfdfb 50%,#edf3ee 82%,#fff 100%)!important;
+      box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 -2px 5px rgba(160,178,166,.06),0 1px 3px rgba(110,130,117,.05)!important;
+      overflow:hidden!important;
+    }
+    .deck-case .case-body:after,
+    .deck-case.treasure-open .case-body:after {
+      border:1px solid rgba(255,255,255,.98)!important;
+      border-bottom:1px solid rgba(210,224,214,.9)!important;
+      background:linear-gradient(180deg,#fff,#edf4ef)!important;
+      box-shadow:0 1px 2px rgba(100,120,108,.04)!important;
+    }
+    /* ケース本体の内寸は高さ約100px。5:7比率を保ったまま内部に収める。 */
+    .deck-case .case-cavity,
+    .deck-case.treasure-open .case-cavity {
+      left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
+      width:70px!important;height:auto!important;aspect-ratio:5 / 7!important;
+      transform:translate(-50%,-50%)!important;
+      border:0!important;border-radius:3px!important;
+      background:linear-gradient(180deg,#fcfefc,#f1f6f2 58%,#e8f0ea)!important;
+      box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.04)!important;
+    }
+    .deck-case .case-spectrum,
+    .deck-case.treasure-open .case-spectrum {
+      left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
+      width:66px!important;height:auto!important;aspect-ratio:5 / 7!important;
+      transform:translate(-50%,-50%) scale(.82)!important;border-radius:3px!important;
+      mix-blend-mode:screen!important;
+    }
+    .deck-case.civ-charging .case-spectrum {transform:translate(-50%,-50%) scale(1)!important}
+    .deck-case .case-lid,
+    .deck-case.treasure-open .case-lid {
+      border:2px solid rgba(218,230,222,.98)!important;
+      border-bottom:2px solid rgba(205,220,210,.94)!important;
+      background:linear-gradient(145deg,#fff 0%,#edf4ef 52%,#fbfdfb 100%)!important;
+      box-shadow:inset 0 2px 5px rgba(255,255,255,.98),0 1px 3px rgba(110,130,117,.06)!important;
+      backface-visibility:visible!important;
+    }
+    .deck-case .case-lid-inner,
+    .deck-case.treasure-open .case-lid-inner {
+      border:1px solid rgba(255,255,255,.98)!important;
+      background:linear-gradient(145deg,#fff,#edf4ef)!important;
+      box-shadow:inset 0 0 4px rgba(255,255,255,.98)!important;
+      transform:translateZ(-1px)!important;
+    }
+    .deck-case .case-lid:before,
+    .deck-case.treasure-open .case-lid:before {
+      border-color:rgba(255,255,255,.98)!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;
+      box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important;
+    }
+    .deck-case .case-lid:after,
+    .deck-case.treasure-open .case-lid:after {
+      border:1px solid rgba(210,222,214,.98)!important;
+      background:linear-gradient(90deg,#fff,#edf4ef 50%,#fff)!important;
+      box-shadow:0 1px 2px rgba(100,118,107,.04)!important;
+    }
+    .deck-case .case-hinge,
+    .deck-case.treasure-open .case-hinge {
+      background:linear-gradient(180deg,#fff,#e9f1eb 55%,#d6e3da)!important;
+      box-shadow:0 1px 2px rgba(100,118,107,.04)!important;
+    }
+    .deck-case .case-lock,
+    .deck-case.treasure-open .case-lock {
+      border:1px solid #dce7df!important;
+      background:linear-gradient(180deg,#fff,#edf4ef 58%,#dce7df)!important;
+      box-shadow:0 1px 2px rgba(100,118,107,.06),inset 0 1px 2px #fff!important;
+    }
+    .deck-case .case-lock:after,
+    .deck-case.treasure-open .case-lock:after {
+      background:#c5d4ca!important;box-shadow:none!important;
+    }
+    .deck-case.opening .case-body,
+    .deck-case.pressure .case-body,
+    .deck-case.civ-charging .case-body,
+    .deck-case.treasure-open .case-body {
+      border-color:rgba(216,228,220,.98)!important;
+      box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 0 12px var(--case-civ-glow,rgba(255,255,255,.16)),0 1px 3px rgba(110,130,117,.05)!important;
+    }
+    .deck-case.opening .case-body:after {
+      background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#e8f0ea) 23%,transparent 72%)!important;
+    }
+    @media(max-width:480px) {
+      .deck-case .case-cavity,.deck-case.treasure-open .case-cavity {width:70px!important}
+      .deck-case .case-spectrum,.deck-case.treasure-open .case-spectrum {width:66px!important}
+    }
+
   </style>
 </head>
 <body>
