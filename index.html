@@ -2137,7 +2137,6 @@
       .deck-case .case-body{top:62px!important}
       .deck-case .case-lid{height:70px!important}
       .deck-case .case-lock{top:62px!important}
-      .case-card-stack{height:54px}
       #result.has-result{padding:18px 13px 15px!important;margin-top:10px!important}
     }
 
@@ -4298,52 +4297,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),inset 0 3px 8px rgba(103,137,113,.08);
       pointer-events:none;
     }
-    .deck-case .case-card-stack {
-      position:absolute;
-      inset:0;
-      display:block;
-      width:100%;
-      height:100%;
-      margin:0;
-      padding:0;
-      overflow:hidden;
-      border:0;
-      border-radius:0;
-      background:transparent;
-      box-shadow:none;
-      opacity:1;
-      transform:none;
-    }
-    .deck-case .case-card-stack > img {
-      position:absolute;
-      inset:0;
-      display:block;
-      width:100%;
-      height:100%;
-      max-width:none;
-      max-height:none;
-      object-fit:contain;
-      object-position:center;
-      margin:0;
-      padding:0;
-      border:0;
-      border-radius:0;
-      background:transparent;
-      box-shadow:none;
-      filter:none;
-      opacity:1;
-      mix-blend-mode:normal;
-    }
-    .deck-case .case-card-stack:before,
-    .deck-case .case-card-stack:after,
-    .deck-case .case-card-stack .card-edge,
-    .deck-case .case-card-stack .card-face {
-      display:none;
-      content:none;
-      box-shadow:none;
-      background:transparent;
-    }
-
     /* ===== Unified winning-deck showcase ===== */
     #cardStage.result-visible{
       display:grid!important;grid-template-columns:minmax(0,1fr)!important;
@@ -4457,19 +4410,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       white-space:nowrap!important;
     }
 
-  </style>
-</head>
-<body>
-  <main>
-    <h1>DMデッキルーレット</h1>
-    <p class="subtitle">次に使用するデッキを抽選します</p>
-    <section class="panel roulette-panel">
-      <div id="cardStage" class="card-stage hidden">
-        <div id="drawingCard" class="mana-absorption hidden" aria-label="5文明の力を吸収して抽選中">
-          <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
-          <div class="deck-case" id="deckCase" aria-hidden="true">
-            <div class="case-body">
-
     /* ===== Card-back visibility: final case-interior layer order ===== */
     .deck-case .case-cavity {
       z-index:4!important;
@@ -4556,6 +4496,19 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       opacity:.2!important;
       mix-blend-mode:screen!important;
     }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DMデッキルーレット</h1>
+    <p class="subtitle">次に使用するデッキを抽選します</p>
+    <section class="panel roulette-panel">
+      <div id="cardStage" class="card-stage hidden">
+        <div id="drawingCard" class="mana-absorption hidden" aria-label="5文明の力を吸収して抽選中">
+          <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
+          <div class="deck-case" id="deckCase" aria-hidden="true">
+            <div class="case-body">
 
               <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><img src="assets/card-back.webp" alt=""></div></div>
               
