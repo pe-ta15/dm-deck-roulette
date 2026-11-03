@@ -804,9 +804,7 @@
 
     @keyframes cutinCaption{0%{opacity:0;transform:translateY(10px) scale(.88)}55%{opacity:1;transform:translateY(-2px) scale(1.05)}100%{opacity:1;transform:translateY(0) scale(1)}}
 
-    #drawingCard.case-impact:before{display:block!important;content:""!important;position:absolute!important;z-index:1!important;inset:-30px!important;border:0!important;border-radius:50%!important;background:radial-gradient(ellipse at 50% 52%,rgba(255,255,255,.98) 0%,rgba(255,244,207,.78) 22%,rgba(255,220,145,.34) 42%,transparent 72%)!important;opacity:0;animation:cutinAura .95s ease-out both;pointer-events:none}
 
-    @keyframes cutinAura{0%{opacity:0;transform:scale(.22)}25%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
 
 
     #drawingCard.case-impact .case-burst{animation:ruptureWave .9s cubic-bezier(.12,.72,.18,1) both}
@@ -4418,10 +4416,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           keyCardImages.appendChild(img);
         });
       }
-      deckCase.style.transition = "opacity .32s ease";
+      deckCase.style.transition = "opacity .16s ease";
       deckCase.style.opacity = "0";
-      // ケースのフェードアウト完了に合わせて結果を表示し、画像読込待ちで演出を止めない。
-      await sleep(320);
+      // ケースの短いフェードアウトに合わせて結果を表示し、画像読込待ちで演出を止めない。
+      await sleep(160);
       // One state transition controls the stage, card group and title.
       cardStage.classList.remove("result-pending", "case-opening-stage", "reveal-hold");
       cardStage.classList.add("winner", "result-visible");
