@@ -4,12 +4,14 @@ on:
     paths:
       - "index.html"
       - ".github/workflows/render-opening.yml"
+      - "tools/validate_frontend.py"
   push:
     branches:
       - main
     paths:
       - "index.html"
       - ".github/workflows/render-opening.yml"
+      - "tools/validate_frontend.py"
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,6 +36,10 @@ jobs:
           Path("/tmp/dm-deck-roulette.js").write_text(scripts[0], encoding="utf-8")
           PY
           node --check /tmp/dm-deck-roulette.js
+      - name: Parse CSS and run transition regression checks
+        run: |
+          python3 -m pip install --disable-pip-version-check tinycss2==1.4.0
+          python3 tools/validate_frontend.py
       - name: Check required case and draw behavior
         run: |
           python3 - <<'PY'
