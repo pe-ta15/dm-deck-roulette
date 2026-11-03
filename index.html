@@ -3905,7 +3905,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         <div id="result" aria-live="polite"></div>
       </div>
       <button type="button" id="spinButton" disabled>デッキを読み込み中…</button>
-      <p id="status" role="status" aria-live="polite">デッキを読み込み中です。</p>
+      <p id="status" role="status" aria-live="polite"></p>
       <div id="settings" class="settings">
         <label class="checkbox-label">
           <input type="checkbox" id="avoidRepeat">
@@ -4024,7 +4024,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     function updateSpinButtonState() {
-      // 抽選中はボタン自体を非表示にするため、ここでは結果画面用の状態だけを管理する。
+      if (isSpinning) {
+        spinButton.textContent = "待機中…";
+        spinButton.disabled = true;
+        return;
+      }
       if (isDeckLoading) {
         spinButton.textContent = "デッキを読み込み中…";
         spinButton.disabled = true;
@@ -4497,7 +4501,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       isDeckLoading = true;
       isDeckLoadFailed = false;
       updateSpinButtonState();
-      statusElement.textContent = "デッキを読み込み中です。";
+      statusElement.textContent = "";
 
       try {
         const response = await fetch(`${API_BASE}/decks`);
@@ -4515,7 +4519,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           return;
         }
 
-        statusElement.textContent = `抽選対象：${decks.length}デッキ`;
       } catch (error) {
         console.error(error);
         isDeckLoadFailed = true;
@@ -4525,6 +4528,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       } finally {
         isDeckLoading = false;
         updateSpinButtonState();
+        if (!isDeckLoadFailed && decks.length > 0) {
+          const availableCount = decks.filter(deck => !getExcludedDeckIds().includes(deck.id)).length;
+          statusElement.textContent = availableCount > 0
+            ? `抽選対象：${availableCount}デッキ`
+            : "除外設定を確認してください。";
+        }
       }
     }
 
