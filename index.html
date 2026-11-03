@@ -162,7 +162,7 @@
 
     #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
 
-    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;will-change:transform,opacity;pointer-events:none}
+    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;will-change:transform,opacity;pointer-events:none;transform-origin:center;backface-visibility:hidden}
 
     .mana-orb.fire{--mana-color:#e53935}
 
@@ -174,7 +174,7 @@
 
     .mana-orb.darkness{--mana-color:#743c9b}
 
-    .mana-orb{transform-origin:center;backface-visibility:hidden}
+    
 
     .mana-orb.fire{filter:drop-shadow(0 0 5px #ff4b35) drop-shadow(0 0 15px #e53935) drop-shadow(0 0 26px rgb(229 57 53 / 55%))}
 
