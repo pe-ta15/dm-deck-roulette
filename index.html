@@ -4719,15 +4719,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         stopSelectionOrbit.stop();
         drawingCard.classList.add("hidden");
         spinButton.classList.remove("hidden");
-        spinButton.textContent = "抽選スタート";
-        isSpinning = false;
-        updateSpinButtonState();
         statusElement.classList.remove("hidden");
         settingsElement.classList.remove("hidden");
         settingsElement.classList.remove("is-spinning");
         avoidRepeatCheckbox.disabled = false;
         document.body.classList.remove("is-spinning");
         isSpinning = false;
+        updateSpinButtonState();
       }
     }
 
