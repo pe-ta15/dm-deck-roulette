@@ -761,8 +761,8 @@
     }
   
 
-    /* ===== Final visual correction: card-ratio cavity + fully milky case ===== */
-    /* 旧い金属ケースの暗色・黒い内側影を、全フェーズで無効化する。 */
+    /* ===== Authoritative milky-case and complete-card rendering ===== */
+    /* 旧い金属ケース用CSSを、通常・吸収・加圧・開封の全状態で上書きする。 */
     .deck-case,
     #drawingCard.opening-cutin .deck-case,
     .deck-case.treasure-open {
@@ -771,17 +771,32 @@
     }
     .deck-case .case-body,
     .deck-case.treasure-open .case-body {
-      border-color:rgba(215,225,219,.96)!important;
+      border:2px solid rgba(215,225,219,.96)!important;
+      border-top:0!important;
       background:linear-gradient(90deg,#fff 0%,rgba(235,242,237,.96) 16%,rgba(250,252,250,.98) 50%,rgba(232,240,234,.96) 84%,#fff 100%)!important;
       box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 -4px 8px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
       overflow:hidden!important;
     }
-    .deck-case .case-body:after {
-      border-color:rgba(255,255,255,.98)!important;
+    .deck-case .case-body:after,
+    .deck-case.treasure-open .case-body:after {
+      border:1px solid rgba(255,255,255,.98)!important;
       border-bottom-color:rgba(205,218,209,.72)!important;
       background:linear-gradient(180deg,#fff,#edf3ef)!important;
       box-shadow:0 1px 2px rgba(100,120,108,.06)!important;
     }
+    /* 開封時の疑似要素は暗い旧背景を使わず、白い光だけを重ねる。 */
+    .deck-case.opening .case-body:after {
+      content:""!important;
+      position:absolute!important;
+      z-index:5!important;
+      inset:4px!important;
+      border:0!important;
+      background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#e8f0ea) 23%,transparent 72%)!important;
+      opacity:0;
+      pointer-events:none;
+      animation:caseCoreFlash .5s ease-out both;
+    }
+    /* ケース内側は常に5:7。親の本体内で中央配置する。 */
     .deck-case .case-cavity,
     .deck-case.treasure-open .case-cavity {
       left:50%!important;
@@ -793,10 +808,12 @@
       aspect-ratio:5 / 7!important;
       transform:translate(-50%,-50%)!important;
       border:0!important;
+      border-radius:3px!important;
       background:linear-gradient(180deg,#fcfefc 0%,#f1f6f2 58%,#e8f0ea 100%)!important;
       box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.05)!important;
     }
-    .deck-case .case-spectrum {
+    .deck-case .case-spectrum,
+    .deck-case.treasure-open .case-spectrum {
       left:50%!important;
       right:auto!important;
       top:50%!important;
@@ -806,14 +823,18 @@
       aspect-ratio:5 / 7!important;
       transform:translate(-50%,-50%) scale(.82)!important;
       border-radius:3px!important;
+      mix-blend-mode:screen!important;
     }
     .deck-case.civ-charging .case-spectrum {
       transform:translate(-50%,-50%) scale(1)!important;
     }
-    .deck-case .case-glow {
+    .deck-case .case-glow,
+    .deck-case.treasure-open .case-glow {
       inset:46px 18px 12px!important;
       background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;
+      mix-blend-mode:screen!important;
     }
+    /* 蓋・蓋裏・背面接続部・留め具に黒い面を残さない。 */
     .deck-case .case-lid,
     .deck-case.treasure-open .case-lid {
       border-color:rgba(218,228,221,.98)!important;
@@ -822,50 +843,81 @@
       box-shadow:inset 0 2px 6px rgba(255,255,255,.98),inset 0 -2px 4px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
       backface-visibility:visible!important;
     }
-    .deck-case .case-lid-inner {
+    .deck-case .case-lid-inner,
+    .deck-case.treasure-open .case-lid-inner {
+      border:1px solid rgba(255,255,255,.98)!important;
       background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(237,244,239,.92))!important;
-      border-color:rgba(255,255,255,.98)!important;
       box-shadow:inset 0 0 5px rgba(255,255,255,.96)!important;
       transform:translateZ(-1px)!important;
     }
-    .deck-case .case-lid:before {
-      background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(225,236,228,.12) 55%,rgba(190,207,195,.08))!important;
+    .deck-case .case-lid:before,
+    .deck-case.treasure-open .case-lid:before {
       border-color:rgba(255,255,255,.96)!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(225,236,228,.12) 55%,rgba(190,207,195,.08))!important;
       box-shadow:inset 0 0 5px rgba(255,255,255,.82)!important;
     }
-    .deck-case .case-lid:after {
-      border-color:rgba(210,222,214,.96)!important;
+    .deck-case .case-lid:after,
+    .deck-case.treasure-open .case-lid:after {
+      border:1px solid rgba(210,222,214,.96)!important;
       background:linear-gradient(90deg,#fff,rgba(235,242,237,.98) 50%,#fff)!important;
       box-shadow:0 2px 3px rgba(100,118,107,.06)!important;
     }
-    .deck-case .case-hinge {
+    .deck-case .case-hinge,
+    .deck-case.treasure-open .case-hinge {
       background:linear-gradient(180deg,#fff,#e9f0eb 55%,#d6e2da)!important;
       box-shadow:0 1px 2px rgba(100,118,107,.06)!important;
     }
-    .deck-case .case-lock {
+    .deck-case .case-lock,
+    .deck-case.treasure-open .case-lock {
       border-color:#dce7df!important;
       background:linear-gradient(180deg,#fff,#edf3ef 58%,#dce7df)!important;
       box-shadow:0 1px 3px rgba(100,118,107,.08),inset 0 1px 2px #fff!important;
     }
-    .deck-case .case-lock:after {background:#c5d4ca!important;box-shadow:none!important}
+    .deck-case .case-lock:after,
+    .deck-case.treasure-open .case-lock:after {
+      background:#c5d4ca!important;
+      box-shadow:none!important;
+    }
     .deck-case.civ-charging .case-body,
+    .deck-case.pressure .case-body,
+    .deck-case.opening .case-body,
     .deck-case.treasure-open .case-body {
+      border-color:rgba(215,225,219,.96)!important;
       box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 0 14px var(--case-civ-glow,rgba(255,255,255,.2)),0 2px 4px rgba(110,130,117,.08)!important;
+    }
+    .deck-case.civ-charging,
+    .deck-case.pressure,
+    .deck-case.opening {
+      filter:drop-shadow(0 9px 12px rgba(112,130,120,.14))!important;
     }
     @media(max-width:480px) {
       .deck-case .case-cavity,
       .deck-case.treasure-open .case-cavity {width:100px!important}
-      .deck-case .case-spectrum {width:94px!important}
+      .deck-case .case-spectrum,
+      .deck-case.treasure-open .case-spectrum {width:94px!important}
     }
-    /* キーカードは5:7の表示枠に統一。画像外周の白い余白は枠外へ出さない。 */
-    #keyCardImages img {
+
+    /* カードは5:7の表示枠に収め、object-fit:containで四辺を切らずに表示する。 */
+    #keyCardImages img,
+    #cardStage.winner #keyCardImages img {
+      width:min(148px,calc((100vw - 72px)/2))!important;
+      height:min(207.2px,calc((100vw - 72px)*.7))!important;
+      max-width:100%!important;
+      max-height:none!important;
       aspect-ratio:5 / 7!important;
-      object-fit:cover!important;
+      object-fit:contain!important;
       object-position:center!important;
-      overflow:hidden!important;
+      overflow:visible!important;
       border-radius:7px!important;
       background:transparent!important;
-      box-shadow:0 7px 16px rgba(35,48,40,.18)!important;
+      box-shadow:0 7px 16px rgba(112,130,120,.18)!important;
+    }
+    @media(max-width:480px) {
+      #keyCardImages img,
+      #cardStage.winner #keyCardImages img {
+        width:min(132px,calc((100vw - 58px)/2))!important;
+        height:min(184.8px,calc((100vw - 58px)*.7))!important;
+      }
     }
 
   </style>
