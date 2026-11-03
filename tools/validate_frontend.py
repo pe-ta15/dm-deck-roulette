@@ -82,6 +82,8 @@ for (context, selector, _), occurrences in duplicate_rules.items():
         duplicate_count += 1
         line_list = ", ".join(map(str, occurrences))
         print(f"CSS duplicate review: {context}: {selector} at lines {line_list} ({len(occurrences)} copies)")
+if duplicate_count:
+    fail(f"Found {duplicate_count} duplicate CSS selector/declaration block(s)")
 
 # Regression guards for the exact handoff effects that previously escaped review.
 for forbidden in ("case-burst", "ruptureWave", "resultShockwave", "revealFlash"):
