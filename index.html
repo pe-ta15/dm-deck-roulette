@@ -625,6 +625,16 @@
       background:linear-gradient(180deg,rgba(250,252,250,.82),rgba(232,240,235,.9) 58%,rgba(216,229,220,.84))!important;
       box-shadow:inset 0 1px 6px rgba(255,255,255,.94),inset 0 -3px 8px rgba(132,151,140,.10)!important;
     }
+  
+    /* ===== Key-card image surface: neutral backing ===== */
+    /* PNG等の透過画素から背後の暗色が見える場合に備え、画像面を白で受ける。
+       元画像の縦横比・全体表示は維持し、画像自体の画素は切り抜かない。 */
+    #keyCardImages img {
+      background-color: #fff !important;
+      background-image: none !important;
+      mix-blend-mode: normal !important;
+      object-fit: contain !important;
+    }
   </style>
 </head>
 <body>
