@@ -141,7 +141,7 @@
 
     .deck-case.opening .case-body{animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both}
 
-    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#dceaff) 23%,transparent 72%);opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
+    
 
     .deck-case.opening .case-light{animation:caseLightPeak .5s cubic-bezier(.12,.8,.2,1) both}
 
@@ -161,7 +161,7 @@
 
     @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}24%{transform:translateY(6px) scale(.97,1.03)}55%{transform:translateY(-4px) scale(1.03,.98)}100%{transform:translateY(0) scale(1)}}
 
-    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.9)}}
+
 
     /* 奥側の蝶番を固定軸に、蓋の板面が後方へ倒れる。位置移動ではなく回転 */
     @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}10%{transform:rotateX(-12deg) translateZ(2px);filter:brightness(1.35)}34%{transform:rotateX(-58deg) translateZ(7px);filter:brightness(1.65)}62%{transform:rotateX(-112deg) translateZ(12px);filter:brightness(2)}82%{transform:rotateX(-132deg) translateZ(15px);filter:brightness(1.8)}100%{transform:rotateX(-138deg) translateZ(16px);filter:brightness(1.45)}}
@@ -2246,8 +2246,6 @@
     .deck-case.opening .case-lid{animation:none!important}
 
     .deck-case.opening .case-body{animation:none!important}
-
-    .deck-case.opening .case-body:after{animation:none!important;opacity:0!important}
 
     .deck-case.mouth-eruption .case-light{animation:mouthCoreFlare .9s ease-out both!important}
 
@@ -4471,6 +4469,99 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
+
+    /* ===== Card-back visibility: final case-interior layer order ===== */
+    .deck-case .case-cavity {
+      z-index:4!important;
+      left:50%!important;
+      right:auto!important;
+      top:50%!important;
+      bottom:auto!important;
+      width:min(132px,calc(100% - 22px))!important;
+      height:auto!important;
+      aspect-ratio:20 / 27!important;
+      transform:translate(-50%,-50%)!important;
+      overflow:hidden!important;
+      border:0!important;
+      border-radius:2px!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      isolation:isolate!important;
+    }
+    .deck-case .case-card-stack {
+      position:absolute!important;
+      inset:0!important;
+      z-index:1!important;
+      width:100%!important;
+      height:100%!important;
+      overflow:hidden!important;
+      background:transparent!important;
+    }
+    .deck-case .case-card-stack > img {
+      position:absolute!important;
+      inset:0!important;
+      display:block!important;
+      width:100%!important;
+      height:100%!important;
+      max-width:none!important;
+      max-height:none!important;
+      object-fit:fill!important;
+      object-position:center!important;
+      margin:0!important;
+      padding:0!important;
+      border:0!important;
+      border-radius:0!important;
+      background:transparent!important;
+      box-shadow:none!important;
+      filter:none!important;
+      opacity:1!important;
+      mix-blend-mode:normal!important;
+    }
+    /* Civilization effects stay above the card back but remain translucent. */
+    .deck-case .case-spectrum {
+      z-index:5!important;
+      mix-blend-mode:screen!important;
+      opacity:0!important;
+    }
+    .deck-case .case-glow {
+      z-index:6!important;
+      mix-blend-mode:screen!important;
+      opacity:0!important;
+    }
+    .deck-case.civ-charging .case-spectrum {
+      opacity:.18!important;
+      filter:blur(5px) saturate(1.5)!important;
+    }
+    .deck-case.civ-charging .case-glow {
+      opacity:.14!important;
+      filter:blur(8px) saturate(1.5)!important;
+    }
+    .deck-case.pressure .case-spectrum,
+    .deck-case.overloaded .case-spectrum,
+    .deck-case.critical .case-spectrum {
+      opacity:.24!important;
+    }
+    .deck-case.pressure .case-glow,
+    .deck-case.overloaded .case-glow,
+    .deck-case.critical .case-glow {
+      opacity:.2!important;
+    }
+    .deck-case.civ-charging .case-cavity:after {
+      opacity:.14!important;
+      mix-blend-mode:screen!important;
+    }
+    .deck-case.pressure .case-cavity:after,
+    .deck-case.overloaded .case-cavity:after,
+    .deck-case.critical .case-cavity:after {
+      opacity:.2!important;
+      mix-blend-mode:screen!important;
+    }
+    @media(max-width:480px) {
+      .deck-case .case-cavity {
+        width:min(132px,calc(100% - 22px))!important;
+      }
+    }
+
               <div class="case-cavity"><div class="case-card-stack" aria-hidden="true"><img src="assets/card-back.webp" alt=""></div></div>
               
               <div class="case-spectrum"></div>
