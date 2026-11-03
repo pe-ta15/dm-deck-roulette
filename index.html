@@ -80,7 +80,7 @@
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
     
     
-    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
+    
     
     @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(6px) scale(1.25);filter:brightness(2.5)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.4)}}
     @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.58;transform:translate(-50%,-50%) scale(1)}}
@@ -566,223 +566,24 @@
     }
 
 
-    /* ===== Vertical card-proportioned milky case: authoritative geometry ===== */
-/* ケース外形・収納部を縦長カード比率に統一。旧横長寸法の上書きをここで終端する。 */
-.deck-case,
-    #drawingCard.opening-cutin .deck-case {
-      width:148px!important;
-      height:220px!important;
-      top:50%!important;
-      transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-4deg) scale(1)!important;
-      filter:drop-shadow(0 12px 14px rgba(91,111,101,.18))!important
-    }
-    /* 本体内寸は約116×162px。トレーディングカードの5:7比率に合わせる。 */
-.deck-case .case-body {
-      left:4px!important;
-      right:4px!important;
-      top:42px!important;
-      bottom:4px!important;
-      border:2px solid rgba(207,218,214,.96)!important;
-      border-top:0!important;
-      border-radius:5px 5px 12px 12px!important;
-      background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(220,230,226,.82) 14%,rgba(246,249,247,.92) 50%,rgba(211,222,218,.82) 86%,rgba(255,255,255,.98))!important;
-      box-shadow:inset 4px 0 8px rgba(255,255,255,.82),inset -4px 0 8px rgba(143,158,151,.12),inset 0 -7px 12px rgba(164,179,171,.14),0 3px 6px rgba(90,105,98,.10)!important;
-      overflow:hidden!important
-    }
-    .deck-case .case-body:after {
-      z-index:3!important;
-      left:3px!important;
-      right:3px!important;
-      top:0!important;
-      height:8px!important;
-      
-      
-      
-      }
-    .deck-case .case-cavity {
-      z-index:1!important;
-      left:12px!important;
-      right:12px!important;
-      top:6px!important;
-      bottom:6px!important;
-      border:0!important;
-      border-radius:3px!important;
-      background:linear-gradient(180deg,rgba(252,254,252,.98),rgba(239,245,241,.96) 58%,rgba(226,236,230,.96))!important;
-      box-shadow:inset 0 1px 4px rgba(255,255,255,.96),inset 0 -2px 5px rgba(132,151,140,.08)!important;
-      pointer-events:none
-    }
-    /* 内部発光も収納空間の範囲に限定し、上下の壁面に帯を作らない。 */
-    .deck-case .case-spectrum {
-      z-index:4!important;
-      left:14px!important;
-      right:14px!important;
-      top:8px!important;
-      bottom:8px!important;
-      border-radius:3px!important
-    }
-    .deck-case .case-glow {
-      ;
-      border-radius:3px!important
-    }
-    /* 蓋の裏側も乳白色に統一。開封時に黒い板面が露出するのを防ぐ。 */
-    .deck-case .case-lid {
-      left:0!important;
-      right:0!important;
-      top:0!important;
-      height:58px!important;
-      border:2px solid rgba(211,222,216,.98)!important;
-      border-bottom:3px solid rgba(184,198,190,.95)!important;
-      border-radius:9px 9px 4px 4px!important;
-      background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(224,234,228,.92) 48%,rgba(246,249,247,.98))!important;
-      box-shadow:inset 0 2px 6px rgba(255,255,255,.96),inset 0 -4px 7px rgba(156,174,163,.12),0 3px 5px rgba(105,122,112,.10)!important
-    }
-    .deck-case .case-lid-inner {
-      inset:5px 7px 7px!important;
-      
-      border-radius:4px!important;
-      
-      
-      }
-    .deck-case .case-lid:before {
-      left:8px!important;
-      right:8px!important;
-      top:7px!important;
-      height:39px!important;
-      border:1px solid rgba(255,255,255,.92)!important;
-      
-      }
-    .deck-case .case-lid:after {
-      left:-2px!important;
-      right:-2px!important;
-      bottom:-34px!important;
-      height:32px!important;
-      
-      border-top:0!important;
-      border-radius:0 0 6px 6px!important;
-      
-      }
-    .deck-case .case-hinge {
-      left:12px!important;
-      right:12px!important;
-      top:1px!important;
-      height:9px!important;
-      
-      }
-    .deck-case .case-lock {top:50px!important}
-    
-    @media(max-width:480px) {
-      .deck-case,
-    #drawingCard.opening-cutin .deck-case {
-        width:132px!important;
-        height:198px!important
-      }
-      .deck-case .case-body {
-        top:38px!important;
-        bottom:4px!important
-      }
-      .deck-case .case-cavity {
-        left:10px!important;
-        right:10px!important;
-        top:6px!important;
-        bottom:6px!important
-      }
-      .deck-case .case-lid {height:52px!important}
-      .deck-case .case-lock {top:44px!important}
-    }
-
-    /* ===== Interior material correction: no black bands inside the milky case ===== */
-    .deck-case .case-cavity{
-      border:0!important;
-      background:linear-gradient(180deg,rgba(250,252,250,.82),rgba(232,240,235,.9) 58%,rgba(216,229,220,.84))!important;
-      box-shadow:inset 0 1px 6px rgba(255,255,255,.94),inset 0 -3px 8px rgba(132,151,140,.10)!important
-    }
-    
-  
-
-    /* ===== Authoritative milky-case and complete-card rendering ===== */
-/* 旧い金属ケース用CSSを、通常・吸収・加圧・開封の全状態で上書きする。 */
-.deck-case,
-    #drawingCard.opening-cutin .deck-case {
-      background:transparent!important;
-      filter:drop-shadow(0 9px 12px rgba(112,130,120,.14))!important
-    }
-    
-    
-    
-    
-    
-    
-    .deck-case .case-body:after {
-      
-      border-bottom-color:rgba(205,218,209,.72)!important;
-      
-      
-    }
-    /* 開封時の疑似要素は暗い旧背景を使わず、白い光だけを重ねる。 */
-    .deck-case.opening .case-body:after {
-      content:""!important;
-      position:absolute!important;
-      z-index:5!important;
-      inset:4px!important;
-      border:0!important;
-      background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#e8f0ea) 23%,transparent 72%)!important;
-      opacity:0;
-      pointer-events:none;
-      animation:caseCoreFlash .5s ease-out both
-    }
-    /* ケース内側は常に5:7。親の本体内で中央配置する。 */
-.deck-case .case-cavity {
-      left:50%!important;
-      right:auto!important;
-      top:50%!important;
-      bottom:auto!important;
-      width:116px!important;
-      height:auto!important;
-      aspect-ratio:5 / 7!important;
-      transform:translate(-50%,-50%)!important;
-      border:0!important;
-      border-radius:3px!important;
-      background:linear-gradient(180deg,#fcfefc 0%,#f1f6f2 58%,#e8f0ea 100%)!important;
-      box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.05)!important
-    }
-    
-    
-    .deck-case .case-glow {
-      inset:46px 18px 12px!important;
-      background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;
-      mix-blend-mode:screen!important
-    }
-    /* 蓋・蓋裏・背面接続部・留め具に黒い面を残さない。 */
-.deck-case .case-lid {
-      border-color:rgba(218,228,221,.98)!important;
-      border-bottom-color:rgba(205,218,209,.9)!important;
-      background:linear-gradient(145deg,#fff 0%,#edf3ef 52%,#fbfdfb 100%)!important;
-      box-shadow:inset 0 2px 6px rgba(255,255,255,.98),inset 0 -2px 4px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
-      backface-visibility:visible!important
-    }
-    
-    
-    
-    
-    .deck-case .case-lock {
-      border-color:#dce7df!important;
-      
-      
-    }
-    
-    .deck-case.civ-charging .case-body,
-    .deck-case.pressure .case-body,
-    .deck-case.opening .case-body {
-      border-color:rgba(215,225,219,.96)!important;
-      box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 0 14px var(--case-civ-glow,rgba(255,255,255,.2)),0 2px 4px rgba(110,130,117,.08)!important
-    }
-    .deck-case.civ-charging,
-    .deck-case.pressure,
-    .deck-case.opening {
-      filter:drop-shadow(0 9px 12px rgba(112,130,120,.14))!important
-    }
-    
-
+    /* ===== Milky deck case: single source of truth ===== */
+.deck-case,#drawingCard.opening-cutin .deck-case{width:148px!important;height:220px!important;top:50%!important;transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-4deg) scale(1)!important;filter:drop-shadow(0 8px 12px rgba(116,132,122,.12))!important;background:transparent!important}
+.deck-case .case-body{left:4px!important;right:4px!important;top:54px!important;bottom:5px!important;overflow:hidden!important;border:2px solid rgba(216,228,220,.98)!important;border-top:0!important;border-radius:5px 5px 12px 12px!important;background:linear-gradient(90deg,#fff 0%,#f0f5f1 18%,#fbfdfb 50%,#edf3ee 82%,#fff 100%)!important;box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 -2px 5px rgba(160,178,166,.06),0 1px 3px rgba(110,130,117,.05)!important}
+.deck-case .case-body:after{z-index:3!important;left:3px!important;right:3px!important;top:0!important;bottom:auto!important;height:8px!important;inset-inline:auto!important;border:1px solid rgba(255,255,255,.98)!important;border-bottom:1px solid rgba(210,224,214,.9)!important;background:linear-gradient(180deg,#fff,#edf4ef)!important;box-shadow:0 1px 2px rgba(100,120,108,.04)!important}
+.deck-case .case-cavity{position:absolute!important;z-index:1!important;left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;width:88px!important;height:auto!important;aspect-ratio:20 / 27!important;overflow:hidden!important;transform:translate(-50%,-50%)!important;border:0!important;border-radius:2px!important;background:transparent!important;box-shadow:inset 0 0 2px rgba(70,90,78,.12)!important;pointer-events:none!important}
+.deck-case .case-back-image{position:absolute!important;display:block!important;z-index:1!important;left:-10%!important;top:-5%!important;width:120%!important;height:110%!important;max-width:none!important;object-fit:fill!important;object-position:center!important;border:0!important;border-radius:0!important;box-shadow:none!important;pointer-events:none!important}
+.deck-case .case-spectrum{z-index:4!important;left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;width:84px!important;height:auto!important;aspect-ratio:20 / 27!important;transform:translate(-50%,-50%) scale(.82)!important;border-radius:3px!important;mix-blend-mode:screen!important}
+.deck-case .case-glow{z-index:3!important;inset:46px 18px 12px!important;border-radius:3px!important;background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;mix-blend-mode:screen!important}
+.deck-case .case-lid{border:2px solid rgba(218,230,222,.98)!important;border-bottom:2px solid rgba(205,220,210,.94)!important;background:linear-gradient(145deg,#fff 0%,#edf4ef 52%,#fbfdfb 100%)!important;box-shadow:inset 0 2px 5px rgba(255,255,255,.98),0 1px 3px rgba(110,130,117,.06)!important;backface-visibility:visible!important}
+.deck-case .case-lid-inner{border:1px solid rgba(255,255,255,.98)!important;background:linear-gradient(145deg,#fff,#edf4ef)!important;box-shadow:inset 0 0 4px rgba(255,255,255,.98)!important;transform:translateZ(-1px)!important}
+.deck-case .case-lid:before{border-color:rgba(255,255,255,.98)!important;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important}
+.deck-case .case-lid:after{border:1px solid rgba(210,222,214,.98)!important;background:linear-gradient(90deg,#fff,#edf4ef 50%,#fff)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
+.deck-case .case-hinge{background:linear-gradient(180deg,#fff,#e9f1eb 55%,#d6e3da)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
+.deck-case .case-lock{border:1px solid #dce7df!important;background:linear-gradient(180deg,#fff,#edf4ef 58%,#dce7df)!important;box-shadow:0 1px 2px rgba(100,118,107,.06),inset 0 1px 2px #fff!important}
+.deck-case .case-lock:after{background:#c5d4ca!important;box-shadow:none!important}
+.deck-case.opening .case-body,.deck-case.pressure .case-body,.deck-case.civ-charging .case-body{border-color:rgba(216,228,220,.98)!important;box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 0 12px var(--case-civ-glow,rgba(255,255,255,.16)),0 1px 3px rgba(110,130,117,.05)!important}
+.deck-case,.deck-case.civ-charging,.deck-case.pressure,.deck-case.opening{filter:drop-shadow(0 8px 12px rgba(116,132,122,.12))!important}
+@media(max-width:480px){.deck-case,#drawingCard.opening-cutin .deck-case{width:132px!important;height:198px!important}.deck-case .case-body{top:54px!important;bottom:5px!important}.deck-case .case-cavity{width:88px!important}}
     /* カードは5:7の表示枠に収め、object-fit:containで四辺を切らずに表示する。 */
     #keyCardImages img,
     #cardStage.winner #keyCardImages img {
@@ -807,94 +608,6 @@
     }
 
 
-    /* ===== Final geometry/material correction: compact 5:7 cavity, no dark case surfaces ===== */
-.deck-case,
-    .deck-case.civ-charging,
-    .deck-case.pressure,
-    .deck-case.opening,
-    #drawingCard.opening-cutin .deck-case {
-      filter:drop-shadow(0 8px 12px rgba(116,132,122,.12))!important
-    }
-    .deck-case .case-body {
-      left:4px!important;right:4px!important;top:54px!important;bottom:5px!important;
-      border:2px solid rgba(216,228,220,.98)!important;border-top:0!important;
-      background:linear-gradient(90deg,#fff 0%,#f0f5f1 18%,#fbfdfb 50%,#edf3ee 82%,#fff 100%)!important;
-      box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 -2px 5px rgba(160,178,166,.06),0 1px 3px rgba(110,130,117,.05)!important;
-      overflow:hidden!important
-    }
-    .deck-case .case-body:after {
-      border:1px solid rgba(255,255,255,.98)!important;
-      border-bottom:1px solid rgba(210,224,214,.9)!important;
-      background:linear-gradient(180deg,#fff,#edf4ef)!important;
-      box-shadow:0 1px 2px rgba(100,120,108,.04)!important
-    }
-    /* ケース本体の内寸は高さ約100px。5:7比率を保ったまま内部に収める。 */
-.deck-case .case-cavity {
-      left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
-      width:70px!important;height:auto!important;aspect-ratio:20 / 27!important;
-      transform:translate(-50%,-50%)!important;
-      border:0!important;border-radius:3px!important;
-      background-color:#f4f8f5!important;
-      background-image:url("https://raw.githubusercontent.com/pe-ta15/dm-deck-roulette/main/assets/card-back.webp")!important;
-      background-position:center!important;background-repeat:no-repeat!important;background-size:100% 100%!important;
-      box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.04)!important
-    }
-    .deck-case .case-spectrum {
-      left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
-      width:66px!important;height:auto!important;aspect-ratio:5 / 7!important;
-      transform:translate(-50%,-50%) scale(.82)!important;border-radius:3px!important;
-      mix-blend-mode:screen!important
-    }
-    .deck-case.civ-charging .case-spectrum {transform:translate(-50%,-50%) scale(1)!important}
-    .deck-case .case-lid {
-      border:2px solid rgba(218,230,222,.98)!important;
-      border-bottom:2px solid rgba(205,220,210,.94)!important;
-      background:linear-gradient(145deg,#fff 0%,#edf4ef 52%,#fbfdfb 100%)!important;
-      box-shadow:inset 0 2px 5px rgba(255,255,255,.98),0 1px 3px rgba(110,130,117,.06)!important;
-      backface-visibility:visible!important
-    }
-    .deck-case .case-lid-inner {
-      border:1px solid rgba(255,255,255,.98)!important;
-      background:linear-gradient(145deg,#fff,#edf4ef)!important;
-      box-shadow:inset 0 0 4px rgba(255,255,255,.98)!important;
-      transform:translateZ(-1px)!important
-    }
-    .deck-case .case-lid:before {
-      border-color:rgba(255,255,255,.98)!important;
-      background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;
-      box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important
-    }
-    .deck-case .case-lid:after {
-      border:1px solid rgba(210,222,214,.98)!important;
-      background:linear-gradient(90deg,#fff,#edf4ef 50%,#fff)!important;
-      box-shadow:0 1px 2px rgba(100,118,107,.04)!important
-    }
-    .deck-case .case-hinge {
-      background:linear-gradient(180deg,#fff,#e9f1eb 55%,#d6e3da)!important;
-      box-shadow:0 1px 2px rgba(100,118,107,.04)!important
-    }
-    .deck-case .case-lock {
-      border:1px solid #dce7df!important;
-      background:linear-gradient(180deg,#fff,#edf4ef 58%,#dce7df)!important;
-      box-shadow:0 1px 2px rgba(100,118,107,.06),inset 0 1px 2px #fff!important
-    }
-    .deck-case .case-lock:after {
-      background:#c5d4ca!important;box-shadow:none!important
-    }
-    .deck-case.opening .case-body,
-    .deck-case.pressure .case-body,
-    .deck-case.civ-charging .case-body {
-      border-color:rgba(216,228,220,.98)!important;
-      box-shadow:inset 2px 0 4px rgba(255,255,255,.96),inset -2px 0 4px rgba(160,178,166,.06),inset 0 0 12px var(--case-civ-glow,rgba(255,255,255,.16)),0 1px 3px rgba(110,130,117,.05)!important
-    }
-    .deck-case.opening .case-body:after {
-      background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#e8f0ea) 23%,transparent 72%)!important
-    }
-    @media(max-width:480px) {
-      .deck-case .case-cavity {width:100px!important}
-      .deck-case .case-spectrum {width:94px!important;aspect-ratio:20 / 27!important}
-    }
-
   </style>
 </head>
 <body>
@@ -907,7 +620,7 @@
           <div class="drawing-card case-mode"><span class="drawing-label">抽選中</span></div>
           <div class="deck-case" id="deckCase" aria-hidden="true">
             <div class="case-body">
-              <div class="case-cavity"></div>
+              <div class="case-cavity"><img class="case-back-image" src="assets/card-back.webp" alt="" aria-hidden="true" draggable="false"></div>
               
               <div class="case-spectrum"></div>
               <div class="case-glow"></div>
