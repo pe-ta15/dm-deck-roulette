@@ -3824,8 +3824,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       border-color:rgba(225,177,76,.72);
       box-shadow:0 0 22px rgba(224,174,65,.18),inset 0 0 24px rgba(255,222,150,.10);
     }
+    /* 豪華演出でも文明アイコンの発光色は各文明本来の色を維持する */
     #cardStage.presentation-premium .mana-orb {
-      filter:drop-shadow(0 0 7px rgba(255,207,91,.82)) drop-shadow(0 0 15px rgba(255,181,55,.38));
+      filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 15px var(--mana-color));
     }
     #cardStage.presentation-premium .deck-case.civ-charging .case-spectrum,
     #cardStage.presentation-premium .deck-case.pressure .case-spectrum,
@@ -3878,8 +3879,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         animation:premiumOrbPulse 1.25s ease-in-out infinite alternate;
       }
       @keyframes premiumOrbPulse {
-        from { filter:drop-shadow(0 0 5px rgba(255,207,91,.62)) drop-shadow(0 0 10px rgba(255,181,55,.24)); }
-        to { filter:drop-shadow(0 0 9px rgba(255,225,145,.95)) drop-shadow(0 0 19px rgba(255,181,55,.55)); }
+        from { filter:drop-shadow(0 0 5px var(--mana-color)) drop-shadow(0 0 10px var(--mana-color)); }
+        to { filter:drop-shadow(0 0 9px var(--mana-color)) drop-shadow(0 0 19px var(--mana-color)); }
       }
     }
 
