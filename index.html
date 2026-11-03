@@ -6,7 +6,45 @@
   <title>DMデッキルーレット</title>
   <style>
 
- grid;place-items:center;isolation:isolate;overflow:visible}
+    :root{color-scheme:light;--bg:#f5f6f8;--panel:#fff;--accent:#e9b94f;--text:#252a35;--muted:#6f7787;
+}
+
+    *{box-sizing:border-box}
+
+    body{margin:0;min-height:100vh;padding:28px 16px 48px;background:radial-gradient(ellipse at top,#fff 0%,transparent 70%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
+
+    main{width:100%;max-width:850px;margin:0 auto}
+
+    h1{margin:0 0 10px;font-size:clamp(1.8rem,5vw,2.7rem);letter-spacing:.04em}
+
+    .subtitle{color:var(--muted);margin:0 0 28px}
+
+    .panel{padding:22px;margin-bottom:22px;border:1px solid #e1e4eb;border-radius:18px;background:rgb(255 255 255 / 95%);box-shadow:0 8px 28px rgb(35 45 65 / 8%)}
+
+    .settings{display:flex;justify-content:center;margin:20px 0 0}
+
+    .checkbox-label{display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid #e1e4eb;border-radius:12px;background:#f8f9fb;cursor:pointer;text-align:left}
+
+    .checkbox-label input{width:18px;height:18px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto}
+
+    button{min-height:48px;padding:12px 28px;border:0;border-radius:12px;background:linear-gradient(135deg,#ffe6a1,#e9ae42);color:#241908;font-size:1.05rem;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}
+
+    button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08)}
+
+    button:disabled{background:#b8bdc7;color:#fff;opacity:1;cursor:wait;box-shadow:none;transform:none;filter:none}
+
+    #status{min-height:24px;margin:16px 0 0;color:var(--muted);font-size:.92rem}
+
+    .hidden{display:none!important}
+
+    .result-reveal{animation:resultReveal .75s ease-out both}
+
+    @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
+
+    .roulette-panel{padding:12px 18px 14px;margin-bottom:16px}
+.card-stage{position:relative;width:100%;max-width:620px;min-height:0;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:208px auto;row-gap:0;justify-items:center;align-items:start;isolation:isolate;overflow:visible}
+
+    .mana-absorption{position:relative;width:min(100%,440px);height:208px;display:grid;place-items:center;isolation:isolate;overflow:visible}
 
     .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
 
@@ -509,7 +547,13 @@
       filter:drop-shadow(0 13px 16px rgba(91,111,101,.2))!important;
     }
 
-    
+    #drawingCard.mana-absorption.opening-cutin {
+      background:#fff!important;
+      border:0!important;
+      border-radius:0!important;
+      box-shadow:none!important;
+      overflow:visible!important;
+    }
 
     #drawingCard.opening-cutin:before,
     #drawingCard.opening-cutin:after {display:none!important;content:none!important}
@@ -663,7 +707,7 @@
 
     .deck-case.civ-charging .case-body{box-shadow:inset 6px 0 11px rgba(255,255,255,.9),inset -6px 0 11px rgba(130,151,138,.17),inset 0 -13px 18px rgba(148,169,155,.22),0 0 22px var(--case-civ-glow)!important}
 
-    
+    #drawingCard.mana-absorption.opening-cutin{background:#fff!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important}
 
     #drawingCard.opening-cutin .deck-case{width:154px!important;height:210px!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(5deg) rotateY(-5deg) scale(1.08)!important}
 
@@ -1252,7 +1296,7 @@
       box-shadow:0 2px 4px rgba(65,87,71,.2)!important;
     }
 
-    
+    .deck-case .case-lock:after {display:none!important}
 
     .deck-case .case-light {
       left:50%!important;top:25%!important;width:152px!important;height:116px!important;
@@ -2052,7 +2096,7 @@
 
 
 
-:root{--bg:#fff!important;--text:#37352f!important;--muted:#787774!important;--accent:#c9a45c!important}
+:root{--bg:#fff!important;--panel:#fff!important;--text:#37352f!important;--muted:#787774!important;--accent:#c9a45c!important}
 
 body{background:#fff!important;color:#37352f!important;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
 
@@ -2236,10 +2280,16 @@ body.is-spinning .roulette-panel{
   background:transparent!important;box-shadow:none!important;overflow:visible!important;
 }
 
-
+#drawingCard.opening-cutin .deck-case{
+  position:absolute!important;left:50%!important;top:50%!important;
+  margin:0!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(18deg) rotateY(-3deg)!important;
+}
 
 /* The front flap is physically joined to the front edge of the top panel. */
-
+.deck-case .case-lid{
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  overflow:visible!important;backface-visibility:visible!important;
+}
 
 .deck-case .case-lid-inner{backface-visibility:visible!important}
 
@@ -2304,7 +2354,10 @@ body.is-spinning .roulette-panel{
   overflow:hidden!important;
 }
 
-
+#drawingCard.opening-cutin .deck-case{
+  position:absolute!important;left:50%!important;top:50%!important;
+  margin:0!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(18deg) rotateY(-3deg)!important;
+}
 
 body.is-spinning .roulette-panel{padding:30px 28px 34px!important}
 
@@ -2320,7 +2373,10 @@ body.is-spinning .roulette-panel{padding:30px 28px 34px!important}
 
 /* A true continuous case lid: top panel remains on the rear hinge; front flap remains
    a child of that panel at the front fold. Both inner faces are visible while opening. */
-
+.deck-case .case-lid{
+  transform-origin:50% 0%!important;transform-style:preserve-3d!important;
+  backface-visibility:visible!important;overflow:visible!important;
+}
 
 .deck-case .case-lid-inner{
   backface-visibility:visible!important;transform:translateZ(1px)!important;
@@ -2353,7 +2409,7 @@ body.is-spinning .roulette-panel{padding:30px 28px 34px!important}
   box-shadow:0 1px 3px rgba(0,0,0,.16)!important;
 }
 
-
+#spinButton{margin-top:0!important}
 
 @media(max-width:480px){
   #cardStage.winner #keyCardImages{padding-bottom:14px!important}
@@ -2745,7 +2801,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   box-shadow:0 -2px 5px rgba(255,255,255,.35)!important;
 }
 
-
+.deck-case .case-lid-front span{display:none!important}
 
 /* Cards emerge from a physical presentation tray positioned directly in front of the case mouth. */
 #keyCardImages.case-launch{
@@ -2865,7 +2921,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(99,126,106,.08))!important;
 }
 
-.deck-case .case-lock,
+.deck-case .case-lid-front:after{
+  content:none!important;display:none!important;
+}.deck-case .case-lock,
 .deck-case .case-lid-front span{display:none!important}
 
 /* During opening, rotate the entire wrap from the rear edge. The front flap remains
@@ -2929,7 +2987,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 5px 8px rgba(40,57,43,.18)!important;
 }
 
-
+.deck-case .case-lid-front:before{
+  content:""!important;position:absolute!important;inset:4px 5px 5px!important;
+  border:1px solid rgba(255,255,255,.58)!important;border-radius:2px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(99,126,106,.08))!important;
+}.deck-case .case-lock,
+.deck-case .case-lid-front span{display:none!important}
 
 .deck-case.opening .case-lid{transform-origin:50% 0%!important;animation:none!important}
 
@@ -3009,7 +3072,16 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       display:none!important;
     }
 
-    
+    .deck-case .case-lid-inner{
+      position:absolute!important;z-index:4!important;
+      inset:0!important;display:block!important;
+      border:3px solid #a5b9a9!important;
+      border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#edf4ee 38%,#c4d7c8 76%,#9fb8a4 100%)!important;
+      box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -5px 9px rgba(91,119,97,.13),0 5px 8px rgba(49,70,55,.12)!important;
+      transform:translateZ(2px)!important;
+      backface-visibility:hidden!important;
+    }
 
     .deck-case .case-lid-underside{
       position:absolute!important;z-index:3!important;
