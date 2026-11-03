@@ -640,16 +640,9 @@
 
     .deck-case.opening .case-rays,
     #drawingCard.case-blast .case-rays {
-      animation:caseRaysBlast .86s cubic-bezier(.12,.78,.18,1) both;
     }
 
-    @keyframes caseRaysBlast {
-      0%{opacity:0;transform:translateY(28px) scale(.24) rotate(-5deg)}
-      18%{opacity:1}
-      48%{opacity:.96;transform:translateY(-18px) scale(1.08) rotate(2deg)}
-      100%{opacity:.08;transform:translateY(-62px) scale(1.42) rotate(5deg)}
-    }
-
+    
     
 
     
@@ -847,7 +840,6 @@
 
     @keyframes cutinAura{0%{opacity:0;transform:scale(.22)}25%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
 
-    #drawingCard.case-impact .case-rays{animation:caseRaysBlast 1.08s cubic-bezier(.12,.78,.18,1) both}
 
     #drawingCard.case-impact .case-burst{animation:ruptureWave .9s cubic-bezier(.12,.72,.18,1) both}
 
@@ -1168,14 +1160,8 @@
       100%{opacity:.38;transform:translateX(-50%) scaleY(1)}
     }
 
-    .deck-case.opening .case-rays{animation:daisoMouthRays .9s ease-out .42s both}
 
-    @keyframes daisoMouthRays {
-      0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(-12deg)}
-      25%{opacity:.95}
-      100%{opacity:0;transform:translate(-50%,-50%) scale(1.35) rotate(8deg)}
-    }
-
+    
     .deck-case.opening .case-light{animation:daisoInteriorFlash 1.35s ease-out .25s both!important}
 
     @keyframes daisoInteriorFlash {
@@ -1299,7 +1285,6 @@
     }
 
     .deck-case.opening .case-rays {
-      animation:fiveColorDispersion 1.12s cubic-bezier(.12,.78,.18,1) .18s both!important;
       background:repeating-conic-gradient(from -8deg at 50% 58%,
         rgba(255,255,255,0) 0deg 5deg,
         rgba(255,255,255,.98) 5.5deg 7deg,
@@ -1338,13 +1323,7 @@
       100%{opacity:.22;transform:translateX(-50%) scaleY(1.55) scaleX(1.8);filter:brightness(1.4)}
     }
 
-    @keyframes fiveColorDispersion {
-      0%{opacity:0;transform:translate(-50%,-50%) scale(.12) rotate(-18deg);filter:blur(5px)}
-      22%{opacity:1;filter:blur(0)}
-      58%{opacity:.95;transform:translate(-50%,-50%) scale(1.22) rotate(8deg)}
-      100%{opacity:0;transform:translate(-50%,-50%) scale(1.72) rotate(18deg);filter:blur(3px)}
-    }
-
+    
     #result.has-result:before {
       content:"";position:absolute;z-index:-1;inset:6px;border:1px solid rgba(210,184,123,.48);
       border-radius:12px;pointer-events:none;
@@ -1528,15 +1507,8 @@
       -webkit-mask:none!important;mask:none!important;filter:blur(17px) drop-shadow(0 0 18px rgba(255,229,172,.68))!important;
     }
 
-    .deck-case.opening .case-rays {animation:softPlumeBloom 1.15s ease-out .28s both!important}
 
-    @keyframes softPlumeBloom {
-      0%{opacity:0;transform:translate(-50%,-50%) scale(.28) translateY(22px);filter:blur(24px)}
-      28%{opacity:.95}
-      68%{opacity:.76;transform:translate(-50%,-50%) scale(1.18) translateY(-16px);filter:blur(18px)}
-      100%{opacity:.16;transform:translate(-50%,-50%) scale(1.48) translateY(-34px);filter:blur(25px)}
-    }
-
+    
     .deck-case.opening .case-mouth-beam {animation:softMouthBloom 1.05s ease-out .2s both!important}
 
     @keyframes softMouthBloom {
@@ -1759,7 +1731,6 @@
     }
 
     .deck-case.opening .case-rays {
-      animation:coloredCloudBloom 1.35s ease-out .42s both!important;
     }
 
     .deck-case.opening .case-energy-plume {
@@ -1777,13 +1748,7 @@
       100%{opacity:.08;transform:translateX(-50%) scaleY(1.18) scaleX(1.22)}
     }
 
-    @keyframes coloredCloudBloom {
-      0%{opacity:0;transform:translate(-50%,-50%) scale(.28) translateY(16px)}
-      28%{opacity:.62}
-      68%{opacity:.48;transform:translate(-50%,-50%) scale(1.18) translateY(-15px)}
-      100%{opacity:0;transform:translate(-50%,-50%) scale(1.55) translateY(-34px)}
-    }
-
+    
     @keyframes coloredPlumeBloom {
       0%{opacity:0;transform:translate(-50%,-35%) scale(.2)}
       32%{opacity:.68;transform:translate(-50%,-44%) scale(1.02)}
