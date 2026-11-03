@@ -4351,7 +4351,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
       const body = deckCase.querySelector(".case-body");
       const lid = deckCase.querySelector(".case-lid");
-      const lock = deckCase.querySelector(".case-lock");
       deckCase.classList.add("civ-charging", "pressure");
 
       // 蓄積：ケース全体ではなく、箱の壁そのものが押し広げられる動きを明示。
@@ -4599,9 +4598,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       avoidRepeatCheckbox.disabled = true;
       settingsElement.classList.add("is-spinning");
 
-      resultElement.classList.remove("result-reveal");
-      resultElement.textContent = "";
-      resultElement.classList.remove("has-result");
       showDrawingCard();
       let stopSelectionOrbit = startSelectionOrbit();
 
