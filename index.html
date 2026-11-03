@@ -3885,6 +3885,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     let recentDrawnDeckIds = [];
     let isSpinning = false;
 
+    let activeDrawStartedAt = 0;
+    function traceDrawTiming(stage) {
+      if (!activeDrawStartedAt) return;
+      console.info(`[draw timing] ${stage}: ${(performance.now() - activeDrawStartedAt).toFixed(0)}ms`);
+    }
+
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     function getDeckName(deck) {
@@ -4266,6 +4272,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     async function showKeyCards(deck) {
+      traceDrawTiming("showKeyCards start");
       keyCardImages.replaceChildren();
       keyCardImages.classList.remove("case-launch", "result-ready", "result-sync");
       cardStage.classList.remove("result-visible");
@@ -4301,6 +4308,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       deckCase.style.opacity = "0";
       // ケースの短いフェードアウトに合わせて結果を表示し、画像読込待ちで演出を止めない。
       await sleep(160);
+      traceDrawTiming("case fade wait complete");
       // One state transition controls the stage, card group and title.
       cardStage.classList.remove("result-pending", "case-opening-stage", "reveal-hold");
       cardStage.classList.add("winner", "result-visible");
@@ -4308,6 +4316,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       keyCardImages.classList.add("result-ready");
       resultElement.classList.remove("result-pending", "result-reveal");
       resultElement.classList.add("has-result", "result-visible");
+      traceDrawTiming("result classes applied");
       await sleep(760);
     }
 
@@ -4383,6 +4392,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       if (isSpinning || decks.length === 0) return;
 
       isSpinning = true;
+      activeDrawStartedAt = performance.now();
+      traceDrawTiming("spin start");
       document.body.classList.add("is-spinning");
       spinButton.disabled = true;
       spinButton.classList.add("hidden");
@@ -4412,16 +4423,20 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             const completeDeck = listedDeck ? { ...listedDeck, ...deck } : deck;
             // 抽選結果が届いた時点で文明色を適用し、吸収演出中から見えるようにする。
             applyDeckCivilizationFrame(completeDeck);
+            traceDrawTiming("draw API response received");
             return { deck: completeDeck };
           },
           error => ({ error })
         );
         await playManaSequence();
+        traceDrawTiming("mana sequence complete");
 
         // 初期画面と同じ乳白色ケースを、そのままCSSアニメーションで開封する。
         await playCaseOpeningSequence();
+        traceDrawTiming("case opening sequence complete");
 
         const outcome = await drawResult;
+        traceDrawTiming("draw result awaited");
         if (outcome.error) throw outcome.error;
         const deck = outcome.deck;
         const deckName = getDeckName(deck);
@@ -4485,6 +4500,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         resultElement.append(resultEyebrow, resultTitle);
         if (resultCivs.childElementCount > 0) resultElement.appendChild(resultCivs);
         await showKeyCards(deck);
+        traceDrawTiming("showKeyCards complete");
         // 結果名が見え始めてから演出行を縮める。
         await sleep(760);
         cardStage.classList.remove("reveal-hold");
