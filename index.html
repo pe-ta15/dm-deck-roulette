@@ -96,18 +96,12 @@
 
     .case-spectrum{position:absolute;z-index:3;left:18px;right:18px;top:43px;bottom:17px;border-radius:4px;background:var(--case-civ-gradient,linear-gradient(90deg,#9aa7bd,#d9e0eb));opacity:0;mix-blend-mode:screen;filter:blur(9px);transform:scale(.82);transition:opacity 1s ease,transform 1.3s ease}
 
-    .case-front-mark{display:none}
-
-    .case-seam{position:absolute;z-index:4;left:8px;right:8px;top:28px;height:5px;border-radius:2px;background:linear-gradient(180deg,#aab4c1,#171e28 70%);box-shadow:0 3px 5px #080b12}
-
     /* 蓋は箱の上面を覆う厚い板。奥側ヒンジから後方へ大きく回転 */
     .case-lid{position:absolute;z-index:7;left:2px;right:2px;top:0;height:58px;border:3px solid #657181;border-bottom:5px solid #151c26;border-radius:9px 9px 5px 5px;background:linear-gradient(180deg,#8793a3 0%,#4b5666 18%,#293341 68%,#151c26 100%);box-shadow:inset 0 3px 7px rgb(255 255 255 / 30%),inset 0 -7px 10px rgb(0 0 0 / 65%),0 8px 10px rgb(0 0 0 / 52%);transform-origin:50% 0%;transform:rotateX(0deg) translateZ(0);transform-style:preserve-3d;backface-visibility:visible}
 
     .case-lid:before{content:"";position:absolute;left:8px;right:8px;top:7px;height:39px;border:2px solid rgb(255 255 255 / 16%);border-radius:4px;background:linear-gradient(135deg,rgb(255 255 255 / 15%),transparent 45%,rgb(0 0 0 / 20%));box-shadow:inset 0 0 8px rgb(255 255 255 / 8%)}
 
     .case-lid:after{content:"";position:absolute;left:3px;right:3px;bottom:-6px;height:6px;border-radius:0 0 3px 3px;background:linear-gradient(180deg,#7f8b9a,#101720);box-shadow:0 3px 5px #000}
-
-    .case-hinge{position:absolute;z-index:8;left:13px;right:13px;top:1px;height:10px;border-radius:5px;background:linear-gradient(180deg,#d0d7df,#667383 48%,#151c26);box-shadow:0 2px 4px #080b12}
 
     .case-lock{position:absolute;z-index:10;left:50%;top:49px;width:29px;height:13px;transform:translateX(-50%);border:2px solid #d0d7df;border-radius:3px;background:linear-gradient(180deg,#f0f3f6,#8491a1 58%,#303b49);box-shadow:0 3px 5px #080b12,inset 0 1px 2px #fff}
 
@@ -318,8 +312,6 @@
 
     .case-spectrum{z-index:4;left:24px;right:24px;top:48px;bottom:22px;border-radius:50%;background:var(--case-civ-gradient,linear-gradient(90deg,#9aa7bd,#d9e0eb));opacity:0;mix-blend-mode:screen;filter:blur(13px);transform:scale(.35);transition:opacity 1.2s ease,transform 1.4s ease}
 
-    .case-seam{z-index:5;left:7px;right:7px;top:37px;height:7px;border-radius:2px;background:linear-gradient(180deg,#d5dce5,#586576 45%,#111923 100%);box-shadow:0 4px 7px #05080d}
-
     .case-lid{z-index:9;left:0;right:0;top:0;height:52px;border:4px solid #8a96a6;border-bottom:6px solid #171f2a;border-radius:11px 11px 4px 4px;background:linear-gradient(180deg,#c0c9d4 0%,#788597 15%,#3d4959 47%,#202a38 82%,#101721 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,.42),inset 0 -9px 12px rgba(0,0,0,.72),0 10px 14px rgba(0,0,0,.62);transform-origin:50% 0%;transform:rotateX(0deg) translateZ(0);transform-style:preserve-3d;backface-visibility:visible}
 
     .case-lid:before{left:9px;right:9px;top:7px;height:32px;border:2px solid rgba(255,255,255,.22);border-radius:5px;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 42%,rgba(0,0,0,.34));box-shadow:inset 0 0 12px rgba(255,255,255,.12)}
@@ -327,8 +319,6 @@
     .case-lid:after{left:2px;right:2px;bottom:-7px;height:7px;background:linear-gradient(180deg,#aeb9c7,#3d4958 45%,#0c121b);box-shadow:0 5px 7px #000}
 
     .case-lid-inner{position:absolute;inset:5px 7px 7px;border:2px solid rgba(255,255,255,.12);border-radius:5px;background:linear-gradient(145deg,#273344,#101722 70%,#05090f);box-shadow:inset 0 0 18px rgba(0,0,0,.8);transform:translateZ(-2px);backface-visibility:visible}
-
-    .case-hinge{z-index:10;left:12px;right:12px;top:0;height:12px;border-radius:7px;background:linear-gradient(180deg,#eef2f6,#8996a7 42%,#263140 82%,#0d131d);box-shadow:0 3px 5px #080b12}
 
     .case-lock{z-index:12;top:48px;width:34px;height:16px;border:2px solid #e4e9ef;border-radius:4px;background:linear-gradient(180deg,#fff,#a9b5c4 48%,#3a4656 100%);box-shadow:0 4px 7px #080b12,inset 0 1px 3px #fff}
 
@@ -543,8 +533,6 @@
       box-shadow:0 2px 4px rgba(93,111,101,.12)!important;
     }
 
-    .case-seam{background:linear-gradient(180deg,#fff,#c4d1ca 72%,#f8fbf9)!important;box-shadow:0 2px 4px rgba(105,125,114,.12)!important}
-
     .case-lid{
       border:2px solid rgba(211,222,216,.98)!important;
       border-bottom:3px solid rgba(184,198,190,.95)!important;
@@ -555,8 +543,6 @@
     .case-lid:before{border:1px solid rgba(255,255,255,.92)!important;background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(220,232,225,.12) 55%,rgba(180,198,187,.18))!important;box-shadow:inset 0 0 7px rgba(255,255,255,.72)!important}
 
     .case-lid:after{background:linear-gradient(180deg,#f9fcfa,#c4d1ca)!important;box-shadow:0 2px 4px rgba(100,118,107,.12)!important}
-
-    .case-hinge{background:linear-gradient(180deg,#fff,#dce6e0 48%,#b8c7be)!important;box-shadow:0 1px 3px rgba(100,118,107,.12)!important}
 
     .case-lock{border:1px solid #d2ded7!important;background:linear-gradient(180deg,#fff,#e4ece7 58%,#c7d4cc)!important;box-shadow:0 2px 4px rgba(100,118,107,.14),inset 0 1px 2px #fff!important}
 
@@ -832,15 +818,11 @@
 
     .case-spectrum{z-index:4!important;left:25px!important;right:25px!important;top:55px!important;bottom:23px!important;border-radius:8px!important;filter:blur(8px)!important;mix-blend-mode:screen!important;opacity:0!important;transform:scale(.72)!important;transition:opacity .7s ease,transform .9s ease!important}
 
-    .case-seam{left:7px!important;right:7px!important;top:38px!important;height:5px!important;background:linear-gradient(180deg,#fff,#c6d3ca 70%,#f8fbf9)!important}
-
     .case-lid{left:0!important;right:0!important;top:0!important;height:49px!important;border:2px solid rgba(199,213,204,.98)!important;border-bottom:4px solid rgba(169,187,175,.96)!important;border-radius:9px 9px 4px 4px!important;background:linear-gradient(145deg,#fff 0%,#e1ebe4 48%,#f9fbfa 100%)!important;box-shadow:inset 0 3px 8px #fff,inset 0 -5px 8px rgba(133,155,140,.18),0 5px 8px rgba(88,106,95,.15)!important;transform-origin:50% 6px!important;backface-visibility:visible!important}
 
     .case-lid:before{left:8px!important;right:8px!important;top:6px!important;height:31px!important;border:1px solid rgba(255,255,255,.96)!important;border-radius:4px!important;background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(216,230,220,.22) 58%,rgba(175,195,182,.18))!important}
 
     .case-lid:after{left:2px!important;right:2px!important;bottom:-5px!important;height:5px!important;background:linear-gradient(180deg,#f8fbf9,#bdccc2)!important}
-
-    .case-hinge{left:13px!important;right:13px!important;top:1px!important;height:9px!important;border-radius:5px!important;background:linear-gradient(180deg,#fff,#dce7e0 52%,#b5c5bb)!important;box-shadow:0 2px 4px rgba(89,108,96,.16)!important}
 
     .case-lock{left:50%!important;top:43px!important;width:27px!important;height:10px!important;border:1px solid #c5d3ca!important;border-radius:3px!important;background:linear-gradient(180deg,#fff,#e3ece6 60%,#c2d0c7)!important;box-shadow:0 2px 4px rgba(92,111,99,.16)!important}
 
@@ -922,9 +904,6 @@
       filter: drop-shadow(13px 18px 13px rgba(58,76,65,.24)) !important;
     }
 
-    /* 前面の不要な横線は削除。ケースの厚みは左右側壁と底面の陰影で表現 */
-    .case-seam { display:none !important; }
-
     .case-body {
       left: 5px !important; right: 5px !important;
       top: 45px !important; bottom: 4px !important;
@@ -957,17 +936,6 @@
     .case-body:after { display:none !important; }
 
     .case-spectrum { left:24px !important; right:24px !important; top:54px !important; bottom:24px !important; }
-
-    /* 蓋は箱の背面上端にある一本の軸へ接続。閉じた状態では上面を覆う板になる */
-    .case-hinge {
-      z-index: 12 !important;
-      left: 12px !important; right: 12px !important;
-      top: 36px !important; height: 12px !important;
-      border-radius: 7px !important;
-      background: linear-gradient(180deg,#fff 0%,#c9d8ce 35%,#82998a 72%,#f5faf6 100%) !important;
-      box-shadow: 0 2px 4px rgba(72,94,78,.3),inset 0 1px 2px #fff !important;
-      transform: translateZ(4px) !important;
-    }
 
     .case-hinge:before,.case-hinge:after {
       content:""; position:absolute; top:-3px; width:15px; height:17px;
