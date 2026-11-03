@@ -74,7 +74,7 @@
     .deck-case.civ-charging .case-glow{opacity:.82}
     .deck-case.civ-charging .case-light{animation:caseLightIn 1.5s ease-out forwards}
     .deck-case.pressure .case-body{animation:casePressure .16s ease-in-out infinite alternate}
-    .deck-case.pressure .case-glow,.deck-case.opening .case-glow{opacity:1;filter:blur(5px);animation:coreOverload .42s ease-in-out infinite alternate}
+    .deck-case.pressure .case-glow,.deck-case.opening .case-glow{opacity:1;filter:blur(5px)}
     .deck-case.pressure .case-light{opacity:.9;animation:corePulse .32s ease-in-out infinite alternate}
     .deck-case.pressure .case-lock{animation:lockStrain .22s ease-in-out infinite alternate}
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
@@ -590,18 +590,26 @@
        filter:brightness(1.12) saturate(1.25)
      }
      .deck-case.pressure .case-lid-inner,
-     .deck-case.opening .case-lid-inner{
-       box-shadow:
-         inset 0 0 16px var(--case-civ-glow),
-         inset 0 0 34px color-mix(in srgb,var(--case-civ-glow) 62%,transparent),
-         0 0 22px color-mix(in srgb,var(--case-civ-glow) 55%,transparent)!important;
-       animation:caseLidGlow .42s ease-in-out infinite alternate
-     }
-     @keyframes caseLidGlow{
-       from{filter:brightness(1.12) saturate(1.25)}
-       to{filter:brightness(1.38) saturate(1.5)}
-     }
-.deck-case .case-lid:before{border-color:rgba(255,255,255,.98)!important;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important}
+     .deck-case.openin.deck-case.pressure .case-lid-inner,
+      .deck-case.opening .case-lid-inner{
+        box-shadow:
+          inset 0 0 16px var(--case-civ-glow),
+          inset 0 0 34px color-mix(in srgb,var(--case-civ-glow) 62%,transparent),
+          0 0 22px color-mix(in srgb,var(--case-civ-glow) 55%,transparent)!important;
+        filter:brightness(1.12) saturate(1.25)
+      }
+      /* 本体内部光と蓋裏面は、同じ透明度パルスを共有して発光の山谷を同期させる。 */
+      .deck-case.pressure .case-glow,
+      .deck-case.opening .case-glow,
+      .deck-case.pressure .case-lid-inner,
+      .deck-case.opening .case-lid-inner{
+        animation:caseEnergyPulse .42s ease-in-out infinite alternate
+      }
+      @keyframes caseEnergyPulse{
+        from{opacity:.62}
+        to{opacity:1}
+      }
+      98)!important;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important}
 .deck-case .case-lid:after{border:1px solid rgba(210,222,214,.98)!important;background:linear-gradient(90deg,#fff,#edf4ef 50%,#fff)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
 .deck-case .case-hinge{background:linear-gradient(180deg,#fff,#e9f1eb 55%,#d6e3da)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
 .deck-case .case-lock{border:1px solid #dce7df!important;background:linear-gradient(180deg,#fff,#edf4ef 58%,#dce7df)!important;box-shadow:0 1px 2px rgba(100,118,107,.06),inset 0 1px 2px #fff!important}
