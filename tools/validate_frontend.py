@@ -81,6 +81,7 @@ known_duplicate_selectors = {
     ("stylesheet", "#spinButton"),
     ("stylesheet", "#drawingCard.mana-absorption.opening-cutin"),
     ("stylesheet", ".deck-case .case-lock:after"),
+    ("stylesheet", ".deck-case .case-lock,"),
     ("stylesheet", "#drawingCard.opening-cutin .deck-case"),
     ("stylesheet", ".deck-case .case-lid"),
     ("stylesheet", ".deck-case .case-lid-front span"),
