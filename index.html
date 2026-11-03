@@ -2562,26 +2562,24 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
   transform-origin:50% 0%!important;backface-visibility:visible!important;
 }
 
-/* The lid participates in every charge beat; glow and reflections follow the case body. */
+/* 蓋の発光は本体の文明色発光と同じ立ち上がり時間で連動させる。
+   独立した点滅や即時の色面変更を避け、ケース全体が一体で光るようにする。 */
+.deck-case .case-lid,
+.deck-case .case-lid-inner,
+.deck-case .case-lid-front{
+  transition:filter 1.2s ease,box-shadow 1.2s ease,border-color 1.2s ease!important;
+}
 .deck-case.civ-charging .case-lid{
-  filter:brightness(1.18) saturate(1.12)!important;
-  box-shadow:inset 0 4px 10px rgba(255,255,255,.58),inset 0 -9px 12px rgba(0,0,0,.62),0 0 15px var(--case-civ-glow,rgba(255,255,255,.5)),0 10px 14px rgba(0,0,0,.5)!important;
-  animation:lidChargeBeat .72s ease-in-out infinite alternate;
+  filter:brightness(1.08) saturate(1.08)!important;
+  box-shadow:inset 0 4px 9px rgba(255,255,255,.44),inset 0 -9px 12px rgba(0,0,0,.62),0 0 8px var(--case-civ-glow,rgba(255,255,255,.35)),0 10px 14px rgba(0,0,0,.5)!important;
+  animation:none!important;
 }
-
 .deck-case.civ-charging .case-lid-inner{
-  background:linear-gradient(145deg,rgba(255,255,255,.96),var(--case-civ-glow,rgba(220,235,255,.75)) 45%,#aebfba 100%)!important;
-  box-shadow:inset 0 0 18px rgba(255,255,255,.9),0 0 12px var(--case-civ-glow,rgba(255,255,255,.4))!important;
+  box-shadow:inset 0 0 12px rgba(255,255,255,.48),0 0 8px var(--case-civ-glow,rgba(255,255,255,.3))!important;
 }
-
 .deck-case.civ-charging .case-lid-front{
-  filter:brightness(1.14) saturate(1.08)!important;
-  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 0 13px var(--case-civ-glow,rgba(255,255,255,.4))!important;
-}
-
-@keyframes lidChargeBeat{
-  from{filter:brightness(1.05) saturate(1);box-shadow:inset 0 4px 8px rgba(255,255,255,.4),0 5px 9px rgba(0,0,0,.35)}
-  to{filter:brightness(1.48) saturate(1.25);box-shadow:inset 0 4px 13px rgba(255,255,255,.8),0 0 22px var(--case-civ-glow,rgba(255,255,255,.55)),0 10px 14px rgba(0,0,0,.48)}
+  filter:brightness(1.06) saturate(1.06)!important;
+  box-shadow:inset 0 -6px 9px rgba(54,79,60,.18),0 0 8px var(--case-civ-glow,rgba(255,255,255,.3))!important;
 }
 
 #result .result-civilizations:before,#result .result-civilizations:after{display:none!important;content:none!important}
