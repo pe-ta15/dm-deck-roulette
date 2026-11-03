@@ -4024,11 +4024,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     function updateSpinButtonState() {
-      if (isSpinning) {
-        spinButton.textContent = "抽選中…";
-        spinButton.disabled = true;
-        return;
-      }
+      // 抽選中はボタン自体を非表示にするため、ここでは結果画面用の状態だけを管理する。
       if (isDeckLoading) {
         spinButton.textContent = "デッキを読み込み中…";
         spinButton.disabled = true;
