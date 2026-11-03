@@ -1,0 +1,110 @@
+from pathlib import Path
+import re
+import sys
+
+import tinycss2
+
+ROOT = Path(__file__).resolve().parents[1]
+HTML = (ROOT / "index.html").read_text(encoding="utf-8")
+errors = []
+
+def fail(message):
+    errors.append(message)
+
+styles = re.findall(r"<style\\b[^>]*>(.*?)</style\\s*>", HTML, re.I | re.S)
+scripts = re.findall(r"<script\\b[^>]*>(.*?)</script\\s*>", HTML, re.I | re.S)
+if len(styles) != 1:
+    fail(f"Expected one style block, found {len(styles)}")
+if len(scripts) != 1:
+    fail(f"Expected one application script, found {len(scripts)}")
+
+CSS = styles[0] if len(styles) == 1 else ""
+JS = scripts[0] if len(scripts) == 1 else ""
+
+# Parse CSS at every nesting level. A brace count alone cannot detect malformed
+# at-rules or declarations, which allowed an incomplete media query to survive.
+def inspect_rules(rules, context):
+    for rule in rules:
+        if rule.type == "error":
+            fail(f"CSS parse error in {context}: {rule.message}")
+            continue
+        if rule.type == "at-rule":
+            name = rule.lower_at_keyword
+            if rule.content is None:
+                continue
+            if name in {"media", "supports", "layer", "container", "document", "keyframes", "-webkit-keyframes"}:
+                nested = tinycss2.parse_rule_list(
+                    rule.content, skip_whitespace=True, skip_comments=True
+                )
+                inspect_rules(nested, f"{context} -> @{name}")
+            else:
+                declarations = tinycss2.parse_declaration_list(
+                    rule.content, skip_whitespace=True, skip_comments=True
+                )
+                for item in declarations:
+                    if item.type == "error":
+                        fail(f"CSS declaration error in {context} -> @{name}: {item.message}")
+        elif rule.type == "qualified-rule":
+            selector = tinycss2.serialize(rule.prelude).strip()
+            declarations = tinycss2.parse_declaration_list(
+                rule.content, skip_whitespace=True, skip_comments=True
+            )
+            for item in declarations:
+                if item.type == "error":
+                    fail(f"CSS declaration error for {selector}: {item.message}")
+                elif (
+                    "#result" in selector
+                    and (":before" in selector or ":after" in selector)
+                    and item.type == "declaration"
+                    and item.lower_name in {"background", "background-image"}
+                    and "radial-gradient(" in tinycss2.serialize(item.value).lower()
+                ):
+                    fail(f"Radial result halo is not allowed: {selector}")
+
+if CSS:
+    rules = tinycss2.parse_stylesheet(CSS, skip_whitespace=True, skip_comments=True)
+    inspect_rules(rules, "stylesheet")
+
+# Regression guards for the exact handoff effects that previously escaped review.
+for forbidden in ("case-burst", "ruptureWave", "resultShockwave", "revealFlash"):
+    if forbidden in HTML:
+        fail(f"Obsolete transition layer remains: {forbidden}")
+
+if HTML.count('id="deckCase"') != 1:
+    fail("Expected exactly one shared deck-case element")
+
+if JS:
+    order = [
+        "const drawResult = requestDraw()",
+        "await playManaSequence()",
+        "await playCaseOpeningSequence()",
+        "const outcome = await drawResult",
+        "await showKeyCards(deck)",
+    ]
+    positions = [JS.find(token) for token in order]
+    if any(position < 0 for position in positions) or positions != sorted(positions):
+        fail("Draw request / animation / result handoff order has changed")
+    if JS.count('deckCase.style.opacity = "0"') != 1:
+        fail("Case fade-out must have one controlled entry point")
+    fade_position = JS.find('deckCase.style.opacity = "0"')
+    outcome_position = JS.find("const outcome = await drawResult")
+    if outcome_position < 0 or fade_position < outcome_position:
+        fail("Case fade-out must occur only after the draw result is available")
+
+# Duplicate keyframe names can silently replace earlier animation definitions.
+keyframes = re.findall(r"@(?:-webkit-)?keyframes\\s+([\\w-]+)", CSS)
+duplicates = sorted({name for name in keyframes if keyframes.count(name) > 1})
+if duplicates:
+    fail("Duplicate keyframe definitions: " + ", ".join(duplicates))
+
+if errors:
+    print("Frontend validation failed:")
+    for error in errors:
+        print(" - " + error)
+    sys.exit(1)
+
+print("Frontend validation passed")
+print(f" - CSS parsed successfully ({len(CSS)} characters)")
+print(" - No obsolete circular / full-screen transition layers")
+print(" - Draw-result handoff order and case fade timing verified")
+print(" - Keyframe names are unique")
