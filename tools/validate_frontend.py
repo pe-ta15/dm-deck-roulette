@@ -86,10 +86,13 @@ if JS:
         fail("Draw request / animation / result handoff order has changed")
     if JS.count('deckCase.style.opacity = "0"') != 1:
         fail("Case fade-out must have one controlled entry point")
-    fade_position = JS.find('deckCase.style.opacity = "0"')
-    outcome_position = JS.find("const outcome = await drawResult")
-    if outcome_position < 0 or fade_position < outcome_position:
-        fail("Case fade-out must occur only after the draw result is available")
+    show_start = JS.find("async function showKeyCards(deck)")
+    show_end = JS.find("function loadDecks()", show_start)
+    show_body = JS[show_start:show_end] if show_start >= 0 and show_end > show_start else ""
+    if 'deckCase.style.opacity = "0"' not in show_body:
+        fail("Case fade-out must remain inside showKeyCards")
+    if show_body.find('deckCase.style.opacity = "0"') > show_body.find("await sleep(160)") and "await sleep(160)" in show_body:
+        fail("Case fade-out must begin before its synchronized wait")
 
 # Duplicate keyframe names can silently replace earlier animation definitions.
 keyframes = re.findall(r"@(?:-webkit-)?keyframes\s+([\w-]+)", CSS)
