@@ -4315,6 +4315,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       // ケースの短いフェードアウトに合わせて結果を表示し、画像読込待ちで演出を止めない。
       await sleep(160);
       traceDrawTiming("case fade wait complete");
+      // 開封専用の固定高・クリッピング・光演出を結果画面へ持ち越さない。
+      // 結果表示へ切り替える直前に抽選中状態を解除し、通常の結果レイアウトへ戻す。
+      document.body.classList.remove("is-spinning");
       // One state transition controls the stage, card group and title.
       cardStage.classList.remove("result-pending", "case-opening-stage", "reveal-hold");
       cardStage.classList.add("winner", "result-visible");
