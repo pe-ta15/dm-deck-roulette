@@ -80,7 +80,8 @@ duplicate_count = 0
 for (context, selector, _), occurrences in duplicate_rules.items():
     if len(occurrences) > 1:
         duplicate_count += 1
-        print(f"CSS duplicate review: {context}: {selector} at lines {\", \".join(map(str, occurrences))} ({len(occurrences)} copies)")
+        line_list = ", ".join(map(str, occurrences))
+        print(f"CSS duplicate review: {context}: {selector} at lines {line_list} ({len(occurrences)} copies)")
 
 # Regression guards for the exact handoff effects that previously escaped review.
 for forbidden in ("case-burst", "ruptureWave", "resultShockwave", "revealFlash"):
