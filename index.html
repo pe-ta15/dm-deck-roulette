@@ -4703,7 +4703,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
-        stopSelectionOrbit();
+        stopSelectionOrbit.stop();
         drawingCard.classList.add("hidden");
         spinButton.classList.remove("hidden");
         spinButton.textContent = "抽選スタート";
