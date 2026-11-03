@@ -88,7 +88,6 @@
     @keyframes coreOverload{from{opacity:.62;filter:blur(8px)}to{opacity:1;filter:blur(3px)}}
     @keyframes casePressure{from{transform:translateY(0) scale(1)}to{transform:translateY(-1px) scale(1.025,1.012)}}
     @keyframes lockStrain{from{transform:translateX(-50%) rotate(-3deg)}to{transform:translateX(-50%) rotate(3deg)}}
-    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.9)}}
     /* 奥側の蝶番を固定軸に、蓋の板面が後方へ倒れる。位置移動ではなく回転 */
 
     /* 決壊時の圧力波と文明色の破片 */
@@ -576,7 +575,7 @@
 .deck-case .case-glow{z-index:3!important;inset:46px 18px 12px!important;border-radius:3px!important;background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;mix-blend-mode:screen!important}
 .deck-case .case-lid{border:2px solid rgba(218,230,222,.98)!important;border-bottom:2px solid rgba(205,220,210,.94)!important;background:linear-gradient(145deg,#fff 0%,#edf4ef 52%,#fbfdfb 100%)!important;box-shadow:inset 0 2px 5px rgba(255,255,255,.98),0 1px 3px rgba(110,130,117,.06)!important;backface-visibility:visible!important}
 .deck-case .case-lid-inner{border:1px solid rgba(255,255,255,.98)!important;background:linear-gradient(145deg,#fff,#edf4ef)!important;box-shadow:inset 0 0 4px rgba(255,255,255,.98)!important;transform:translateZ(-1px)!important}
-     /* 蓋の内側にも本体と同じ文明色レイヤーを重ね、発光開始・立ち上がりを同期する。 */
+     /* 蓋の裏面も本体と同じ文明色・同じ発光タイミングで点灯させる。 */
      .deck-case .case-lid-inner{position:absolute!important;overflow:hidden!important}
      .deck-case .case-lid-inner:after{
        content:"";
@@ -586,17 +585,21 @@
        border-radius:4px;
        background:var(--case-civ-gradient,linear-gradient(115deg,#fff,#edf3ef));
        opacity:0;
-       mix-blend-mode:multiply;
-       box-shadow:inset 0 0 12px var(--case-civ-glow,rgba(255,255,255,.2)),inset 0 0 24px var(--case-civ-glow,rgba(255,255,255,.12));
-       filter:brightness(1.15) saturate(1.2);
-       transition:opacity 1.2s ease,filter 1.2s ease;
+       mix-blend-mode:color;
+       box-shadow:inset 0 0 14px var(--case-civ-glow,rgba(255,255,255,.2)),0 0 12px var(--case-civ-glow,rgba(255,255,255,.12));
+       filter:brightness(1.2) saturate(1.65);
+       transition:opacity 1s ease,filter 1s ease;
        pointer-events:none
      }
-     .deck-case.civ-charging .case-lid-inner:after{opacity:.34}
-     .deck-case.pressure .case-lid-inner:after,
+     .deck-case.civ-charging .case-lid-inner:after{opacity:.82}
+     .deck-case.pressure .case-lid-inner:after{
+       opacity:1;
+       filter:brightness(1.55) saturate(1.8);
+       animation:coreOverload .42s ease-in-out infinite alternate
+     }
      .deck-case.opening .case-lid-inner:after{
-       opacity:.58;
-       filter:brightness(1.65) saturate(1.45);
+       opacity:1;
+       filter:brightness(1.7) saturate(1.9);
        animation:coreOverload .42s ease-in-out infinite alternate
      }
 .deck-case .case-lid:before{border-color:rgba(255,255,255,.98)!important;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important}
@@ -743,7 +746,6 @@
       deckCase.classList.remove("civ-charging");
       deckCase.style.removeProperty("--case-civ-gradient");
       deckCase.style.removeProperty("--case-civ-glow");
-      keyCardImages.style.removeProperty("--case-card-glow");
       if (colors.length === 0) return;
 
       // 各文明に同じ幅を割り当て、全色を均等に見せる連続グラデーション。
@@ -757,7 +759,6 @@
       const glow = `#${average.map(value => value.toString(16).padStart(2, "0")).join("")}`;
       deckCase.style.setProperty("--case-civ-gradient", gradient);
       deckCase.style.setProperty("--case-civ-glow", glow);
-      keyCardImages.style.setProperty("--case-card-glow", glow);
       // 次フレームでクラスを付け、色が瞬時に切り替わらずじわじわ立ち上がるようにする。
       requestAnimationFrame(() => deckCase.classList.add("civ-charging"));
     }
