@@ -19,19 +19,19 @@
     button{min-height:48px;padding:12px 28px;border:0;border-radius:12px;background:linear-gradient(135deg,#ffe6a1,#e9ae42);color:#241908;font-size:1.05rem;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}
     button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08)}
     button:disabled{background:#b8bdc7;color:#fff;opacity:1;cursor:wait;box-shadow:none;transform:none;filter:none}
-    #status{;;color:var(--muted);font-size:.92rem}
+    #status{min-height:24px;margin:16px 0 0;color:var(--muted);font-size:.92rem}
     .hidden{display:none!important}
-    #result{;z-index:12;;;;;place-items:center;;font-size:clamp(1.35rem,4.6vw,2rem);font-weight:900;;}
+    #result{position:relative;z-index:12;width:100%;margin:0 auto;min-height:0;display:grid;place-items:center;overflow-wrap:anywhere;font-size:clamp(1.35rem,4.6vw,2rem);font-weight:900;line-height:1.2;padding:0 8px}
     #result:empty{display:none}
-    #result.has-result{;}
+    #result.has-result{min-height:42px;margin:4px auto 0}
     .result-reveal{animation:resultReveal .75s ease-out both}
-    @keyframes resultReveal{0%{opacity:0;;;;;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
+    @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
     .roulette-panel{padding:12px 18px 14px;margin-bottom:16px}.card-stage{position:relative;width:100%;max-width:620px;min-height:0;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:208px auto;row-gap:0;justify-items:center;align-items:start;isolation:isolate;overflow:visible}
     #cardStage #drawingCard{grid-column:1;grid-row:1;justify-self:center;margin:0 auto}
     #cardStage #keyCardImages{grid-column:1;grid-row:2;justify-self:center;margin:0 auto}
     .mana-absorption{position:relative;width:min(100%,440px);height:208px;display:grid;place-items:center;isolation:isolate;overflow:visible}
-    .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;;;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
-    .mana-absorption.charging:before{;;opacity:1;animation:runeSpin 2.85s linear both}
+    .mana-absorption:before,.mana-absorption:after{content:"";position:absolute;left:50%;top:50%;width:230px;height:230px;border:1px solid rgb(160 174 220 / 0%);border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.7)}
+    .mana-absorption.charging:before{border-color:rgb(139 155 211 / 72%);box-shadow:0 0 22px rgb(133 158 239 / 34%),inset 0 0 22px rgb(133 158 239 / 20%);opacity:1;animation:runeSpin 2.85s linear both}
     .mana-absorption.charging:after{width:188px;height:188px;border:1px dashed rgb(177 151 225 / 85%);opacity:1;animation:runeSpinReverse 2.85s linear both}
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
     /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
@@ -44,8 +44,8 @@
     .drawing-card.deck-civ-colored:before{inset:4px;border:2px solid rgb(255 255 255 / 96%);box-shadow:inset 0 0 16px var(--deck-civ-glow),0 0 12px var(--deck-civ-glow)}
     .mana-absorption.charging .drawing-card.deck-civ-colored{border-width:10px;box-shadow:0 0 18px 3px var(--deck-civ-glow),0 0 42px 7px var(--deck-civ-glow),0 0 72px rgb(255 255 255 / 55%),inset 0 0 28px rgb(255 255 255 / 70%);animation:cardChargeCiv .72s ease-in-out infinite alternate}
     .mana-absorption.charging .drawing-card.deck-civ-colored:before{box-shadow:inset 0 0 22px var(--deck-civ-glow),0 0 20px var(--deck-civ-glow)}
-    @keyframes cardChargeCiv{from{transform:translate(-50%,-50%) scale(1);;filter:brightness(1.7) saturate(1.8)}}
-    @keyframes civFramePulse{from{filter:brightness(1.08) saturate(1.2);;box-shadow:0 0 28px var(--deck-civ-glow),0 0 62px var(--deck-civ-glow),0 0 90px rgb(255 255 255 / 40%),inset 0 0 30px rgb(255 255 255 / 68%)}}
+    @keyframes cardChargeCiv{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1.15) saturate(1.25)}to{transform:translate(-50%,-50%) scale(1.075);filter:brightness(1.7) saturate(1.8)}}
+    @keyframes civFramePulse{from{filter:brightness(1.08) saturate(1.2);box-shadow:0 0 16px var(--deck-civ-glow),0 0 34px var(--deck-civ-glow),inset 0 0 18px rgb(255 255 255 / 35%)}to{filter:brightness(1.6) saturate(1.7);box-shadow:0 0 28px var(--deck-civ-glow),0 0 62px var(--deck-civ-glow),0 0 90px rgb(255 255 255 / 40%),inset 0 0 30px rgb(255 255 255 / 68%)}}
     .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 75%);border-radius:8px}
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
     .drawing-label{z-index:1;padding:6px 9px;border-radius:8px;background:rgb(10 13 24 / 78%);color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.12em}
@@ -56,21 +56,21 @@
     /* 無地の縦型デッキケース。奥側ヒンジのフリップトップ蓋＋前面マグネット */
     /* 厚みのあるハードケース本体。正面壁・側面壁・内側の収納空間を別レイヤーで表現 */
     .deck-case{position:absolute;z-index:2;left:50%;top:50%;width:154px;height:202px;transform:translate(-50%,-50%) perspective(900px) rotateX(9deg) rotateY(-4deg) scale(1);transform-style:preserve-3d;opacity:1;filter:drop-shadow(0 18px 20px rgb(0 0 0 / 48%));pointer-events:none;transition:transform .55s cubic-bezier(.2,.75,.25,1),opacity .45s ease,filter .8s ease;will-change:transform}
-    .case-body{position:absolute;;;;;;;;;;;}
-    .case-body:after{content:"";position:absolute;z-index:2;;;;;;;;}
-    .case-spectrum{position:absolute;;;;;;;;;;;;}
+    .case-body{position:absolute;left:5px;right:5px;top:34px;bottom:3px;border:3px solid #303946;border-top:0;border-radius:4px 4px 15px 15px;background:linear-gradient(90deg,#667181 0%,#252d39 9%,#141b25 22%,#303a49 52%,#151c27 82%,#687384 100%);box-shadow:inset 7px 0 9px rgb(255 255 255 / 10%),inset -8px 0 10px rgb(0 0 0 / 60%),inset 0 -16px 22px rgb(0 0 0 / 65%),0 7px 8px rgb(0 0 0 / 45%);overflow:hidden;transform:translateZ(0)}
+    .case-body:after{content:"";position:absolute;z-index:2;left:4px;right:4px;top:0;height:13px;border:2px solid #8994a3;border-bottom:3px solid #111821;background:linear-gradient(180deg,#aeb8c6,#394453 55%,#111821);box-shadow:0 3px 5px #05080d}
+    .case-spectrum{position:absolute;z-index:3;left:18px;right:18px;top:43px;bottom:17px;border-radius:4px;background:var(--case-civ-gradient,linear-gradient(90deg,#9aa7bd,#d9e0eb));opacity:0;mix-blend-mode:screen;filter:blur(9px);transform:scale(.82);transition:opacity 1s ease,transform 1.3s ease}
     /* 蓋は箱の上面を覆う厚い板。奥側ヒンジから後方へ大きく回転 */
     .case-lid{position:absolute;z-index:7;left:2px;right:2px;top:0;height:58px;border:3px solid #657181;border-bottom:5px solid #151c26;border-radius:9px 9px 5px 5px;background:linear-gradient(180deg,#8793a3 0%,#4b5666 18%,#293341 68%,#151c26 100%);box-shadow:inset 0 3px 7px rgb(255 255 255 / 30%),inset 0 -7px 10px rgb(0 0 0 / 65%),0 8px 10px rgb(0 0 0 / 52%);transform-origin:50% 0%;transform:rotateX(0deg) translateZ(0);transform-style:preserve-3d;backface-visibility:visible}
-    .case-lid:before{content:"";position:absolute;;;;;;;;}
-    .case-lid:after{content:"";position:absolute;;;;;border-radius:0 0 3px 3px;;}
-    .case-hinge{position:absolute;;;;;;;;}
-    .case-lock{position:absolute;;left:50%;;;;transform:translateX(-50%);;;;}
-    .case-lock:after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;;}
+    .case-lid:before{content:"";position:absolute;left:8px;right:8px;top:7px;height:39px;border:2px solid rgb(255 255 255 / 16%);border-radius:4px;background:linear-gradient(135deg,rgb(255 255 255 / 15%),transparent 45%,rgb(0 0 0 / 20%));box-shadow:inset 0 0 8px rgb(255 255 255 / 8%)}
+    .case-lid:after{content:"";position:absolute;left:3px;right:3px;bottom:-6px;height:6px;border-radius:0 0 3px 3px;background:linear-gradient(180deg,#7f8b9a,#101720);box-shadow:0 3px 5px #000}
+    .case-hinge{position:absolute;z-index:8;left:13px;right:13px;top:1px;height:10px;border-radius:5px;background:linear-gradient(180deg,#d0d7df,#667383 48%,#151c26);box-shadow:0 2px 4px #080b12}
+    .case-lock{position:absolute;z-index:10;left:50%;top:49px;width:29px;height:13px;transform:translateX(-50%);border:2px solid #d0d7df;border-radius:3px;background:linear-gradient(180deg,#f0f3f6,#8491a1 58%,#303b49);box-shadow:0 3px 5px #080b12,inset 0 1px 2px #fff}
+    .case-lock:after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;background:#1a2029;box-shadow:0 0 3px #fff}
     .case-glow{position:absolute;z-index:3;inset:13px 9px 10px;opacity:0;border-radius:5px;background:var(--case-civ-gradient,linear-gradient(90deg,#b9d8ff,#d9e0eb));mix-blend-mode:screen;filter:blur(10px);transition:opacity 1s ease;pointer-events:none}
-    .case-light{position:absolute;;left:50%;;;;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 38%,transparent 76%);;pointer-events:none}
+    .case-light{position:absolute;z-index:4;left:50%;top:55%;width:82px;height:128px;transform:translate(-50%,-50%) scale(.2);opacity:0;border-radius:50%;background:radial-gradient(ellipse,#fff 0%,var(--case-civ-glow,#b9d8ff) 38%,transparent 76%);filter:blur(12px);pointer-events:none}
     .deck-case.civ-charging{filter:drop-shadow(0 10px 14px rgb(0 0 0 / 42%))}
     .deck-case.civ-charging .case-body{border-color:#778397;box-shadow:inset 0 3px 7px rgb(255 255 255 / 16%),inset 0 -10px 15px rgb(0 0 0 / 48%),inset 0 0 22px var(--case-civ-glow,#d9e0eb);transition:box-shadow 1.8s ease}
-    .deck-case.civ-charging .case-spectrum{opacity:.78;}
+    .deck-case.civ-charging .case-spectrum{opacity:.78;transform:scale(1)}
     .deck-case.civ-charging .case-glow{opacity:.82}
     .deck-case.civ-charging .case-light{animation:caseLightIn 1.5s ease-out forwards}
     .deck-case.pressure .case-body{animation:casePressure .16s ease-in-out infinite alternate}
@@ -78,30 +78,30 @@
     .deck-case.pressure .case-light{opacity:.9;animation:corePulse .32s ease-in-out infinite alternate}
     .deck-case.pressure .case-lock{animation:lockStrain .22s ease-in-out infinite alternate}
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
-    .deck-case.opening .case-lid{}
-    .deck-case.opening .case-body{}
-    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;;opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
-    .deck-case.opening .case-light{}
-    @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(6px) scale(1.25);;filter:brightness(1.4)}}
-    @keyframes caseLightIn{0%{opacity:0;;transform:translate(-50%,-50%) scale(1)}}
-    @keyframes caseLightPeak{0%{opacity:.25;;;transform:translate(-50%,-50%) scale(2.5)}}
-    @keyframes corePulse{from{transform:translate(-50%,-50%) scale(.75);;opacity:1}}
-    @keyframes coreOverload{from{opacity:.62;;filter:blur(3px)}}
+    .deck-case.opening .case-lid{animation:caseLidOpen .82s cubic-bezier(.12,.78,.18,1) both}
+    .deck-case.opening .case-body{animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both}
+    .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#dceaff) 23%,transparent 72%);opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
+    .deck-case.opening .case-light{animation:caseLightPeak .5s cubic-bezier(.12,.8,.2,1) both}
+    @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(6px) scale(1.25);filter:brightness(2.5)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.4)}}
+    @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.58;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.3)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
+    @keyframes corePulse{from{transform:translate(-50%,-50%) scale(.75);opacity:.55}to{transform:translate(-50%,-50%) scale(1.35);opacity:1}}
+    @keyframes coreOverload{from{opacity:.62;filter:blur(8px)}to{opacity:1;filter:blur(3px)}}
     @keyframes casePressure{from{transform:translateY(0) scale(1)}to{transform:translateY(-1px) scale(1.025,1.012)}}
     @keyframes lockStrain{from{transform:translateX(-50%) rotate(-3deg)}to{transform:translateX(-50%) rotate(3deg)}}
     @keyframes caseBodyRecoil{0%{transform:translateY(0) scale(1)}24%{transform:translateY(6px) scale(.97,1.03)}55%{transform:translateY(-4px) scale(1.03,.98)}100%{transform:translateY(0) scale(1)}}
-    @keyframes caseCoreFlash{0%{opacity:0;;;transform:scale(1.9)}}
+    @keyframes caseCoreFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.9)}}
     /* 奥側の蝶番を固定軸に、蓋の板面が後方へ倒れる。位置移動ではなく回転 */
 
     /* 決壊時の圧力波と文明色の破片 */
     .case-burst{position:absolute;z-index:7;left:50%;top:48%;width:34px;height:34px;border:4px solid #fff;border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 12px 5px #fff,0 0 28px 12px var(--case-civ-glow,#fff),inset 0 0 14px #fff}
     .case-burst:before,.case-burst:after{content:"";position:absolute;inset:-15px;border:2px solid var(--case-civ-glow,#fff);border-radius:50%;box-shadow:0 0 18px var(--case-civ-glow,#fff)}
     .case-burst:after{inset:-29px;border-width:1px;border-color:rgb(255 255 255 / 90%)}
-    .deck-case.opening .case-burst{}
-    @keyframes ruptureWave{0%{opacity:0;;;transform:translate(-50%,-50%) scale(8)}}
+    .deck-case.opening .case-burst{animation:ruptureWave .62s cubic-bezier(.12,.72,.18,1) both}
+    @keyframes ruptureWave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}12%{opacity:1}38%{opacity:1;transform:translate(-50%,-50%) scale(3.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(8)}}
     /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
     #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
-    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;;;;display:block;object-fit:contain;opacity:0;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 18px var(--mana-color));will-change:transform,opacity;pointer-events:none}
+    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 18px var(--mana-color));will-change:transform,opacity;pointer-events:none}
     .mana-orb.fire{--mana-color:#e53935}
     .mana-orb.light{--mana-color:#f2c600}
     .mana-orb.nature{--mana-color:#299b45}
@@ -114,42 +114,43 @@
     .mana-orb.water{filter:drop-shadow(0 0 5px #8be4ff) drop-shadow(0 0 15px #168bd2) drop-shadow(0 0 26px rgb(22 139 210 / 55%))}
     .mana-orb.darkness{filter:drop-shadow(0 0 5px #d49aff) drop-shadow(0 0 15px #743c9b) drop-shadow(0 0 26px rgb(116 60 155 / 60%))}
     .mana-absorption.charging .drawing-card{animation:cardCharge .72s ease-in-out infinite alternate}
-    .mana-absorption.charging .drawing-card:before{}
-    @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);;filter:brightness(1.38) saturate(1.25)}}
+    .mana-absorption.charging .drawing-card:before{box-shadow:inset 0 0 18px rgb(255 255 255 / 55%),0 0 15px rgb(255 255 255 / 35%)}
+    @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1) saturate(1)}to{transform:translate(-50%,-50%) scale(1.065);filter:brightness(1.38) saturate(1.25)}}
     .mana-absorption.absorbing:after{content:"";position:absolute;z-index:5;left:50%;top:50%;width:240px;height:240px;border-radius:50%;border:3px solid rgb(255 255 255 / 85%);box-shadow:0 0 25px #fff,0 0 55px #e9c85c,0 0 85px #8e8cff;pointer-events:none;animation:finalShockwave .72s cubic-bezier(.12,.7,.2,1) both}
-    @keyframes finalShockwave{0%{opacity:0;;transform:translate(-50%,-50%) scale(2.4)}}
+    @keyframes finalShockwave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}22%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
     .mana-absorption.absorbing .drawing-card{animation:cardAbsorb .72s cubic-bezier(.2,.85,.25,1) both}
-    @keyframes cardAbsorb{0%{transform:translate(-50%,-50%) scale(1);;;;filter:brightness(1.35)}}
+    @keyframes cardAbsorb{0%{transform:translate(-50%,-50%) scale(1);filter:brightness(1)}42%{transform:translate(-50%,-50%) scale(1.13);filter:brightness(1.75)}72%{transform:translate(-50%,-50%) scale(.97);filter:brightness(1.2)}100%{transform:translate(-50%,-50%) scale(1.06);filter:brightness(1.35)}}
     .mana-absorption.absorbing{animation:stageFlash .72s ease-out both}
     @keyframes stageFlash{0%{filter:brightness(1)}24%{filter:brightness(2.7)}48%{filter:brightness(1.65)}100%{filter:brightness(1)}}
     .card-stage.absorption-burst{animation:stageImpact .42s ease-out both}
     @keyframes runeSpin{from{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}to{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}}
     @keyframes runeSpinReverse{from{transform:translate(-50%,-50%) rotate(360deg) scale(1.12)}to{transform:translate(-50%,-50%) rotate(0deg) scale(.8)}}
-    #keyCardImages{position:relative;z-index:5;justify-self:stretch!important;;min-width:0;;;;;;}
-    #keyCardImages img{;;;;;;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
+    #keyCardImages{position:relative;z-index:5;justify-self:stretch!important;width:100%;min-width:0;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px;padding:4px 0 2px}
+    #keyCardImages img{display:block;flex:0 1 auto;width:min(180px,42vw);height:auto;max-height:360px;object-fit:contain;border-radius:9px;box-shadow:0 8px 20px rgb(0 0 0 / 20%);transform-style:preserve-3d;backface-visibility:visible}
     #keyCardImages.revealing img{animation:cardFlipIn .9s cubic-bezier(.2,.75,.25,1) both}
     #keyCardImages.revealing img:nth-child(2){animation-delay:.12s}
     #keyCardImages.revealing img:nth-child(3){animation-delay:.24s}
-    @keyframes cardFlipIn{0%{opacity:0;;;;;transform:perspective(900px) rotateY(0) scale(1);filter:brightness(1)}}
+    @keyframes cardFlipIn{0%{opacity:0;transform:perspective(900px) rotateY(180deg) scale(.72);filter:brightness(.35)}55%{opacity:1;transform:perspective(900px) rotateY(0) scale(1.06);filter:brightness(1.8)}100%{opacity:1;transform:perspective(900px) rotateY(0) scale(1);filter:brightness(1)}}
     .card-stage.absorption-burst:before{content:"";position:absolute;z-index:1;left:50%;top:50%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgb(255 255 255 / 80%) 12%,rgb(255 220 100 / 55%) 30%,rgb(110 160 255 / 18%) 58%,transparent 72%);pointer-events:none;animation:absorbFlash .55s ease-out both}
-    @keyframes absorbFlash{0%{opacity:0;;transform:translate(-50%,-50%) scale(2.3)}}
-    .card-stage.winner:before{content:"";position:absolute;z-index:0;left:50%;top:50%;;;border-radius:50%;pointer-events:none;;animation:lightBurst 1.1s ease-out both}
+    @keyframes absorbFlash{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}24%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.3)}}
+    .card-stage.winner:before{content:"";position:absolute;z-index:0;left:50%;top:50%;width:230px;height:230px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgb(255 246 190 / 80%) 0%,rgb(255 204 74 / 42%) 28%,rgb(255 157 41 / 15%) 55%,transparent 72%);animation:lightBurst 1.1s ease-out both}
     .card-stage.winner:after{content:"";position:absolute;z-index:0;left:50%;top:50%;width:190px;height:190px;border:2px solid rgb(255 224 128 / 85%);border-radius:50%;pointer-events:none;animation:ringBurst .9s ease-out both}
-    @keyframes lightBurst{0%{opacity:0;;transform:translate(-50%,-50%) scale(2.5)}}
-    @keyframes ringBurst{0%{opacity:0;;transform:translate(-50%,-50%) scale(2.1)}}
+    @keyframes lightBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.1)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
+    @keyframes ringBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.1)}}
     .particle{position:absolute;z-index:3;width:var(--size,6px);height:var(--size,6px);border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffbdc 0%,#ffd45e 55%,#ff9c2d 100%);box-shadow:0 0 9px 2px rgb(255 213 96 / 75%);animation:particleFly var(--duration,1s) ease-out forwards}
     #result.result-reveal{position:relative;color:#8b5a08;text-shadow:0 0 12px rgb(255 226 143 / 80%),0 0 28px rgb(255 190 65 / 45%)}
-    @keyframes particleFly{0%{opacity:0;;transform:translate(var(--dx),var(--dy)) scale(0)}}
+    @keyframes particleFly{0%{opacity:0;transform:translate(0,0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
     .fallback{width:100%;padding:28px 14px;color:var(--muted);line-height:1.7}
     .deck-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;padding:0;margin:18px 0 0;list-style:none;text-align:left}
     .deck-list li{padding:12px 14px;border:1px solid #e1e4eb;border-radius:10px;background:#f8f9fb;overflow-wrap:anywhere}
     .deck-list li.excluded{opacity:.48}
-    .small-note{color:var(--muted);font-size:.85rem;}
-    @media(max-width:480px){body{padding:12px 10px 24px}.panel{padding:12px 10px}.roulette-panel{;margin-bottom:12px}.card-stage{min-height:0;grid-template-rows:194px auto}.mana-absorption{height:194px}.deck-case{}.mana-orb{;;}#keyCardImages{}#keyCardImages img{}#result.has-result{;}}
+    .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
+    @media(max-width:480px){body{padding:12px 10px 24px}.panel{padding:12px 10px}.roulette-panel{padding:8px 8px 10px;margin-bottom:12px}.card-stage{min-height:0;grid-template-rows:194px auto}.mana-absorption{height:194px}.deck-case{transform:translate(-50%,-50%) perspective(850px) rotateX(8deg) scale(.9)}.mana-orb{width:44px;height:44px;margin:-22px}#keyCardImages{padding:2px 0 0}#keyCardImages img{width:min(155px,42vw)}#result.has-result{min-height:38px;margin:2px auto 0}}
     /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
     .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
     @keyframes revealPending{
-      from{transform:translate(-50%,-50%) scale(1.035);;;filter:brightness(1.62);box-shadow:0 0 34px rgb(255 255 255 / 82%),0 0 66px rgb(255 210 100 / 62%),0 0 90px rgb(130 155 255 / 35%)}
+      from{transform:translate(-50%,-50%) scale(1.035);filter:brightness(1.22);box-shadow:0 0 24px rgb(255 255 255 / 55%),0 0 42px rgb(130 155 255 / 42%)}
+      to{transform:translate(-50%,-50%) scale(1.09);filter:brightness(1.62);box-shadow:0 0 34px rgb(255 255 255 / 82%),0 0 66px rgb(255 210 100 / 62%),0 0 90px rgb(130 155 255 / 35%)}
     }
     /* 吸収時に短く画面を揺らす */
     .card-stage.absorption-burst{animation:stageImpact .48s ease-out both}
@@ -162,42 +163,42 @@
     /* ===== Premium treasure-reveal redesign ===== */
     .roulette-panel{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:10px 14px 12px}
     #cardStage{width:100%;max-width:620px;min-height:0;margin:0 auto;grid-template-rows:214px auto;row-gap:0;overflow:visible}
-    #drawingCard.mana-absorption{;;width:100%;;}
-    #result{;;;;;;align-self:center}
-    #result.has-result{;;;;;}
-    #result.result-reveal{margin:0!important;}
+    #drawingCard.mana-absorption{height:214px;min-height:214px;width:100%;max-width:460px;overflow:visible}
+    #result{display:none;min-height:0!important;height:auto;margin:0!important;padding:0!important;line-height:1.08;align-self:center}
+    #result.has-result{display:grid;min-height:0!important;height:auto;margin:0!important;padding:0 4px!important;line-height:1.08}
+    #result.result-reveal{margin:0!important;padding:0!important}
     #spinButton{margin:8px auto 0;flex:0 0 auto}
     #status{min-height:0;margin:7px 0 0;line-height:1.25}
     #settings{margin:8px 0 0}
     .card-stage{perspective:1200px}
     .mana-absorption:before{width:290px;height:190px;border:1px solid rgb(255 219 137 / 0%);background:radial-gradient(ellipse,rgba(255,205,100,.10),transparent 68%)}
-    .mana-absorption.charging:before{;box-shadow:0 0 34px rgba(255,190,80,.20),inset 0 0 25px rgba(255,220,150,.12)}
+    .mana-absorption.charging:before{border-color:rgb(255 218 145 / 42%);box-shadow:0 0 34px rgba(255,190,80,.20),inset 0 0 25px rgba(255,220,150,.12)}
     .deck-case{width:198px;height:164px;top:51%;transform:translate(-50%,-50%) perspective(1050px) rotateX(7deg) rotateY(-8deg) scale(1);transform-style:preserve-3d;filter:drop-shadow(0 22px 18px rgba(0,0,0,.58));transition:transform .72s cubic-bezier(.2,.72,.18,1),filter .7s ease,opacity .45s ease}
-    .case-body{left:4px;right:4px;top:42px;bottom:3px;;;border-radius:5px 5px 15px 15px;;;transform:translateZ(0);overflow:visible}
+    .case-body{left:4px;right:4px;top:42px;bottom:3px;border:4px solid #303947;border-top:0;border-radius:5px 5px 15px 15px;background:linear-gradient(90deg,#8993a2 0%,#3d4858 7%,#202a38 17%,#111923 28%,#2c3747 52%,#121a25 79%,#758092 96%,#303a49 100%);box-shadow:inset 9px 0 12px rgba(255,255,255,.15),inset -10px 0 13px rgba(0,0,0,.72),inset 0 -18px 24px rgba(0,0,0,.78),0 9px 12px rgba(0,0,0,.55);transform:translateZ(0);overflow:visible}
     .case-body:after{left:5px;right:5px;top:-1px;height:15px;border:2px solid #aab4c2;border-bottom:4px solid #111923;background:linear-gradient(180deg,#d2d9e1 0%,#687587 38%,#293442 78%,#111923 100%);box-shadow:0 4px 7px rgba(0,0,0,.8)}
     /* ケース内部は乳白色樹脂。暗い収納穴や黒い縁取りは作らない。 */
     .case-cavity{position:absolute;z-index:2;left:18px;right:18px;top:5px;bottom:15px;border:0;border-radius:4px;background:linear-gradient(180deg,rgba(250,252,250,.82),rgba(232,240,235,.9) 58%,rgba(216,229,220,.84));box-shadow:inset 0 1px 6px rgba(255,255,255,.94),inset 0 -3px 8px rgba(132,151,140,.10);pointer-events:none}
     .case-spectrum{z-index:4;left:24px;right:24px;top:48px;bottom:22px;border-radius:50%;background:var(--case-civ-gradient,linear-gradient(90deg,#9aa7bd,#d9e0eb));opacity:0;mix-blend-mode:screen;filter:blur(13px);transform:scale(.35);transition:opacity 1.2s ease,transform 1.4s ease}
-    .case-lid{z-index:9;left:0;right:0;top:0;height:52px;;;border-radius:11px 11px 4px 4px;;;transform-origin:50% 0%;transform:rotateX(0deg) translateZ(0);transform-style:preserve-3d;backface-visibility:visible}
-    .case-lid:before{left:9px;right:9px;top:7px;height:32px;;border-radius:5px;;}
-    .case-lid:after{left:2px;right:2px;bottom:-7px;height:7px;;}
+    .case-lid{z-index:9;left:0;right:0;top:0;height:52px;border:4px solid #8a96a6;border-bottom:6px solid #171f2a;border-radius:11px 11px 4px 4px;background:linear-gradient(180deg,#c0c9d4 0%,#788597 15%,#3d4959 47%,#202a38 82%,#101721 100%);box-shadow:inset 0 4px 8px rgba(255,255,255,.42),inset 0 -9px 12px rgba(0,0,0,.72),0 10px 14px rgba(0,0,0,.62);transform-origin:50% 0%;transform:rotateX(0deg) translateZ(0);transform-style:preserve-3d;backface-visibility:visible}
+    .case-lid:before{left:9px;right:9px;top:7px;height:32px;border:2px solid rgba(255,255,255,.22);border-radius:5px;background:linear-gradient(135deg,rgba(255,255,255,.22),transparent 42%,rgba(0,0,0,.34));box-shadow:inset 0 0 12px rgba(255,255,255,.12)}
+    .case-lid:after{left:2px;right:2px;bottom:-7px;height:7px;background:linear-gradient(180deg,#aeb9c7,#3d4958 45%,#0c121b);box-shadow:0 5px 7px #000}
     .case-lid-inner{position:absolute;inset:5px 7px 7px;border:2px solid rgba(255,255,255,.12);border-radius:5px;background:linear-gradient(145deg,#273344,#101722 70%,#05090f);box-shadow:inset 0 0 18px rgba(0,0,0,.8);transform:translateZ(-2px);backface-visibility:visible}
-    .case-hinge{z-index:10;left:12px;right:12px;top:0;height:12px;border-radius:7px;;}
-    .case-lock{z-index:12;top:48px;width:34px;height:16px;;border-radius:4px;;}
+    .case-hinge{z-index:10;left:12px;right:12px;top:0;height:12px;border-radius:7px;background:linear-gradient(180deg,#eef2f6,#8996a7 42%,#263140 82%,#0d131d);box-shadow:0 3px 5px #080b12}
+    .case-lock{z-index:12;top:48px;width:34px;height:16px;border:2px solid #e4e9ef;border-radius:4px;background:linear-gradient(180deg,#fff,#a9b5c4 48%,#3a4656 100%);box-shadow:0 4px 7px #080b12,inset 0 1px 3px #fff}
     .case-light{z-index:6;top:61%;width:128px;height:112px;filter:blur(15px)}
-    .deck-case.opening .case-lid{}
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);;;;;;filter:brightness(1.5)}}
-    .deck-case.opening .case-body{}
-    .deck-case.opening .case-light{}
-    .deck-case.opening .case-burst{}
+    .deck-case.opening .case-lid{animation:caseLidOpen 1.12s cubic-bezier(.16,.78,.16,1) both}
+    @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}12%{transform:rotateX(-9deg) translateZ(2px);filter:brightness(1.12)}38%{transform:rotateX(-62deg) translateZ(8px);filter:brightness(1.45)}70%{transform:rotateX(-132deg) translateZ(15px);filter:brightness(1.9)}88%{transform:rotateX(-158deg) translateZ(18px);filter:brightness(1.65)}100%{transform:rotateX(-164deg) translateZ(19px);filter:brightness(1.5)}}
+    .deck-case.opening .case-body{animation:caseBodyRecoil .62s cubic-bezier(.16,.82,.22,1) both}
+    .deck-case.opening .case-light{animation:caseLightPeak .85s cubic-bezier(.12,.8,.2,1) both}
+    .deck-case.opening .case-burst{animation:ruptureWave .9s cubic-bezier(.12,.72,.18,1) both}
     .card-stage.winner:before{width:290px;height:230px;background:radial-gradient(ellipse,rgba(255,255,235,.98) 0%,rgba(255,220,135,.72) 18%,rgba(255,177,66,.24) 48%,transparent 74%)}
     #result.has-result{font-size:clamp(1.25rem,4.2vw,1.85rem);text-shadow:0 2px 0 rgba(255,255,255,.8),0 0 18px rgba(255,204,92,.48)}
     .small-note{margin:0;line-height:1.4}
     @media(max-width:480px){
       .roulette-panel{padding:7px 8px 9px}
-      #cardStage{}
-      #drawingCard.mana-absorption{;}
-      .deck-case{;;transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-8deg) scale(.94)}
+      #cardStage{grid-template-rows:194px auto}
+      #drawingCard.mana-absorption{height:194px;min-height:194px}
+      .deck-case{width:176px;height:148px;transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-8deg) scale(.94)}
       #keyCardImages{padding:0}
       #result.has-result{min-height:0!important;margin:0!important;padding:0!important}
       #spinButton{margin-top:6px}
@@ -207,39 +208,39 @@
     /* 当選後はケースの演出枠を完全に畳み、画像はパネル幅内に収める */
     #cardStage{width:100%;max-width:620px;min-width:0;overflow:hidden;}
     #cardStage.winner{display:grid;grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;overflow:visible;}
-    #cardStage.winner #drawingCard{;;;;;}
-    #cardStage.winner #keyCardImages{;;;;align-self:start;;;;}
+    #cardStage.winner #drawingCard{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
+    #cardStage.winner #keyCardImages{grid-row:1!important;padding:0!important;margin:0 auto!important;min-height:0!important;align-self:start;width:100%;max-width:100%;overflow:hidden;}
     #keyCardImages{padding:0!important;margin:0 auto!important;min-height:0!important;width:100%;max-width:100%;display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap;gap:8px;overflow:hidden;}
-    #keyCardImages img{;;;;;;;;}
-    #result{;;;;;;;;;}
-    #result.has-result{;;;;;;}
-    #result.result-reveal{;;;}
+    #keyCardImages img{display:block;flex:0 1 auto;width:min(148px,calc((100vw - 72px)/2));max-width:100%;max-height:min(230px,34vh);height:auto;object-fit:contain;margin:0!important;}
+    #result{display:none!important;min-width:0;width:100%;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;line-height:1.08!important;overflow-wrap:anywhere;}
+    #result.has-result{display:grid!important;min-height:0!important;height:auto!important;margin:3px auto 0!important;padding:0 4px!important;line-height:1.08!important;}
+    #result.result-reveal{display:grid!important;margin-top:3px!important;padding:0 4px!important;}
     #spinButton{max-width:100%;}
     @media(max-width:480px){
-      #keyCardImages img{;;}
-      #cardStage.winner{;}
+      #keyCardImages img{width:min(132px,calc((100vw - 58px)/2));max-height:30vh;}
+      #cardStage.winner{grid-template-rows:0 min-content!important;}
     }
 
 
     /* ===== Final repair: fixed treasure opening + strictly contained result layout ===== */
     #cardStage{display:grid!important;grid-template-columns:minmax(0,1fr);grid-template-rows:214px auto!important;row-gap:0!important;width:100%;max-width:620px;min-width:0;height:auto;min-height:0;overflow:visible;}
-    #drawingCard.mana-absorption{;;;;border-radius:18px;}
+    #drawingCard.mana-absorption{height:214px;min-height:214px;max-width:460px;overflow:visible;border-radius:18px;}
     /* カメラ切替を廃止。斜め上からケース内部が見える構図を固定 */
     #drawingCard.mana-absorption.treasure-scene .mana-orb,
     #drawingCard.mana-absorption.treasure-scene .drawing-card{opacity:0!important;visibility:hidden!important;}
     #drawingCard.mana-absorption.treasure-scene .deck-case,
     .deck-case.treasure-open{top:52%;transform:translate(-50%,-50%) perspective(980px) rotateX(25deg) rotateY(-5deg) scale(1.24)!important;filter:drop-shadow(0 22px 24px rgba(0,0,0,.68));}
-    .deck-case.treasure-open .case-body{;;}
+    .deck-case.treasure-open .case-body{border-color:#8b98aa;box-shadow:inset 9px 0 12px rgba(255,255,255,.18),inset -10px 0 13px rgba(0,0,0,.7),inset 0 -18px 24px rgba(0,0,0,.72),0 9px 12px rgba(0,0,0,.55),0 0 22px rgba(255,225,160,.16);}
 
     .deck-case.treasure-open .case-spectrum,.deck-case.treasure-open .case-glow{background:radial-gradient(ellipse,#fff 0%,#fff8dc 35%,rgba(255,219,145,.62) 58%,transparent 82%)!important;mix-blend-mode:screen;}
     .deck-case.treasure-open .case-light{--case-civ-glow:#fff0c4;}
     .deck-case.treasure-open .case-lid{transform-origin:50% 0%;}
-    .deck-case.treasure-open.opening .case-lid{;}
-    @keyframes treasureLidOpen{0%{transform:rotateX(0deg) translateZ(0);;;;;filter:brightness(1.7)}}
-    .deck-case.treasure-open .case-light{;;;opacity:0;;;}
-    .deck-case.treasure-open.opening .case-light{;}
+    .deck-case.treasure-open.opening .case-lid{animation:treasureLidOpen 1.22s cubic-bezier(.16,.78,.16,1) both;}
+    @keyframes treasureLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}16%{transform:rotateX(-10deg) translateZ(3px);filter:brightness(1.25)}48%{transform:rotateX(-78deg) translateZ(10px);filter:brightness(1.7)}78%{transform:rotateX(-138deg) translateZ(17px);filter:brightness(2)}100%{transform:rotateX(-154deg) translateZ(20px);filter:brightness(1.7)}}
+    .deck-case.treasure-open .case-light{top:56%;width:170px;height:145px;opacity:0;background:radial-gradient(ellipse,#fff 0%,#fffdf2 24%,#ffe9b0 47%,rgba(255,218,135,.55) 64%,transparent 82%);filter:blur(20px);}
+    .deck-case.treasure-open.opening .case-light{animation:treasureInteriorGlow 1.7s ease-out .55s both;}
 
-    @keyframes treasureInteriorGlow{0%{opacity:0;;;;transform:translate(-50%,-50%) scale(1.2)}}
+    @keyframes treasureInteriorGlow{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}70%{opacity:1;transform:translate(-50%,-50%) scale(1.32)}100%{opacity:.92;transform:translate(-50%,-50%) scale(1.2)}}
 
     .deck-case.treasure-open.opening .case-burst{border-color:#fff;box-shadow:0 0 18px 8px #fff,0 0 42px 18px rgba(255,224,151,.95),inset 0 0 18px #fff;}
     /* 射出カードは常に通常フロー内。絶対配置によるデッキ名・設定との重なりを禁止 */
@@ -249,23 +250,23 @@
     #keyCardImages.case-launch img{animation:containedCardReveal .82s cubic-bezier(.16,.78,.18,1) both;}
     #keyCardImages.case-launch img:nth-child(2){animation-delay:.08s}
     #keyCardImages.case-launch img:nth-child(3){animation-delay:.16s}
-    @keyframes containedCardReveal{0%{opacity:0;;;;;transform:translateY(0) scale(1) rotateX(0);filter:brightness(1) drop-shadow(0 8px 16px rgba(0,0,0,.28))}}
+    @keyframes containedCardReveal{0%{opacity:0;transform:translateY(36px) scale(.42) rotateX(32deg);filter:brightness(2.6) drop-shadow(0 0 24px #fff)}48%{opacity:1;transform:translateY(-8px) scale(1.035) rotateX(-5deg);filter:brightness(1.65) drop-shadow(0 0 20px #ffe6a0)}100%{opacity:1;transform:translateY(0) scale(1) rotateX(0);filter:brightness(1) drop-shadow(0 8px 16px rgba(0,0,0,.28))}}
     /* 当選後は演出行を削除し、カード画像を1行目に配置。0px行への誤配置を防止 */
     #cardStage.winner{display:grid!important;grid-template-rows:min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;overflow:visible!important;}
-    #cardStage.winner #drawingCard{;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
-    #cardStage.winner #keyCardImages{;;;;}
+    #cardStage.winner #drawingCard{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
+    #cardStage.winner #keyCardImages{grid-row:1!important;min-height:0!important;padding:0!important;margin:0 auto!important;}
     #result{display:none!important;position:relative;width:100%;min-width:0;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;line-height:1.08!important;overflow-wrap:anywhere;}
-    #result.has-result{;;;;;;}
+    #result.has-result{display:grid!important;min-height:0!important;height:auto!important;margin:6px auto 0!important;padding:0 4px!important;line-height:1.08!important;}
     #result.result-reveal{display:grid!important;margin-top:6px!important;padding:0 4px!important;}
     .roulette-panel{gap:0!important;}
     @media(max-width:480px){
       #cardStage{grid-template-rows:194px auto!important;}
-      #drawingCard.mana-absorption{;;}
+      #drawingCard.mana-absorption{height:194px;min-height:194px;}
       #drawingCard.mana-absorption.treasure-scene .deck-case,.deck-case.treasure-open{transform:translate(-50%,-50%) perspective(850px) rotateX(25deg) rotateY(-5deg) scale(1.08)!important;}
       #keyCardImages{gap:7px;padding-top:6px!important;}
       #keyCardImages img{flex-basis:132px;width:min(132px,calc((100% - 14px)/2));max-height:min(210px,30vh);}
       #cardStage.winner{grid-template-rows:min-content!important;}
-      #result.has-result{;}
+      #result.has-result{margin-top:5px!important;}
     }
 
   
@@ -292,23 +293,23 @@
     #drawingCard.opening-cutin:before,#drawingCard.opening-cutin:after{opacity:0!important;}
     #drawingCard.opening-cutin .mana-orb,#drawingCard.opening-cutin .drawing-card{display:none!important;}
     #drawingCard.opening-cutin .deck-case,
-    .deck-case.treasure-open{;;top:53%!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(34deg) rotateY(-2deg) scale(1.12)!important;;}
+    .deck-case.treasure-open{width:244px!important;height:204px!important;top:53%!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(34deg) rotateY(-2deg) scale(1.12)!important;filter:drop-shadow(0 30px 28px rgba(0,0,0,.78))!important;}
     /* 本体は深い収納箱。前壁・左右の厚み・内底を別レイヤーにする */
     .deck-case.treasure-open .case-body{top:54px!important;left:4px!important;right:4px!important;bottom:5px!important;border:7px solid #354151!important;border-top:0!important;border-radius:7px 7px 18px 18px!important;background:linear-gradient(90deg,#a1adbd 0%,#4c596b 7%,#1b2533 18%,#111a27 32%,#344153 50%,#121b28 78%,#8995a5 96%,#263242 100%)!important;box-shadow:inset 12px 0 16px rgba(255,255,255,.18),inset -14px 0 18px rgba(0,0,0,.78),inset 0 -24px 28px rgba(0,0,0,.82),0 13px 18px rgba(0,0,0,.65)!important;}
-     .deck-case.treasure-open .case-cavity{left:23px!important;right:23px!important;top:9px!important;bottom:20px!important;;border-radius:5px!important;;;}
+     .deck-case.treasure-open .case-cavity{left:23px!important;right:23px!important;top:9px!important;bottom:20px!important;border:0!important;border-radius:5px!important;background:linear-gradient(180deg,rgba(250,252,250,.82),rgba(232,240,235,.9) 58%,rgba(216,229,220,.84))!important;box-shadow:inset 0 1px 6px rgba(255,255,255,.94),inset 0 -3px 8px rgba(132,151,140,.10)!important;}
     /* 蓋は上面＋前面スカートを持つ巻き込み式。閉じた時に箱の前面まで覆う */
     .deck-case.treasure-open .case-lid{left:0!important;right:0!important;top:0!important;height:76px!important;border:6px solid #8794a6!important;border-bottom:7px solid #1a2431!important;border-radius:13px 13px 5px 5px!important;background:linear-gradient(180deg,#d1d9e3 0%,#7e8b9d 18%,#394657 55%,#1a2431 100%)!important;box-shadow:inset 0 5px 9px rgba(255,255,255,.5),inset 0 -12px 15px rgba(0,0,0,.72),0 12px 16px rgba(0,0,0,.72)!important;transform-origin:50% 8px!important;}
-    .deck-case.treasure-open .case-lid:before{left:12px!important;right:12px!important;top:10px!important;height:48px!important;border:3px solid rgba(255,255,255,.22)!important;;}
-    .deck-case.treasure-open .case-lid:after{content:""!important;position:absolute!important;;;;;border:5px solid #687689!important;border-top:0!important;border-radius:0 0 8px 8px!important;background:linear-gradient(90deg,#a1adbd 0%,#4a586b 12%,#263344 50%,#3d4b5e 88%,#9aa6b6 100%)!important;box-shadow:inset 0 -8px 10px rgba(0,0,0,.5),0 6px 9px rgba(0,0,0,.6)!important;}
-    .deck-case.treasure-open .case-hinge{;;;;background:linear-gradient(180deg,#f2f5f8,#8997a9 48%,#1b2532)!important;box-shadow:0 4px 7px #000!important;}
-    .deck-case.treasure-open .case-lock{;width:40px!important;height:19px!important;border:3px solid #e7edf4!important;background:linear-gradient(180deg,#fff,#aab7c7 50%,#364355)!important;box-shadow:0 5px 9px #000,inset 0 2px 3px #fff!important;}
+    .deck-case.treasure-open .case-lid:before{left:12px!important;right:12px!important;top:10px!important;height:48px!important;border:3px solid rgba(255,255,255,.22)!important;background:linear-gradient(135deg,rgba(255,255,255,.24),transparent 48%,rgba(0,0,0,.4))!important;}
+    .deck-case.treasure-open .case-lid:after{content:""!important;position:absolute!important;left:-6px!important;right:-6px!important;bottom:-39px!important;height:38px!important;border:5px solid #687689!important;border-top:0!important;border-radius:0 0 8px 8px!important;background:linear-gradient(90deg,#a1adbd 0%,#4a586b 12%,#263344 50%,#3d4b5e 88%,#9aa6b6 100%)!important;box-shadow:inset 0 -8px 10px rgba(0,0,0,.5),0 6px 9px rgba(0,0,0,.6)!important;}
+    .deck-case.treasure-open .case-hinge{left:15px!important;right:15px!important;top:1px!important;height:15px!important;background:linear-gradient(180deg,#f2f5f8,#8997a9 48%,#1b2532)!important;box-shadow:0 4px 7px #000!important;}
+    .deck-case.treasure-open .case-lock{top:68px!important;width:40px!important;height:19px!important;border:3px solid #e7edf4!important;background:linear-gradient(180deg,#fff,#aab7c7 50%,#364355)!important;box-shadow:0 5px 9px #000,inset 0 2px 3px #fff!important;}
     /* 文明色は吸収フェーズで保持。開封カットインでは共通の白金色へ切り替える */
     .deck-case.treasure-open .case-spectrum,.deck-case.treasure-open .case-glow{background:radial-gradient(ellipse,#fff 0%,#fff8dc 32%,rgba(255,220,150,.75) 55%,transparent 82%)!important;}
     .deck-case.treasure-open .case-light{top:62%!important;width:210px!important;height:170px!important;background:radial-gradient(ellipse,#fff 0%,#fffef5 26%,#ffe8ad 48%,rgba(255,218,135,.62) 66%,transparent 84%)!important;filter:blur(22px)!important;}
     .deck-case.treasure-open.opening .case-lid{animation:fixedWrapLidOpen 1.35s cubic-bezier(.14,.76,.16,1) both!important;}
-    @keyframes fixedWrapLidOpen{0%{transform:rotateX(0deg) translateZ(0);;;;;filter:brightness(1.7)}}
+    @keyframes fixedWrapLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}14%{transform:rotateX(-12deg) translateZ(3px);filter:brightness(1.2)}42%{transform:rotateX(-68deg) translateZ(10px);filter:brightness(1.55)}72%{transform:rotateX(-126deg) translateZ(17px);filter:brightness(2)}100%{transform:rotateX(-150deg) translateZ(22px);filter:brightness(1.7)}}
     .deck-case.treasure-open.opening .case-light{animation:fixedInteriorFlare 1.8s ease-out .48s both!important;}
-    @keyframes fixedInteriorFlare{0%{opacity:0;;;;transform:translate(-50%,-50%) scale(1.35)}}
+    @keyframes fixedInteriorFlare{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}62%{opacity:1;transform:translate(-50%,-50%) scale(1.5)}100%{opacity:.96;transform:translate(-50%,-50%) scale(1.35)}}
 
     /* 結果表示：カード画像を通常フローに置き、結果名・ボタン・設定と重ねない */
     #cardStage.winner{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:min-content!important;row-gap:0!important;height:auto!important;min-height:0!important;overflow:visible!important;}
@@ -316,7 +317,7 @@
     #cardStage.winner #keyCardImages{position:relative!important;inset:auto!important;grid-column:1!important;grid-row:1!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-flow:row wrap!important;justify-content:center!important;align-items:flex-start!important;gap:10px!important;padding:0!important;margin:0 auto!important;overflow:visible!important;}
     #cardStage.winner #keyCardImages img{position:static!important;display:block!important;flex:0 1 142px!important;width:min(142px,calc((100% - 20px)/2))!important;max-width:100%!important;height:auto!important;max-height:min(220px,28vh)!important;object-fit:contain!important;margin:0!important;transform:none;}
     #result.has-result{display:grid!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;margin:7px auto 0!important;padding:0 5px!important;line-height:1.15!important;overflow:visible!important;}
-    #spinButton{;}
+    #spinButton{margin-top:0!important;}
     .roulette-panel:has(#result.has-result) #spinButton{margin-top:8px!important;}
     #status{margin-top:6px!important;}
     #settings{margin-top:8px!important;}
@@ -333,7 +334,7 @@
     #spinButton{margin-top:0!important;}
     /* 白いフラッシュで開封から当選結果へつなぐ。 */
     #revealFlash{position:fixed;inset:0;z-index:9999;background:#fff;opacity:0;visibility:hidden;pointer-events:none;}
-    #revealFlash.active{visibility:visible;;}
+    #revealFlash.active{visibility:visible;animation:rouletteWhiteout 1.18s cubic-bezier(.16,.72,.18,1) both;}
     @keyframes rouletteWhiteout{0%{opacity:1}18%{opacity:1}100%{opacity:0}}
     #cardStage.reveal-hold{grid-template-rows:auto auto!important;min-height:0!important;height:auto!important;overflow:visible!important;}
     #cardStage.reveal-hold #drawingCard{display:none!important;}
@@ -375,8 +376,8 @@
     .case-lock{border:1px solid #d2ded7!important;background:linear-gradient(180deg,#fff,#e4ece7 58%,#c7d4cc)!important;box-shadow:0 2px 4px rgba(100,118,107,.14),inset 0 1px 2px #fff!important}
     .case-lock:after{background:#a9bbb0!important;box-shadow:0 0 3px #fff!important}
     #drawingCard.mana-absorption.opening-cutin{
-      ;;;
-      ;;
+      background:#fff!important;border:0!important;box-shadow:none!important;
+      border-radius:0!important;overflow:visible!important;
     }
     #drawingCard.opening-cutin{background:#fff!important}
     #drawingCard.opening-cutin .deck-case,
@@ -394,18 +395,18 @@
     .deck-case.treasure-open .case-lid:before{background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(215,230,220,.28))!important}
     /* デッキ名は当選カードの下に独立したタイトルとして表示 */
     #result.has-result{display:flex;flex-direction:column;gap:5px;margin:13px auto 4px;min-height:62px}
-    .result-eyebrow{;;;;}
+    .result-eyebrow{font-size:.68rem;font-weight:900;letter-spacing:.2em;color:#8b7441;text-shadow:none}
     .deck-name-title{
-      display:inline-block;max-width:100%;;
-      ;;;
-      ;;overflow-wrap:anywhere;
-      ;
-      ;;
+      display:inline-block;max-width:100%;padding:7px 18px 9px;
+      color:#27333a;font-size:clamp(1.25rem,4.2vw,1.9rem);font-weight:950;
+      letter-spacing:.055em;line-height:1.25;overflow-wrap:anywhere;
+      background:linear-gradient(180deg,#fff 0%,#f8f6ee 100%);
+      border:1px solid rgba(203,174,103,.76);border-radius:12px;
       box-shadow:0 4px 0 rgba(194,164,94,.18),0 7px 20px rgba(137,117,70,.13),inset 0 1px 0 #fff;
-      ;
+      text-shadow:0 1px 0 #fff,0 0 14px rgba(255,221,135,.38);
     }
     #result.result-reveal .deck-name-title{animation:deckNameImpact .78s cubic-bezier(.16,.88,.2,1) both}
-    @keyframes deckNameImpact{0%{opacity:0;;;;;box-shadow:0 0 0 5px rgba(255,222,145,.3),0 0 36px rgba(255,194,75,.65)}100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}}
+    @keyframes deckNameImpact{0%{opacity:0;transform:translateY(18px) scale(.72);filter:brightness(1.8)}58%{opacity:1;transform:translateY(-3px) scale(1.08);filter:brightness(1.25);box-shadow:0 0 0 5px rgba(255,222,145,.3),0 0 36px rgba(255,194,75,.65)}100%{opacity:1;transform:translateY(0) scale(1);filter:brightness(1)}}
     @media(max-width:480px){
       .deck-case{width:176px!important;height:144px!important}
       #drawingCard.opening-cutin .deck-case,.deck-case.treasure-open{width:218px!important;height:184px!important}
@@ -460,13 +461,20 @@
       animation:caseRaysBlast .86s cubic-bezier(.12,.78,.18,1) both;
     }
     @keyframes caseRaysBlast {
-      0%{opacity:0;;;transform:translateY(-62px) scale(1.42) rotate(5deg)}
+      0%{opacity:0;transform:translateY(28px) scale(.24) rotate(-5deg)}
+      18%{opacity:1}
+      48%{opacity:.96;transform:translateY(-18px) scale(1.08) rotate(2deg)}
+      100%{opacity:.08;transform:translateY(-62px) scale(1.42) rotate(5deg)}
     }
     .deck-case.opening .case-lid {
       animation:milkyLidSnap .72s cubic-bezier(.12,.82,.16,1) both!important;
     }
     @keyframes milkyLidSnap {
-      0%{transform:rotateX(0deg) translateZ(0);;;;;filter:brightness(1.75)}
+      0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
+      12%{transform:rotateX(-10deg) translateZ(2px);filter:brightness(1.3)}
+      38%{transform:rotateX(-72deg) translateZ(10px);filter:brightness(1.8)}
+      68%{transform:rotateX(-132deg) translateZ(18px);filter:brightness(2.5)}
+      100%{transform:rotateX(-148deg) translateZ(22px);filter:brightness(1.75)}
     }
     .deck-case.opening .case-body {
       animation:milkyCaseKick .48s cubic-bezier(.16,.82,.2,1) both!important;
@@ -481,7 +489,10 @@
       animation:milkyCoreBurst .82s cubic-bezier(.12,.78,.18,1) .02s both!important;
     }
     @keyframes milkyCoreBurst {
-      0%{opacity:.12;;;;transform:translate(-50%,-50%) scale(2.65)}
+      0%{opacity:.12;transform:translate(-50%,-50%) scale(.22)}
+      24%{opacity:1;transform:translate(-50%,-50%) scale(1.45)}
+      62%{opacity:.98;transform:translate(-50%,-50%) scale(2.15)}
+      100%{opacity:.35;transform:translate(-50%,-50%) scale(2.65)}
     }
 .deck-case.opening .case-burst {animation:ruptureWave .72s cubic-bezier(.12,.72,.18,1) both}
     #revealFlash.active {animation:rouletteWhiteout .78s cubic-bezier(.16,.72,.18,1) both!important}
@@ -526,7 +537,9 @@
       pointer-events:none;
     }
     @keyframes resultShockwave {
-      0%{opacity:0;;transform:translate(-50%,-50%) scale(1.12)}
+      0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}
+      18%{opacity:1}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(1.12)}
     }
     .result-eyebrow {
       display:inline-flex;
@@ -576,7 +589,9 @@
       box-shadow:0 0 0 1px rgba(210,163,69,.55),0 8px 26px rgba(190,143,51,.22),inset 0 1px 0 #fff;
     }
     @keyframes deckTitleShine {
-      0%{background-position:100% 0;;;;;transform:translateY(0) scale(1);opacity:1}
+      0%{background-position:100% 0;transform:translateY(18px) scale(.72);opacity:0}
+      58%{background-position:20% 0;transform:translateY(-3px) scale(1.1);opacity:1}
+      100%{background-position:0 0;transform:translateY(0) scale(1);opacity:1}
     }
     @media(prefers-reduced-motion:reduce) {
       .case-rays,.deck-case.opening .case-lid,.deck-case.opening .case-body,
@@ -696,7 +711,7 @@
       box-shadow:0 1px 3px rgba(100,118,107,.10)!important;
     }
     .deck-case .case-lock {top:50px!important}
-    .deck-case.treasure-open .case-lock {}
+    .deck-case.treasure-open .case-lock {top:50px!important}
     @media(max-width:480px) {
       .deck-case,
       #drawingCard.opening-cutin .deck-case,
@@ -769,18 +784,18 @@
     .deck-case.treasure-open .case-lock {top:50px!important}
     .deck-case .case-body,
     .deck-case.treasure-open .case-body {
-      ;
-      ;
-      ;
-      ;
-      ;
+      border:2px solid rgba(215,225,219,.96)!important;
+      border-top:0!important;
+      background:linear-gradient(90deg,#fff 0%,rgba(235,242,237,.96) 16%,rgba(250,252,250,.98) 50%,rgba(232,240,234,.96) 84%,#fff 100%)!important;
+      box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 -4px 8px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
+      overflow:hidden!important;
     }
     .deck-case .case-body:after,
     .deck-case.treasure-open .case-body:after {
-      ;
+      border:1px solid rgba(255,255,255,.98)!important;
       border-bottom-color:rgba(205,218,209,.72)!important;
-      ;
-      ;
+      background:linear-gradient(180deg,#fff,#edf3ef)!important;
+      box-shadow:0 1px 2px rgba(100,120,108,.06)!important;
     }
     /* 開封時の疑似要素は暗い旧背景を使わず、白い光だけを重ねる。 */
     .deck-case.opening .case-body:after {
@@ -812,19 +827,19 @@
     }
     .deck-case .case-spectrum,
     .deck-case.treasure-open .case-spectrum {
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
+      left:50%!important;
+      right:auto!important;
+      top:50%!important;
+      bottom:auto!important;
+      width:108px!important;
+      height:auto!important;
+      aspect-ratio:5 / 7!important;
+      transform:translate(-50%,-50%) scale(.82)!important;
+      border-radius:3px!important;
+      mix-blend-mode:screen!important;
     }
     .deck-case.civ-charging .case-spectrum {
-      ;
+      transform:translate(-50%,-50%) scale(1)!important;
     }
     .deck-case .case-glow,
     .deck-case.treasure-open .case-glow {
@@ -843,38 +858,38 @@
     }
     .deck-case .case-lid-inner,
     .deck-case.treasure-open .case-lid-inner {
-      ;
-      ;
-      ;
-      ;
+      border:1px solid rgba(255,255,255,.98)!important;
+      background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(237,244,239,.92))!important;
+      box-shadow:inset 0 0 5px rgba(255,255,255,.96)!important;
+      transform:translateZ(-1px)!important;
     }
     .deck-case .case-lid:before,
     .deck-case.treasure-open .case-lid:before {
-      ;
-      ;
-      ;
+      border-color:rgba(255,255,255,.96)!important;
+      background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(225,236,228,.12) 55%,rgba(190,207,195,.08))!important;
+      box-shadow:inset 0 0 5px rgba(255,255,255,.82)!important;
     }
     .deck-case .case-lid:after,
     .deck-case.treasure-open .case-lid:after {
-      ;
-      ;
-      ;
+      border:1px solid rgba(210,222,214,.96)!important;
+      background:linear-gradient(90deg,#fff,rgba(235,242,237,.98) 50%,#fff)!important;
+      box-shadow:0 2px 3px rgba(100,118,107,.06)!important;
     }
     .deck-case .case-hinge,
     .deck-case.treasure-open .case-hinge {
-      ;
-      ;
+      background:linear-gradient(180deg,#fff,#e9f0eb 55%,#d6e2da)!important;
+      box-shadow:0 1px 2px rgba(100,118,107,.06)!important;
     }
     .deck-case .case-lock,
     .deck-case.treasure-open .case-lock {
       border-color:#dce7df!important;
-      ;
-      ;
+      background:linear-gradient(180deg,#fff,#edf3ef 58%,#dce7df)!important;
+      box-shadow:0 1px 3px rgba(100,118,107,.08),inset 0 1px 2px #fff!important;
     }
     .deck-case .case-lock:after,
     .deck-case.treasure-open .case-lock:after {
-      ;
-      ;
+      background:#c5d4ca!important;
+      box-shadow:none!important;
     }
     .deck-case.civ-charging .case-body,
     .deck-case.pressure .case-body,
