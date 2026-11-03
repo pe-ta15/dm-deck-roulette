@@ -4024,7 +4024,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     function updateSpinButtonState() {
-      if (isSpinning) return;
+      if (isSpinning) {
+        spinButton.textContent = "抽選中…";
+        spinButton.disabled = true;
+        return;
+      }
       if (isDeckLoading) {
         spinButton.textContent = "デッキを読み込み中…";
         spinButton.disabled = true;
@@ -4598,6 +4602,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       if (isSpinning || decks.length === 0) return;
 
       isSpinning = true;
+      updateSpinButtonState();
       activeDrawStartedAt = performance.now();
       traceDrawTiming("spin start");
       document.body.classList.add("is-spinning");
