@@ -3883,7 +3883,47 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }
     }
 
-  </style>
+  
+/* Lid glow follows the same charge, pressure and eruption timing as the case core. */
+.deck-case .case-lid-inner,
+.deck-case .case-lid-underside,
+.deck-case .case-lid-front{position:relative}
+.deck-case .case-lid-inner:after,
+.deck-case .case-lid-underside:after,
+.deck-case .case-lid-front:after{
+  content:""!important;position:absolute!important;z-index:20!important;
+  left:50%!important;top:50%!important;width:100%!important;height:100%!important;
+  inset:auto!important;border-radius:inherit!important;
+  background:var(--case-civ-gradient,linear-gradient(90deg,#e53935,#168bd2,#299b45,#f2c600,#743c9b))!important;
+  mix-blend-mode:normal!important;filter:blur(5px) saturate(1.25)!important;
+  opacity:0!important;transform:translate(-50%,-50%) scale(1)!important;
+  pointer-events:none!important;
+}
+.deck-case.civ-charging .case-lid-inner:after,
+.deck-case.civ-charging .case-lid-underside:after,
+.deck-case.civ-charging .case-lid-front:after{
+  opacity:.48!important;animation:coloredCoreCharge 1.35s ease-out both!important;
+}
+.deck-case.pressure .case-lid-inner:after,
+.deck-case.pressure .case-lid-underside:after,
+.deck-case.pressure .case-lid-front:after{
+  opacity:.72!important;animation:coloredCorePulse .2s ease-in-out infinite alternate!important;
+}
+.deck-case.overloaded .case-lid-inner:after,
+.deck-case.overloaded .case-lid-underside:after,
+.deck-case.overloaded .case-lid-front:after,
+.deck-case.critical .case-lid-inner:after,
+.deck-case.critical .case-lid-underside:after,
+.deck-case.critical .case-lid-front:after{
+  opacity:.88!important;animation:coloredCoreCritical .24s ease-in-out infinite alternate!important;
+}
+.deck-case.mouth-eruption .case-lid-inner:after,
+.deck-case.mouth-eruption .case-lid-underside:after,
+.deck-case.mouth-eruption .case-lid-front:after{
+  opacity:1!important;animation:mouthCoreFlare .9s ease-out both!important;
+}
+
+</style>
 </head>
 <body>
   <main>
