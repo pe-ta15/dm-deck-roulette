@@ -93,15 +93,34 @@ if HTML.count('id="deckCase"') != 1:
 
 if JS:
     order = [
-        "const drawResult = requestDraw()",
+        "const selectedDeck = await requestDraw()",
+        "const presentation = drawPresentation()",
+        "applyPresentation(presentation)",
         "await playManaSequence()",
         "await playCaseOpeningSequence()",
-        "const outcome = await drawResult",
         "await showKeyCards(deck)",
     ]
     positions = [JS.find(token) for token in order]
     if any(position < 0 for position in positions) or positions != sorted(positions):
         fail("Draw request / animation / result handoff order has changed")
+    # The presentation lottery must be independent, exhaustive, and use the agreed weights.
+    expected_weights = {
+        "normal": 7200,
+        "premium": 1800,
+        "anomaly": 700,
+        "special": 250,
+        "ultimate": 50,
+    }
+    for presentation, weight in expected_weights.items():
+        pattern = rf'\{{\s*id:\s*"{presentation}"\s*,\s*className:\s*"presentation-[\w-]+"\s*,\s*weight:\s*{weight}\s*\}}'
+        if not re.search(pattern, JS):
+            fail(f"Missing or incorrect presentation weight: {presentation}={weight}")
+    if "PRESENTATION_TOTAL_WEIGHT = 10000" not in JS:
+        fail("Presentation weights must use a 10,000-ticket scale")
+    presentation_fn = JS[JS.find("function drawPresentation()"):JS.find("function applyPresentation(")]
+    if "recentDrawnDeckIds" in presentation_fn:
+        fail("Presentation lottery must not depend on recent deck results")
+
     if JS.count('deckCase.style.opacity = "0"') != 1:
         fail("Case fade-out must have one controlled entry point")
     show_start = JS.find("async function showKeyCards(deck)")
