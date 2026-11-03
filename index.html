@@ -4191,8 +4191,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       // 五文明は正円で周回。アイコン半径＋12pxの安全余白を四辺に確保する。
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
       const orbitRadius = Math.max(0, Math.min(drawingCard.clientWidth, drawingCard.clientHeight) / 2 - iconRadius - 12);
-      const orbitRadiusX = orbitRadius;
-      const orbitRadiusY = orbitRadius;
       const duration = 2850;
       const turns = 2.35;
       const colors = ["#ff5948", "#fff0a0", "#65e982", "#64d8ff", "#d5a0ff"];
@@ -4214,11 +4212,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const easedTurn = turns * (initialTurnRate * t + (1 - initialTurnRate) * t * t);
         const angle = startAngle + Math.PI * 2 * easedTurn;
         // 未定義の radius を参照せず、画面サイズから算出した楕円軌道を使う。
-        // 吸収が進むほどX/Yそれぞれの半径を縮め、アイコンを中央へ集める。
+        // 吸収が進むほど円軌道の半径を縮め、アイコンを中央へ集める。
         const convergence = Math.pow(1 - t, 0.88);
         return {
-          x: rect.width / 2 + Math.cos(angle) * orbitRadiusX * convergence,
-          y: rect.height / 2 + Math.sin(angle) * orbitRadiusY * convergence
+          x: rect.width / 2 + Math.cos(angle) * orbitRadius * convergence,
+          y: rect.height / 2 + Math.sin(angle) * orbitRadius * convergence
         };
       };
 
