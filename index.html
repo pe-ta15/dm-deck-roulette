@@ -597,11 +597,30 @@
           0 0 22px color-mix(in srgb,var(--case-civ-glow) 55%,transparent)!important;
         filter:brightness(1.12) saturate(1.25)
       }
-      /* 本体内部光と蓋裏面は、同じ透明度パルスを共有して発光の山谷を同期させる。 */
+      /* 蓋裏面にも本体と同じ文明色の発光層を設け、光そのものを同期して明滅させる。 */
+      .deck-case .case-lid-inner:after{
+        content:"";
+        position:absolute;
+        z-index:1;
+        inset:0;
+        border-radius:4px;
+        background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef));
+        mix-blend-mode:screen;
+        filter:blur(5px);
+        opacity:0;
+        pointer-events:none
+      }
+      .deck-case.civ-charging .case-lid-inner:after{
+        opacity:.82
+      }
+      .deck-case.pressure .case-lid-inner:after,
+      .deck-case.opening .case-lid-inner:after{
+        opacity:1;
+        animation:caseEnergyPulse .42s ease-in-out infinite alternate
+      }
+      /* 本体の発光層と蓋裏面の発光層に同じ明滅周期を適用する。 */
       .deck-case.pressure .case-glow,
-      .deck-case.opening .case-glow,
-      .deck-case.pressure .case-lid-inner,
-      .deck-case.opening .case-lid-inner{
+      .deck-case.opening .case-glow{
         animation:caseEnergyPulse .42s ease-in-out infinite alternate
       }
       @keyframes caseEnergyPulse{
