@@ -11,8 +11,8 @@ errors = []
 def fail(message):
     errors.append(message)
 
-styles = re.findall(r"<style\\b[^>]*>(.*?)</style\\s*>", HTML, re.I | re.S)
-scripts = re.findall(r"<script\\b[^>]*>(.*?)</script\\s*>", HTML, re.I | re.S)
+styles = re.findall(r"<style\b[^>]*>(.*?)</style\s*>", HTML, re.I | re.S)
+scripts = re.findall(r"<script\b[^>]*>(.*?)</script\s*>", HTML, re.I | re.S)
 if len(styles) != 1:
     fail(f"Expected one style block, found {len(styles)}")
 if len(scripts) != 1:
@@ -92,7 +92,7 @@ if JS:
         fail("Case fade-out must occur only after the draw result is available")
 
 # Duplicate keyframe names can silently replace earlier animation definitions.
-keyframes = re.findall(r"@(?:-webkit-)?keyframes\\s+([\\w-]+)", CSS)
+keyframes = re.findall(r"@(?:-webkit-)?keyframes\s+([\w-]+)", CSS)
 duplicates = sorted({name for name in keyframes if keyframes.count(name) > 1})
 if duplicates:
     fail("Duplicate keyframe definitions: " + ", ".join(duplicates))
