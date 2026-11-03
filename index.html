@@ -1491,23 +1491,15 @@
     }
 
 
-    .deck-case.pressure {animation:caseShellRattle .13s linear infinite!important}
+    
 
-    .deck-case.overloaded {animation:caseShellSwelling .2s ease-in-out 2!important}
+    
 
     .deck-case.pressure .case-body {animation:casePressure .13s ease-in-out infinite alternate!important}
 
-    @keyframes caseShellRattle {
-      0%,100%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(0)}
-      25%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(-2px)}
-      75%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(2px)}
-    }
+    
 
-    @keyframes caseShellSwelling {
-      0%,100%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1)}
-      45%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.055,1.035)}
-      72%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(.985,.99)}
-    }
+    
 
     
 
@@ -1683,11 +1675,11 @@
 
 
     /* Pressure is readable in silhouette: shake, bulge, hold, then snap back. */
-    .deck-case.pressure {animation:casePressureShake .11s linear infinite!important}
+    
 
-    .deck-case.overloaded {animation:caseShellInflate .48s cubic-bezier(.25,.78,.2,1) 1 both!important}
+    
 
-    .deck-case.critical {animation:caseCriticalSnap .42s cubic-bezier(.16,.82,.18,1) 1 both!important}
+    
 
     .deck-case.pressure .case-body {animation:caseBodyPressure .16s ease-in-out infinite alternate!important}
 
@@ -1699,25 +1691,11 @@
 
     .deck-case.overloaded .case-lock {animation:caseLatchStrain .48s ease-in-out both!important}
 
-    @keyframes casePressureShake {
-      0%,100%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(0) rotateZ(0)}
-      25%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(-3px) rotateZ(-.7deg)}
-      75%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) translateX(3px) rotateZ(.7deg)}
-    }
+    
 
-    @keyframes caseShellInflate {
-      0%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1)}
-      38%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.085,1.055)}
-      72%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.065,1.045)}
-      100%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.015,1.01)}
-    }
+    
 
-    @keyframes caseCriticalSnap {
-      0%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.015,1.01)}
-      28%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.105,1.075)}
-      62%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(.965,.98)}
-      100%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1)}
-    }
+    
 
     @keyframes caseBodyPressure {
       from{transform:translateY(0) scale(1)}
