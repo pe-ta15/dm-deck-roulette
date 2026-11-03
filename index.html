@@ -3850,62 +3850,23 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
   
-/* Lid glow follows the same charge, pressure and eruption timing as the case core. */
-.deck-case .case-lid-inner:after,
-.deck-case .case-lid-underside:after,
-.deck-case .case-lid-front:after{
-  content:""!important;position:absolute!important;z-index:20!important;
-  left:50%!important;top:50%!important;width:100%!important;height:100%!important;
-  border-radius:inherit!important;
-  background:var(--case-civ-gradient,linear-gradient(90deg,#e53935,#168bd2,#299b45,#f2c600,#743c9b))!important;
-  mix-blend-mode:normal!important;filter:blur(5px) saturate(1.25)!important;
-  opacity:0!important;transform:translate(-50%,-50%) scale(1);
-  pointer-events:none!important;
+/* 蓋の発光は本体と同じ文明色を弱く反射させ、面全体を染める強い色面は作らない。 */
+.deck-case.civ-charging .case-lid,
+.deck-case.pressure .case-lid,
+.deck-case.overloaded .case-lid,
+.deck-case.critical .case-lid{
+  filter:brightness(1.035) saturate(1.025)!important;
+  box-shadow:inset 0 3px 8px rgba(255,255,255,.88),
+    inset 0 -5px 8px rgba(91,119,97,.16),
+    0 0 7px var(--case-civ-glow,rgba(255,255,255,.22)),
+    0 5px 9px rgba(49,70,55,.14)!important;
 }
-.deck-case.civ-charging .case-lid-inner:after,
-.deck-case.civ-charging .case-lid-underside:after,
-.deck-case.civ-charging .case-lid-front:after{
-  opacity:.48!important;animation:coloredCoreCharge 1.35s ease-out both!important;
+.deck-case.pressure .case-lid{
+  filter:brightness(1.045) saturate(1.03)!important;
 }
-.deck-case.pressure .case-lid-inner:after,
-.deck-case.pressure .case-lid-underside:after,
-.deck-case.pressure .case-lid-front:after{
-  opacity:.72!important;animation:coloredCorePulse .2s ease-in-out infinite alternate!important;
-}
-.deck-case.overloaded .case-lid-inner:after,
-.deck-case.overloaded .case-lid-underside:after,
-.deck-case.overloaded .case-lid-front:after,
-.deck-case.critical .case-lid-inner:after,
-.deck-case.critical .case-lid-underside:after,
-.deck-case.critical .case-lid-front:after{
-  opacity:.88!important;animation:coloredCoreCritical .24s ease-in-out infinite alternate!important;
-}
-.deck-case.mouth-eruption .case-lid-inner:after,
-.deck-case.mouth-eruption .case-lid-underside:after,
-.deck-case.mouth-eruption .case-lid-front:after{
-  opacity:1!important;animation:mouthCoreFlare .9s ease-out both!important;
-}
-
-
-@media(prefers-reduced-motion:reduce){
-  .deck-case.civ-charging .case-lid-inner:after,
-  .deck-case.civ-charging .case-lid-underside:after,
-  .deck-case.civ-charging .case-lid-front:after,
-  .deck-case.pressure .case-lid-inner:after,
-  .deck-case.pressure .case-lid-underside:after,
-  .deck-case.pressure .case-lid-front:after,
-  .deck-case.overloaded .case-lid-inner:after,
-  .deck-case.overloaded .case-lid-underside:after,
-  .deck-case.overloaded .case-lid-front:after,
-  .deck-case.critical .case-lid-inner:after,
-  .deck-case.critical .case-lid-underside:after,
-  .deck-case.critical .case-lid-front:after,
-  .deck-case.mouth-eruption .case-lid-inner:after,
-  .deck-case.mouth-eruption .case-lid-underside:after,
-  .deck-case.mouth-eruption .case-lid-front:after{
-    animation-duration:.01ms!important;
-    animation-iteration-count:1!important;
-  }
+.deck-case.overloaded .case-lid,
+.deck-case.critical .case-lid{
+  filter:brightness(1.06) saturate(1.035)!important;
 }
 
 </style>
@@ -4359,7 +4320,17 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         {at:.72, values:[-5,1.055,1.055]},
         {at:1, values:[0,1,1]}
       ];
-      const pulse = () => animateTransform(body, pulseFrames, 520, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeInOut);
+      const lidPulseFrames = [
+        {at:0, values:[0,1,1]},
+        {at:.22, values:[-1,1.015,1.02]},
+        {at:.48, values:[1,.995,1.01]},
+        {at:.72, values:[-2,1.035,1.035]},
+        {at:1, values:[0,1,1]}
+      ];
+      const pulse = () => Promise.all([
+        animateTransform(body, pulseFrames, 520, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeInOut),
+        animateTransform(lid, lidPulseFrames, 520, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+") rotateX(0deg)", easeInOut)
+      ]);
       await pulse();
       traceDrawTiming("first pressure pulse complete");
       deckCase.classList.add("overloaded");
@@ -4367,13 +4338,22 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       traceDrawTiming("second pressure pulse complete");
       deckCase.classList.add("critical");
       // Magnetic closure releases without a mechanical clasp animation.
-      await animateTransform(body, [
-        {at:0,values:[0,1,1]},
-        {at:.32,values:[7,.94,1.08]},
-        {at:.58,values:[-7,1.075,.94]},
-        {at:.78,values:[2,.98,1.02]},
-        {at:1,values:[0,1,1]}
-      ], 420, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeOutCubic);
+      await Promise.all([
+        animateTransform(body, [
+          {at:0,values:[0,1,1]},
+          {at:.32,values:[7,.94,1.08]},
+          {at:.58,values:[-7,1.075,.94]},
+          {at:.78,values:[2,.98,1.02]},
+          {at:1,values:[0,1,1]}
+        ], 420, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeOutCubic),
+        animateTransform(lid, [
+          {at:0,values:[0,1,1]},
+          {at:.32,values:[3,.97,1.04]},
+          {at:.58,values:[-3,1.04,.97]},
+          {at:.78,values:[1,.99,1.02]},
+          {at:1,values:[0,1,1]}
+        ], 420, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+") rotateX(0deg)", easeOutCubic)
+      ]);
 
       traceDrawTiming("case body recoil complete");
       deckCase.classList.remove("pressure", "overloaded", "critical");
