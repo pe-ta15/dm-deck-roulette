@@ -4668,13 +4668,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           if (civ === "zero") return;
           const item = civilizationIcons[civ];
           if (!item) return;
-          if (!item.src) {
-            const label = document.createElement("span");
-            label.className = "civilization-text";
-            label.textContent = item.label;
-            resultCivs.appendChild(label);
-            return;
-          }
           const icon = document.createElement("img");
           icon.className = "civilization-icon";
           icon.src = item.src;
