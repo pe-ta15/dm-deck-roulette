@@ -137,14 +137,12 @@
 
     
 
-    .deck-case.opening .case-light{animation:caseLightPeak .5s cubic-bezier(.12,.8,.2,1) both}
 
     @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(6px) scale(1.25);filter:brightness(2.5)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.4)}}
 
     @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.58;transform:translate(-50%,-50%) scale(1)}}
 
-    @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.3)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
-
+    
     @keyframes corePulse{from{transform:translate(-50%,-50%) scale(.75);opacity:.55}to{transform:translate(-50%,-50%) scale(1.35);opacity:1}}
 
     @keyframes coreOverload{from{opacity:.62;filter:blur(8px)}to{opacity:1;filter:blur(3px)}}
@@ -328,7 +326,6 @@
 
     .deck-case.opening .case-body{animation:caseBodyRecoil .62s cubic-bezier(.16,.82,.22,1) both}
 
-    .deck-case.opening .case-light{animation:caseLightPeak .85s cubic-bezier(.12,.8,.2,1) both}
 
     .deck-case.opening .case-burst{animation:ruptureWave .9s cubic-bezier(.12,.72,.18,1) both}
 
@@ -659,16 +656,9 @@
     }
 
     .deck-case.opening .case-light {
-      animation:milkyCoreBurst .82s cubic-bezier(.12,.78,.18,1) .02s both!important;
     }
 
-    @keyframes milkyCoreBurst {
-      0%{opacity:.12;transform:translate(-50%,-50%) scale(.22)}
-      24%{opacity:1;transform:translate(-50%,-50%) scale(1.45)}
-      62%{opacity:.98;transform:translate(-50%,-50%) scale(2.15)}
-      100%{opacity:.35;transform:translate(-50%,-50%) scale(2.65)}
-    }
-
+    
     .deck-case.opening .case-cavity {
       animation:milkyCavityFlash .78s ease-out both!important;
     }
@@ -826,10 +816,8 @@
 
     @keyframes verticalCaseKick{0%{transform:translateY(0) scale(1)}24%{transform:translateY(6px) scale(.97,1.025)}56%{transform:translateY(-4px) scale(1.02,.99)}100%{transform:translateY(0) scale(1)}}
 
-    .deck-case.opening .case-light{animation:verticalCoreSurge 1.08s cubic-bezier(.12,.78,.18,1) both!important}
 
-    @keyframes verticalCoreSurge{0%{opacity:.08;transform:translate(-50%,-50%) scale(.12)}22%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}52%{opacity:1;transform:translate(-50%,-50%) scale(2.25)}100%{opacity:.48;transform:translate(-50%,-50%) scale(2.8)}}
-
+    
     .deck-case.opening .case-cavity{animation:verticalCavityFlash .95s ease-out both!important}
 
     @keyframes verticalCavityFlash{0%{background:linear-gradient(180deg,rgba(185,201,191,.38),rgba(232,240,235,.55) 65%,rgba(176,194,182,.44));box-shadow:inset 0 0 12px #fff}38%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf4 36%,#ffe8aa 70%,#fff 100%);box-shadow:inset 0 0 42px #fff,inset 0 0 78px #ffe6a0,0 0 40px rgba(255,220,145,.9)}100%{background:radial-gradient(ellipse at 50% 45%,#fff 0%,#fffdf4 42%,#fff0c6 76%,#fff 100%);box-shadow:inset 0 0 48px #fff,inset 0 0 88px #ffe6a0,0 0 46px rgba(255,220,145,.88)}}{position:absolute;z-index:18;left:0;right:0;top:-8%;margin:auto;width:max-content;max-width:92%;padding:7px 18px;border:1px solid rgba(205,164,79,.55);border-radius:999px;background:rgba(255,252,241,.94);color:#79551c;font-size:clamp(11px,2.5vw,14px);font-weight:950;letter-spacing:.28em;box-shadow:0 4px 18px rgba(162,128,61,.12);opacity:0;transform:translateY(10px) scale(.88);pointer-events:none}{animation:cutinCaption .7s cubic-bezier(.16,.86,.2,1) .12s both}
@@ -1162,15 +1150,8 @@
 
 
     
-    .deck-case.opening .case-light{animation:daisoInteriorFlash 1.35s ease-out .25s both!important}
 
-    @keyframes daisoInteriorFlash {
-      0%{opacity:.08;transform:translate(-50%,-50%) scale(.12)}
-      30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
-      66%{opacity:.95;transform:translate(-50%,-50%) scale(1.65)}
-      100%{opacity:.48;transform:translate(-50%,-50%) scale(1.9)}
-    }
-
+    
     .deck-case.opening .case-cavity {
       animation:daisoMouthInterior 1.2s ease-out .18s both!important;
     }
