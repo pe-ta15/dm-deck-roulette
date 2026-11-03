@@ -23,7 +23,7 @@
     .hidden{display:none!important}
     #result{;z-index:12;;;;;place-items:center;;font-size:clamp(1.35rem,4.6vw,2rem);font-weight:900;;}
     #result:empty{display:none}
-    #result.has-result{;}
+    
     .result-reveal{animation:resultReveal .75s ease-out both}
     @keyframes resultReveal{0%{opacity:0;transform:scale(.65);text-shadow:0 0 0 transparent}55%{opacity:1;transform:scale(1.12);text-shadow:0 0 12px #fff0b2,0 0 32px #ffcf57,0 0 58px #f99c28}100%{opacity:1;transform:scale(1);text-shadow:0 0 18px rgb(255 205 92 / 40%)}}
     .roulette-panel{padding:12px 18px 14px;margin-bottom:16px}.card-stage{position:relative;width:100%;max-width:620px;min-height:0;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:208px auto;row-gap:0;justify-items:center;align-items:start;isolation:isolate;overflow:visible}
@@ -78,10 +78,10 @@
     .deck-case.pressure .case-light{opacity:.9;animation:corePulse .32s ease-in-out infinite alternate}
     .deck-case.pressure .case-lock{animation:lockStrain .22s ease-in-out infinite alternate}
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
-    .deck-case.opening .case-lid{}
-    .deck-case.opening .case-body{}
+    
+    
     .deck-case.opening .case-body:after{content:"";position:absolute;z-index:5;inset:4px;;opacity:0;pointer-events:none;animation:caseCoreFlash .5s ease-out both}
-    .deck-case.opening .case-light{}
+    
     @keyframes magnetRelease{0%{transform:translateX(-50%) translateY(0) scale(1)}45%{transform:translateX(-50%) translateY(6px) scale(1.25);filter:brightness(2.5)}100%{transform:translateX(-50%) translateY(2px);filter:brightness(1.4)}}
     @keyframes caseLightIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}100%{opacity:.58;transform:translate(-50%,-50%) scale(1)}}
     @keyframes caseLightPeak{0%{opacity:.25;transform:translate(-50%,-50%) scale(.3)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
@@ -97,7 +97,7 @@
     .case-burst{position:absolute;z-index:7;left:50%;top:48%;width:34px;height:34px;border:4px solid #fff;border-radius:50%;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 12px 5px #fff,0 0 28px 12px var(--case-civ-glow,#fff),inset 0 0 14px #fff}
     .case-burst:before,.case-burst:after{content:"";position:absolute;inset:-15px;border:2px solid var(--case-civ-glow,#fff);border-radius:50%;box-shadow:0 0 18px var(--case-civ-glow,#fff)}
     .case-burst:after{inset:-29px;border-width:1px;border-color:rgb(255 255 255 / 90%)}
-    .deck-case.opening .case-burst{}
+    
     @keyframes ruptureWave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}12%{opacity:1}38%{opacity:1;transform:translate(-50%,-50%) scale(3.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(8)}}
     /* ケースの口からカードが飛び出し、手前で回転して正面を向く */
     #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
@@ -114,7 +114,7 @@
     .mana-orb.water{filter:drop-shadow(0 0 5px #8be4ff) drop-shadow(0 0 15px #168bd2) drop-shadow(0 0 26px rgb(22 139 210 / 55%))}
     .mana-orb.darkness{filter:drop-shadow(0 0 5px #d49aff) drop-shadow(0 0 15px #743c9b) drop-shadow(0 0 26px rgb(116 60 155 / 60%))}
     .mana-absorption.charging .drawing-card{animation:cardCharge .72s ease-in-out infinite alternate}
-    .mana-absorption.charging .drawing-card:before{}
+    
     @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1) saturate(1)}to{transform:translate(-50%,-50%) scale(1.065);filter:brightness(1.38) saturate(1.25)}}
     .mana-absorption.absorbing:after{content:"";position:absolute;z-index:5;left:50%;top:50%;width:240px;height:240px;border-radius:50%;border:3px solid rgb(255 255 255 / 85%);box-shadow:0 0 25px #fff,0 0 55px #e9c85c,0 0 85px #8e8cff;pointer-events:none;animation:finalShockwave .72s cubic-bezier(.12,.7,.2,1) both}
     @keyframes finalShockwave{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}22%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
@@ -145,7 +145,7 @@
     .deck-list li{padding:12px 14px;border:1px solid #e1e4eb;border-radius:10px;background:#f8f9fb;overflow-wrap:anywhere}
     .deck-list li.excluded{opacity:.48}
     .small-note{color:var(--muted);font-size:.85rem;}
-    @media(max-width:480px){body{padding:12px 10px 24px}.panel{padding:12px 10px}.roulette-panel{;margin-bottom:12px}.card-stage{min-height:0;grid-template-rows:194px auto}.mana-absorption{height:194px}.deck-case{}.mana-orb{;;}#keyCardImages{}#keyCardImages img{}#result.has-result{;}}
+    @media(max-width:480px){body{padding:12px 10px 24px}.panel{padding:12px 10px}.roulette-panel{;margin-bottom:12px}.card-stage{min-height:0;grid-template-rows:194px auto}.mana-absorption{height:194px}}
     /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
     .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
     @keyframes revealPending{
@@ -165,7 +165,7 @@
     #cardStage{width:100%;max-width:620px;min-height:0;margin:0 auto;grid-template-rows:214px auto;row-gap:0;overflow:visible}
     #drawingCard.mana-absorption{;;width:100%;;}
     #result{;;;;;;align-self:center}
-    #result.has-result{;;;;;}
+    
     #result.result-reveal{margin:0!important;}
     #spinButton{margin:8px auto 0;flex:0 0 auto}
     #status{min-height:0;margin:7px 0 0;line-height:1.25}
@@ -186,18 +186,18 @@
     .case-hinge{z-index:10;left:12px;right:12px;top:0;height:12px;border-radius:7px;;}
     .case-lock{z-index:12;top:48px;width:34px;height:16px;;border-radius:4px;;}
     .case-light{z-index:6;top:61%;width:128px;height:112px;filter:blur(15px)}
-    .deck-case.opening .case-lid{}
+    
     @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}12%{transform:rotateX(-9deg) translateZ(2px);filter:brightness(1.12)}38%{transform:rotateX(-62deg) translateZ(8px);filter:brightness(1.45)}70%{transform:rotateX(-132deg) translateZ(15px);filter:brightness(1.9)}88%{transform:rotateX(-158deg) translateZ(18px);filter:brightness(1.65)}100%{transform:rotateX(-164deg) translateZ(19px);filter:brightness(1.5)}}
-    .deck-case.opening .case-body{}
-    .deck-case.opening .case-light{}
-    .deck-case.opening .case-burst{}
+    
+    
+    
     .card-stage.winner:before{width:290px;height:230px;background:radial-gradient(ellipse,rgba(255,255,235,.98) 0%,rgba(255,220,135,.72) 18%,rgba(255,177,66,.24) 48%,transparent 74%)}
     #result.has-result{font-size:clamp(1.25rem,4.2vw,1.85rem);text-shadow:0 2px 0 rgba(255,255,255,.8),0 0 18px rgba(255,204,92,.48)}
     .small-note{margin:0;line-height:1.4}
     @media(max-width:480px){
       .roulette-panel{padding:7px 8px 9px}
-      #cardStage{}
-      #drawingCard.mana-absorption{;}
+      
+      
       .deck-case{;;transform:translate(-50%,-50%) perspective(900px) rotateX(7deg) rotateY(-8deg) scale(.94)}
       #keyCardImages{padding:0}
       #result.has-result{min-height:0!important;margin:0!important;padding:0!important}
@@ -208,17 +208,17 @@
     /* 当選後はケースの演出枠を完全に畳み、画像はパネル幅内に収める */
     #cardStage{width:100%;max-width:620px;min-width:0;overflow:hidden;}
     #cardStage.winner{display:grid;grid-template-rows:0 min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;overflow:visible;}
-    #cardStage.winner #drawingCard{;;;;;}
+    
     #cardStage.winner #keyCardImages{;;;;align-self:start;;;;}
     #keyCardImages{padding:0!important;margin:0 auto!important;min-height:0!important;width:100%;max-width:100%;display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap;gap:8px;overflow:hidden;}
-    #keyCardImages img{;;;;;;;;}
-    #result{;;;;;;;;;}
-    #result.has-result{;;;;;;}
-    #result.result-reveal{;;;}
+    
+    
+    
+    
     #spinButton{max-width:100%;}
     @media(max-width:480px){
-      #keyCardImages img{;;}
-      #cardStage.winner{;}
+      
+      
     }
 
 
@@ -230,15 +230,15 @@
     #drawingCard.mana-absorption.treasure-scene .drawing-card{opacity:0!important;visibility:hidden!important;}
     #drawingCard.mana-absorption.treasure-scene .deck-case,
     .deck-case.treasure-open{top:52%;transform:translate(-50%,-50%) perspective(980px) rotateX(25deg) rotateY(-5deg) scale(1.24)!important;filter:drop-shadow(0 22px 24px rgba(0,0,0,.68));}
-    .deck-case.treasure-open .case-body{;;}
+    
 
     .deck-case.treasure-open .case-spectrum,.deck-case.treasure-open .case-glow{background:radial-gradient(ellipse,#fff 0%,#fff8dc 35%,rgba(255,219,145,.62) 58%,transparent 82%)!important;mix-blend-mode:screen;}
     .deck-case.treasure-open .case-light{--case-civ-glow:#fff0c4;}
     .deck-case.treasure-open .case-lid{transform-origin:50% 0%;}
-    .deck-case.treasure-open.opening .case-lid{;}
+    
     @keyframes treasureLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}16%{transform:rotateX(-10deg) translateZ(3px);filter:brightness(1.25)}48%{transform:rotateX(-78deg) translateZ(10px);filter:brightness(1.7)}78%{transform:rotateX(-138deg) translateZ(17px);filter:brightness(2)}100%{transform:rotateX(-154deg) translateZ(20px);filter:brightness(1.7)}}
     .deck-case.treasure-open .case-light{;;;opacity:0;;;}
-    .deck-case.treasure-open.opening .case-light{;}
+    
 
     @keyframes treasureInteriorGlow{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}70%{opacity:1;transform:translate(-50%,-50%) scale(1.32)}100%{opacity:.92;transform:translate(-50%,-50%) scale(1.2)}}
 
@@ -254,19 +254,19 @@
     /* 当選後は演出行を削除し、カード画像を1行目に配置。0px行への誤配置を防止 */
     #cardStage.winner{display:grid!important;grid-template-rows:min-content!important;row-gap:0!important;min-height:0!important;height:auto!important;overflow:visible!important;}
     #cardStage.winner #drawingCard{;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
-    #cardStage.winner #keyCardImages{;;;;}
+    
     #result{display:none!important;position:relative;width:100%;min-width:0;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;line-height:1.08!important;overflow-wrap:anywhere;}
-    #result.has-result{;;;;;;}
+    
     #result.result-reveal{display:grid!important;margin-top:6px!important;padding:0 4px!important;}
     .roulette-panel{gap:0!important;}
     @media(max-width:480px){
       #cardStage{grid-template-rows:194px auto!important;}
-      #drawingCard.mana-absorption{;;}
+      
       #drawingCard.mana-absorption.treasure-scene .deck-case,.deck-case.treasure-open{transform:translate(-50%,-50%) perspective(850px) rotateX(25deg) rotateY(-5deg) scale(1.08)!important;}
       #keyCardImages{gap:7px;padding-top:6px!important;}
       #keyCardImages img{flex-basis:132px;width:min(132px,calc((100% - 14px)/2));max-height:min(210px,30vh);}
       #cardStage.winner{grid-template-rows:min-content!important;}
-      #result.has-result{;}
+      
     }
 
   
@@ -317,7 +317,7 @@
     #cardStage.winner #keyCardImages{position:relative!important;inset:auto!important;grid-column:1!important;grid-row:1!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-flow:row wrap!important;justify-content:center!important;align-items:flex-start!important;gap:10px!important;padding:0!important;margin:0 auto!important;overflow:visible!important;}
     #cardStage.winner #keyCardImages img{position:static!important;display:block!important;flex:0 1 142px!important;width:min(142px,calc((100% - 20px)/2))!important;max-width:100%!important;height:auto!important;max-height:min(220px,28vh)!important;object-fit:contain!important;margin:0!important;transform:none;}
     #result.has-result{display:grid!important;position:relative!important;width:100%!important;height:auto!important;min-height:0!important;margin:7px auto 0!important;padding:0 5px!important;line-height:1.15!important;overflow:visible!important;}
-    #spinButton{;}
+    
     .roulette-panel:has(#result.has-result) #spinButton{margin-top:8px!important;}
     #status{margin-top:6px!important;}
     #settings{margin-top:8px!important;}
@@ -375,10 +375,7 @@
     .case-hinge{background:linear-gradient(180deg,#fff,#dce6e0 48%,#b8c7be)!important;box-shadow:0 1px 3px rgba(100,118,107,.12)!important}
     .case-lock{border:1px solid #d2ded7!important;background:linear-gradient(180deg,#fff,#e4ece7 58%,#c7d4cc)!important;box-shadow:0 2px 4px rgba(100,118,107,.14),inset 0 1px 2px #fff!important}
     .case-lock:after{background:#a9bbb0!important;box-shadow:0 0 3px #fff!important}
-    #drawingCard.mana-absorption.opening-cutin{
-      ;;;
-      ;;
-    }
+    
     #drawingCard.opening-cutin{background:#fff!important}
     #drawingCard.opening-cutin .deck-case,
     .deck-case.treasure-open{
@@ -395,7 +392,7 @@
     .deck-case.treasure-open .case-lid:before{background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(215,230,220,.28))!important}
     /* デッキ名は当選カードの下に独立したタイトルとして表示 */
     #result.has-result{display:flex;flex-direction:column;gap:5px;margin:13px auto 4px;min-height:62px}
-    .result-eyebrow{;;;;}
+    
     .deck-name-title{
       display:inline-block;max-width:100%;;
       ;;;
@@ -711,7 +708,7 @@
       box-shadow:0 1px 3px rgba(100,118,107,.10)!important;
     }
     .deck-case .case-lock {top:50px!important}
-    .deck-case.treasure-open .case-lock {}
+    
     @media(max-width:480px) {
       .deck-case,
       #drawingCard.opening-cutin .deck-case,
@@ -782,14 +779,7 @@
       height:9px!important;
     }
     .deck-case.treasure-open .case-lock {top:50px!important}
-    .deck-case .case-body,
-    .deck-case.treasure-open .case-body {
-      ;
-      ;
-      ;
-      ;
-      ;
-    }
+    
     .deck-case .case-body:after,
     .deck-case.treasure-open .case-body:after {
       ;
@@ -825,22 +815,8 @@
       background:linear-gradient(180deg,#fcfefc 0%,#f1f6f2 58%,#e8f0ea 100%)!important;
       box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.05)!important;
     }
-    .deck-case .case-spectrum,
-    .deck-case.treasure-open .case-spectrum {
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-      ;
-    }
-    .deck-case.civ-charging .case-spectrum {
-      ;
-    }
+    
+    
     .deck-case .case-glow,
     .deck-case.treasure-open .case-glow {
       inset:46px 18px 12px!important;
@@ -856,41 +832,17 @@
       box-shadow:inset 0 2px 6px rgba(255,255,255,.98),inset 0 -2px 4px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
       backface-visibility:visible!important;
     }
-    .deck-case .case-lid-inner,
-    .deck-case.treasure-open .case-lid-inner {
-      ;
-      ;
-      ;
-      ;
-    }
-    .deck-case .case-lid:before,
-    .deck-case.treasure-open .case-lid:before {
-      ;
-      ;
-      ;
-    }
-    .deck-case .case-lid:after,
-    .deck-case.treasure-open .case-lid:after {
-      ;
-      ;
-      ;
-    }
-    .deck-case .case-hinge,
-    .deck-case.treasure-open .case-hinge {
-      ;
-      ;
-    }
+    
+    
+    
+    
     .deck-case .case-lock,
     .deck-case.treasure-open .case-lock {
       border-color:#dce7df!important;
       ;
       ;
     }
-    .deck-case .case-lock:after,
-    .deck-case.treasure-open .case-lock:after {
-      ;
-      ;
-    }
+    
     .deck-case.civ-charging .case-body,
     .deck-case.pressure .case-body,
     .deck-case.opening .case-body,
