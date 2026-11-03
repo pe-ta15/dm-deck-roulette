@@ -3440,218 +3440,102 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
 
-    /* The lid is driven by JS around the rear fabric fold; final geometry below */, not by legacy keyframes. */
+    /* ===== Case geometry: single source of truth =====
+       The lid rotates around its lower/rear edge. The fabric bridge occupies
+       the 62-74px fold area and becomes visible only during opening. */
 
-    /* Physical rear-fold geometry: transparent carrier, two faces, flexible rear gusset. */
-    .deck-case{perspective:1100px!important;transform-style:preserve-3d!important}
-
-    .deck-case .case-body{transform-style:preserve-3d!important}
-
-    .deck-case .case-rear-gusset{
-      position:absolute!important;z-index:13!important;left:12px!important;right:12px!important;
-      top:2px!important;height:70px!important;display:block!important;
-      transform-origin:50% 0%!important;transform:rotateX(0deg)!important;
-      clip-path:polygon(0 0,100% 0,94% 100%,6% 100%)!important;
-      border-left:3px solid #a8b9ac!important;border-right:3px solid #a8b9ac!important;
-      background:linear-gradient(90deg,#a8b9ac 0%,#f7faf7 12%,#e5eee7 48%,#c4d5c8 88%,#a8b9ac 100%)!important;
-      box-shadow:inset 0 0 9px rgba(255,255,255,.7),0 2px 7px rgba(42,61,46,.16)!important;
-      opacity:0!important;pointer-events:none!important;
-    }
-
-    
-
-    .deck-case .case-lid{
-      background:transparent!important;border:0!important;box-shadow:none!important;
-      overflow:visible!important;transform-style:preserve-3d!important;
-      transform-origin:50% 0%!important;backface-visibility:visible!important;z-index:14!important;
-    }
-
-    .deck-case .case-lid:before,.deck-case .case-lid:after{content:none!important;display:none!important}
-
-    .deck-case .case-lid-inner{
-      position:absolute!important;z-index:4!important;inset:0!important;display:block!important;
-      border:3px solid #a5b9a9!important;border-radius:9px 9px 2px 2px!important;
-      background:linear-gradient(145deg,#fff 0%,#edf4ee 38%,#c4d7c8 76%,#9fb8a4 100%)!important;
-      box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -5px 9px rgba(91,119,97,.13),0 5px 8px rgba(49,70,55,.12)!important;
-      transform:translateZ(2px)!important;backface-visibility:hidden!important;
-    }
-
-    .deck-case .case-lid-underside{
-      position:absolute!important;z-index:3!important;inset:0!important;display:block!important;
-      border:3px solid #a8b9ac!important;border-radius:9px 9px 2px 2px!important;
-      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
-      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
-      transform:rotateX(180deg) translateZ(2px)!important;backface-visibility:hidden!important;
-      pointer-events:none!important;
-    }
-
-    .deck-case .case-lid-front{z-index:5!important;backface-visibility:visible!important}
-
-    .deck-case.opening .case-lid{animation:none!important}
-
-    @media(max-width:480px){.deck-case .case-rear-gusset{left:10px!important;right:10px!important}}
-
-
-
-    /* Rear fabric connection correction:
-       The lid meets the case body at y=72px, so the fold axis is the lid's LOWER edge,
-       not its upper edge. The gusset is a short flexible bridge sharing that same axis. */
-    .deck-case .case-lid{
-      transform-origin:50% 100%!important;
-      transform-style:preserve-3d!important;
-    }
-
-    .deck-case .case-rear-gusset{
-      top:62px!important;
-      height:12px!important;
-      transform-origin:50% 100%!important;
-      z-index:15!important;
-      clip-path:none!important;
-      border:2px solid #a8b9ac!important;
-      border-radius:2px!important;
-      background:linear-gradient(180deg,#f8fbf8 0%,#dce8df 48%,#aebfb2 100%)!important;
-      box-shadow:inset 0 1px 3px rgba(255,255,255,.9),0 1px 4px rgba(42,61,46,.2)!important;
-      opacity:0!important;
-      backface-visibility:visible!important;
-    }
-
-    
-
-
-    /* Reveal the physical underside when the lid turns past vertical.
-       Do not pre-flip this face: the parent lid rotation already turns it toward the viewer. */
-    .deck-case .case-lid-underside{
-      position:absolute!important;
-      z-index:3!important;
-      inset:0!important;
-      display:block!important;
-      transform:translateZ(-2px)!important;
-      transform-origin:50% 50%!important;
-      backface-visibility:visible!important;
-      opacity:1!important;
-      visibility:visible!important;
-      border:3px solid #a8b9ac!important;
-      border-radius:9px 9px 2px 2px!important;
-      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
-      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
-      pointer-events:none!important;
-    }
-
-    .deck-case .case-lid-inner{
-      backface-visibility:hidden!important;
-      transform:translateZ(2px)!important;
-    }
-
-    .deck-case.opening .case-lid-underside{
-      opacity:1!important;
-      visibility:visible!important;
-    }
-
-
-    /* Rebuilt rear fabric fold: the lid's lower edge meets the body rim.
-       The underside is a reverse-facing panel, not a coplanar duplicate. */
-    .deck-case{perspective:1100px!important;transform-style:preserve-3d!important}
-
-    .deck-case .case-body{transform-style:preserve-3d!important}
-
-    .deck-case .case-lid{
-      top:0!important;height:74px!important;
-      transform-origin:50% 100%!important;
-      transform-style:preserve-3d!important;
-      backface-visibility:visible!important;
-      overflow:visible!important;
-      z-index:14!important;
-    }
-
-    .deck-case .case-lid-inner{
-      inset:0!important;
-      transform:translateZ(2px)!important;
-      backface-visibility:hidden!important;
-    }
-
-    .deck-case .case-lid-underside{
-      position:absolute!important;inset:0!important;display:block!important;
-      z-index:3!important;
-      transform:rotateY(180deg) translateZ(2px)!important;
-      transform-origin:50% 50%!important;
-      backface-visibility:hidden!important;
-      opacity:1!important;visibility:visible!important;
-      border:3px solid #a8b9ac!important;
-      border-radius:9px 9px 2px 2px!important;
-      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
-      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
-      pointer-events:none!important;
-    }
-
-    .deck-case .case-rear-gusset{
-      position:absolute!important;left:12px!important;right:12px!important;
-      top:62px!important;height:12px!important;display:block!important;
-      z-index:15!important;
-      transform-origin:50% 100%!important;
-      transform:rotateX(0deg)!important;
-      border:2px solid #a8b9ac!important;border-radius:2px!important;
-      background:linear-gradient(180deg,#f8fbf8 0%,#dce8df 48%,#aebfb2 100%)!important;
-      box-shadow:inset 0 1px 3px rgba(255,255,255,.9),0 1px 4px rgba(42,61,46,.2)!important;
-      opacity:0!important;backface-visibility:visible!important;
-      pointer-events:none!important;
-    }
-
-    
-
-    .deck-case .case-lid-front{backface-visibility:visible!important}.deck-case .case-lock{display:none!important}
-
-
-    
-    /* Single hinge geometry:
-       The case body begins at y=72px. The continuous lid ends at y=74px,
-       so the shared fold axis is the lid's LOWER edge (50% 100%).
-       The rear fabric bridge occupies y=62..74px and uses that same axis. */
     .deck-case{
+      perspective:1100px!important;
       transform:translate(-50%,-50%) perspective(1100px) rotateX(0deg) rotateY(0deg) scale(1)!important;
       transform-style:preserve-3d!important;
     }
 
-    .deck-case .case-body{transform-style:preserve-3d!important}
-
-    .deck-case .case-lid{
-      top:0!important;height:74px!important;
-      transform-origin:50% 100%!important;
-      transform-style:preserve-3d!important;backface-visibility:visible!important;
-      overflow:visible!important;border-radius:10px 10px 4px 4px!important;
+    .deck-case .case-body{
+      transform-style:preserve-3d!important;
     }
 
-    /* The opening-state selector was historically more specific; pin its hinge too. */
-    .deck-case.opening .case-lid{transform-origin:50% 100%!important}
+    /* Transparent carrier: the visible surfaces are separate child panels. */
+    .deck-case .case-lid{
+      position:absolute!important;
+      top:0!important;left:2px!important;right:2px!important;height:74px!important;
+      z-index:14!important;
+      background:transparent!important;border:0!important;box-shadow:none!important;
+      overflow:visible!important;
+      transform-origin:50% 100%!important;
+      transform-style:preserve-3d!important;
+      backface-visibility:visible!important;
+    }
+
+    .deck-case .case-lid:before,
+    .deck-case .case-lid:after{
+      content:none!important;
+      display:none!important;
+    }
 
     .deck-case .case-lid-inner{
-      inset:0!important;transform:translateZ(2px)!important;backface-visibility:hidden!important;
+      position:absolute!important;z-index:4!important;
+      inset:0!important;display:block!important;
+      border:3px solid #a5b9a9!important;
+      border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#edf4ee 38%,#c4d7c8 76%,#9fb8a4 100%)!important;
+      box-shadow:inset 0 3px 9px rgba(255,255,255,.96),inset 0 -5px 9px rgba(91,119,97,.13),0 5px 8px rgba(49,70,55,.12)!important;
+      transform:translateZ(2px)!important;
+      backface-visibility:hidden!important;
     }
 
     .deck-case .case-lid-underside{
-      inset:0!important;transform:rotateX(180deg) translateZ(2px)!important;
-      transform-origin:50% 50%!important;backface-visibility:hidden!important;
+      position:absolute!important;z-index:3!important;
+      inset:0!important;display:block!important;
+      border:3px solid #a8b9ac!important;
+      border-radius:9px 9px 2px 2px!important;
+      background:linear-gradient(145deg,#fff 0%,#f1f7f2 34%,#d3e1d7 72%,#b1c5b6 100%)!important;
+      box-shadow:inset 0 2px 7px rgba(255,255,255,.98),inset 0 -5px 10px rgba(75,101,81,.15)!important;
+      transform:rotateX(180deg) translateZ(2px)!important;
+      transform-origin:50% 50%!important;
+      backface-visibility:hidden!important;
+      opacity:1!important;visibility:visible!important;
+      pointer-events:none!important;
     }
 
     .deck-case .case-lid-front{
-      top:calc(100% - 2px)!important;transform-origin:50% 0%!important;
-      transform:rotateX(90deg)!important;backface-visibility:visible!important;
+      top:calc(100% - 2px)!important;
+      transform-origin:50% 0%!important;
+      transform:rotateX(90deg)!important;
+      z-index:5!important;
+      backface-visibility:visible!important;
     }
 
     .deck-case .case-rear-gusset{
-      top:62px!important;height:12px!important;left:12px!important;right:12px!important;
-      transform-origin:50% 100%!important;transform:rotateX(0deg)!important;
-      border:2px solid #a8b9ac!important;border-radius:2px!important;
-      background:repeating-linear-gradient(0deg,rgba(105,132,111,.10) 0 1px,transparent 1px 3px),
-        linear-gradient(90deg,#9fb5a3 0%,#f7faf7 13%,#e5eee7 50%,#c4d5c8 87%,#9fb5a3 100%)!important;
+      position:absolute!important;display:block!important;
+      left:12px!important;right:12px!important;top:62px!important;height:12px!important;
+      z-index:15!important;
+      transform-origin:50% 100%!important;
+      transform:rotateX(0deg)!important;
+      border:2px solid #a8b9ac!important;
+      border-radius:2px!important;
+      background:repeating-linear-gradient(0deg,rgba(105,132,111,.10) 0 1px,transparent 1px 3px),linear-gradient(90deg,#9fb5a3 0%,#f7faf7 13%,#e5eee7 50%,#c4d5c8 87%,#9fb5a3 100%)!important;
       box-shadow:inset 0 0 8px rgba(255,255,255,.72),0 2px 6px rgba(42,61,46,.18)!important;
-      opacity:0!important;pointer-events:none!important;
+      opacity:0!important;
+      backface-visibility:visible!important;
+      pointer-events:none!important;
     }
 
-    .deck-case.opening .case-rear-gusset{opacity:1!important}.deck-case .case-lock{display:none!important}
+    /* JavaScript controls the lid transform; keep CSS keyframes from competing. */
+    .deck-case.opening .case-lid{
+      transform-origin:50% 100%!important;
+      animation:none!important;
+    }
+
+    .deck-case.opening .case-rear-gusset{opacity:1!important}
+    .deck-case .case-lock{display:none!important}
 
     @media(max-width:480px){
       .deck-case .case-lid{height:70px!important}
-      .deck-case .case-rear-gusset{top:60px!important;height:10px!important;left:10px!important;right:10px!important}
+      .deck-case .case-lid-inner,
+      .deck-case .case-lid-underside{border-radius:8px 8px 2px 2px!important}
+      .deck-case .case-rear-gusset{
+        top:60px!important;height:10px!important;left:10px!important;right:10px!important;
+      }
     }
 
 
