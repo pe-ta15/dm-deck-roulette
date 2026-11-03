@@ -760,6 +760,114 @@
       box-shadow:inset 0 1px 6px rgba(255,255,255,.94),inset 0 -3px 8px rgba(132,151,140,.10)!important;
     }
   
+
+    /* ===== Final visual correction: card-ratio cavity + fully milky case ===== */
+    /* 旧い金属ケースの暗色・黒い内側影を、全フェーズで無効化する。 */
+    .deck-case,
+    #drawingCard.opening-cutin .deck-case,
+    .deck-case.treasure-open {
+      background:transparent!important;
+      filter:drop-shadow(0 9px 12px rgba(112,130,120,.14))!important;
+    }
+    .deck-case .case-body,
+    .deck-case.treasure-open .case-body {
+      border-color:rgba(215,225,219,.96)!important;
+      background:linear-gradient(90deg,#fff 0%,rgba(235,242,237,.96) 16%,rgba(250,252,250,.98) 50%,rgba(232,240,234,.96) 84%,#fff 100%)!important;
+      box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 -4px 8px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
+      overflow:hidden!important;
+    }
+    .deck-case .case-body:after {
+      border-color:rgba(255,255,255,.98)!important;
+      border-bottom-color:rgba(205,218,209,.72)!important;
+      background:linear-gradient(180deg,#fff,#edf3ef)!important;
+      box-shadow:0 1px 2px rgba(100,120,108,.06)!important;
+    }
+    .deck-case .case-cavity,
+    .deck-case.treasure-open .case-cavity {
+      left:50%!important;
+      right:auto!important;
+      top:50%!important;
+      bottom:auto!important;
+      width:116px!important;
+      height:auto!important;
+      aspect-ratio:5 / 7!important;
+      transform:translate(-50%,-50%)!important;
+      border:0!important;
+      background:linear-gradient(180deg,#fcfefc 0%,#f1f6f2 58%,#e8f0ea 100%)!important;
+      box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.05)!important;
+    }
+    .deck-case .case-spectrum {
+      left:50%!important;
+      right:auto!important;
+      top:50%!important;
+      bottom:auto!important;
+      width:108px!important;
+      height:auto!important;
+      aspect-ratio:5 / 7!important;
+      transform:translate(-50%,-50%) scale(.82)!important;
+      border-radius:3px!important;
+    }
+    .deck-case.civ-charging .case-spectrum {
+      transform:translate(-50%,-50%) scale(1)!important;
+    }
+    .deck-case .case-glow {
+      inset:46px 18px 12px!important;
+      background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;
+    }
+    .deck-case .case-lid,
+    .deck-case.treasure-open .case-lid {
+      border-color:rgba(218,228,221,.98)!important;
+      border-bottom-color:rgba(205,218,209,.9)!important;
+      background:linear-gradient(145deg,#fff 0%,#edf3ef 52%,#fbfdfb 100%)!important;
+      box-shadow:inset 0 2px 6px rgba(255,255,255,.98),inset 0 -2px 4px rgba(145,164,151,.08),0 2px 4px rgba(110,130,117,.08)!important;
+      backface-visibility:visible!important;
+    }
+    .deck-case .case-lid-inner {
+      background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(237,244,239,.92))!important;
+      border-color:rgba(255,255,255,.98)!important;
+      box-shadow:inset 0 0 5px rgba(255,255,255,.96)!important;
+      transform:translateZ(-1px)!important;
+    }
+    .deck-case .case-lid:before {
+      background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(225,236,228,.12) 55%,rgba(190,207,195,.08))!important;
+      border-color:rgba(255,255,255,.96)!important;
+      box-shadow:inset 0 0 5px rgba(255,255,255,.82)!important;
+    }
+    .deck-case .case-lid:after {
+      border-color:rgba(210,222,214,.96)!important;
+      background:linear-gradient(90deg,#fff,rgba(235,242,237,.98) 50%,#fff)!important;
+      box-shadow:0 2px 3px rgba(100,118,107,.06)!important;
+    }
+    .deck-case .case-hinge {
+      background:linear-gradient(180deg,#fff,#e9f0eb 55%,#d6e2da)!important;
+      box-shadow:0 1px 2px rgba(100,118,107,.06)!important;
+    }
+    .deck-case .case-lock {
+      border-color:#dce7df!important;
+      background:linear-gradient(180deg,#fff,#edf3ef 58%,#dce7df)!important;
+      box-shadow:0 1px 3px rgba(100,118,107,.08),inset 0 1px 2px #fff!important;
+    }
+    .deck-case .case-lock:after {background:#c5d4ca!important;box-shadow:none!important}
+    .deck-case.civ-charging .case-body,
+    .deck-case.treasure-open .case-body {
+      box-shadow:inset 3px 0 6px rgba(255,255,255,.92),inset -3px 0 6px rgba(145,164,151,.08),inset 0 0 14px var(--case-civ-glow,rgba(255,255,255,.2)),0 2px 4px rgba(110,130,117,.08)!important;
+    }
+    @media(max-width:480px) {
+      .deck-case .case-cavity,
+      .deck-case.treasure-open .case-cavity {width:100px!important}
+      .deck-case .case-spectrum {width:94px!important}
+    }
+    /* キーカードは5:7の表示枠に統一。画像外周の白い余白は枠外へ出さない。 */
+    #keyCardImages img {
+      aspect-ratio:5 / 7!important;
+      object-fit:cover!important;
+      object-position:center!important;
+      overflow:hidden!important;
+      border-radius:7px!important;
+      background:transparent!important;
+      box-shadow:0 7px 16px rgba(35,48,40,.18)!important;
+    }
+
   </style>
 </head>
 <body>
