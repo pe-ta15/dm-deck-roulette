@@ -3818,6 +3818,71 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       mix-blend-mode:screen!important;
     }
 
+
+    /* ===== Premium presentation: gold accents during draw and result ===== */
+    #cardStage.presentation-premium #drawingCard.mana-absorption {
+      border-color:rgba(225,177,76,.72);
+      box-shadow:0 0 22px rgba(224,174,65,.18),inset 0 0 24px rgba(255,222,150,.10);
+    }
+    #cardStage.presentation-premium .mana-orb {
+      filter:drop-shadow(0 0 7px rgba(255,207,91,.82)) drop-shadow(0 0 15px rgba(255,181,55,.38));
+    }
+    #cardStage.presentation-premium .deck-case.civ-charging .case-spectrum,
+    #cardStage.presentation-premium .deck-case.pressure .case-spectrum,
+    #cardStage.presentation-premium .deck-case.overloaded .case-spectrum,
+    #cardStage.presentation-premium .deck-case.critical .case-spectrum {
+      opacity:.48!important;
+      filter:blur(5px) saturate(1.8)!important;
+    }
+    #cardStage.presentation-premium .deck-case.civ-charging .case-glow,
+    #cardStage.presentation-premium .deck-case.pressure .case-glow,
+    #cardStage.presentation-premium .deck-case.overloaded .case-glow,
+    #cardStage.presentation-premium .deck-case.critical .case-glow {
+      opacity:.42!important;
+      filter:blur(8px) saturate(1.7)!important;
+    }
+    #cardStage.presentation-premium .deck-case .case-body {
+      box-shadow:inset 9px 0 12px rgba(255,255,255,.2),inset -10px 0 13px rgba(0,0,0,.66),
+        inset 0 -18px 24px rgba(0,0,0,.65),0 9px 12px rgba(0,0,0,.48),
+        0 0 20px rgba(255,196,76,.24);
+    }
+    #cardStage.presentation-premium.result-visible {
+      border-color:rgba(204,157,65,.62)!important;
+      background:linear-gradient(145deg,#fffefa 0%,#fff9eb 48%,#fffdf8 100%)!important;
+      box-shadow:0 7px 24px rgba(151,108,30,.13),inset 0 0 0 2px rgba(231,190,104,.14)!important;
+    }
+    #cardStage.presentation-premium.result-visible #keyCardImages img {
+      border:1px solid rgba(204,157,65,.58)!important;
+      box-shadow:0 6px 17px rgba(151,108,30,.17),0 0 0 2px rgba(236,204,139,.16)!important;
+    }
+    #cardStage.presentation-premium.result-visible #result .result-eyebrow {
+      border-color:rgba(188,139,43,.55)!important;
+      background:linear-gradient(180deg,#fff7df,#f5e3b5)!important;
+      color:#80550e!important;
+      box-shadow:0 2px 8px rgba(171,124,37,.12)!important;
+    }
+    #cardStage.presentation-premium.result-visible #result .deck-name-title {
+      border-color:rgba(191,139,42,.72)!important;
+      background:linear-gradient(135deg,#fffdf5 0%,#fff0c7 52%,#fffaf0 100%)!important;
+      color:#62420c!important;
+      box-shadow:inset 0 1px 0 #fff,0 5px 16px rgba(151,108,30,.16)!important;
+    }
+    #cardStage.presentation-premium.result-visible #result .result-civilizations {
+      padding:5px 12px!important;
+      border:1px solid rgba(204,157,65,.28)!important;
+      border-radius:999px!important;
+      background:rgba(255,249,232,.82)!important;
+    }
+    @media(prefers-reduced-motion:no-preference) {
+      #cardStage.presentation-premium #drawingCard.mana-absorption .mana-orb {
+        animation:premiumOrbPulse 1.25s ease-in-out infinite alternate;
+      }
+      @keyframes premiumOrbPulse {
+        from { filter:drop-shadow(0 0 5px rgba(255,207,91,.62)) drop-shadow(0 0 10px rgba(255,181,55,.24)); }
+        to { filter:drop-shadow(0 0 9px rgba(255,225,145,.95)) drop-shadow(0 0 19px rgba(255,181,55,.55)); }
+      }
+    }
+
   </style>
 </head>
 <body>
