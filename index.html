@@ -2080,27 +2080,7 @@
     body.is-spinning #settings,
     body.is-spinning #deckListPanel{display:none!important}
 
-    body.is-spinning #status{
-      display:block!important;
-      min-height:24px;
-      margin-top:12px!important;
-      color:#647b70!important;
-      font-weight:600;
-      text-align:center;
-    }
-    body.is-spinning #status::before{
-      content:"";
-      display:inline-block;
-      width:10px;
-      height:10px;
-      margin-right:9px;
-      border:2px solid rgba(100,123,112,.24);
-      border-top-color:#647b70;
-      border-radius:50%;
-      vertical-align:-1px;
-      animation:drawStatusSpin .8s linear infinite;
-    }
-    @keyframes drawStatusSpin{to{transform:rotate(360deg)}}
+    body.is-spinning #status{display:none!important}
 
     @media(max-width:480px){
       .roulette-panel{padding:16px 10px 18px!important}
@@ -4122,6 +4102,43 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       });
     }
 
+    // デッキ選定待ちの間も五文明アイコンを周回させ、画面が停止した印象をなくす。
+    // デッキ確定後はアニメーションを解除し、既存の文明吸収演出へ引き継ぐ。
+    function startSelectionOrbit() {
+      const icons = [...drawingCard.querySelectorAll(".mana-orb")];
+      if (icons.length === 0) return () => {};
+
+      const rect = drawingCard.getBoundingClientRect();
+      const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
+      const orbitRadius = Math.max(0, Math.min(rect.width, rect.height) / 2 - iconRadius - 12);
+      const animations = icons.map((icon, index) => {
+        const frames = [];
+        const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
+        const steps = 72;
+        for (let step = 0; step <= steps; step++) {
+          const angle = startAngle + Math.PI * 2 * step / steps;
+          frames.push({
+            transform: `translate(${Math.cos(angle) * orbitRadius}px, ${Math.sin(angle) * orbitRadius}px) scale(.96)`,
+            opacity: 1,
+            offset: step / steps
+          });
+        }
+        return icon.animate(frames, {
+          duration: 1800,
+          iterations: Infinity,
+          easing: "linear"
+        });
+      });
+
+      return () => {
+        animations.forEach(animation => animation.cancel());
+        icons.forEach(icon => {
+          icon.style.opacity = "0";
+          icon.style.transform = "translate(0,0) scale(.7)";
+        });
+      };
+    }
+
     // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
     async function playManaSequence() {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
@@ -4529,8 +4546,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       document.body.classList.add("is-spinning");
       spinButton.disabled = true;
       spinButton.classList.add("hidden");
-      statusElement.classList.remove("hidden");
-      statusElement.textContent = "デッキを選定中です...";
       settingsElement.classList.add("hidden");
       avoidRepeatCheckbox.disabled = true;
       settingsElement.classList.add("is-spinning");
@@ -4539,6 +4554,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       resultElement.textContent = "";
       resultElement.classList.remove("has-result");
       showDrawingCard();
+      let stopSelectionOrbit = startSelectionOrbit();
 
       try {
         const excludedIds = new Set(getExcludedDeckIds());
@@ -4551,11 +4567,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         // 先にデッキを確定し、その後に演出だけを独立抽選する。
         // 演出の種類・連続回数・過去の結果がデッキ選択へ影響することはない。
         const selectedDeck = await requestDraw();
+        stopSelectionOrbit();
+        stopSelectionOrbit = () => {};
         // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
         const listedDeck = decks.find(item => String(item.id) === String(selectedDeck.id));
         const deck = listedDeck ? { ...listedDeck, ...selectedDeck } : selectedDeck;
         traceDrawTiming("deck result fixed");
-        statusElement.textContent = "文明を吸収中です...";
 
         const presentation = drawPresentation();
         applyPresentation(presentation);
@@ -4567,7 +4584,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         traceDrawTiming("mana sequence complete");
 
         // 初期画面と同じ乳白色ケースを、そのまま開封する。
-        statusElement.textContent = "ケースを開封中です...";
         await playCaseOpeningSequence();
         traceDrawTiming("case opening sequence complete");
 
@@ -4662,6 +4678,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         statusElement.textContent = "抽選できませんでした。設定を確認して、もう一度お試しください。";
       } finally {
+        stopSelectionOrbit();
         drawingCard.classList.add("hidden");
         spinButton.classList.remove("hidden");
         spinButton.textContent = "抽選スタート";
