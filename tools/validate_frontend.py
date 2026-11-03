@@ -23,6 +23,8 @@ JS = scripts[0] if len(scripts) == 1 else ""
 
 # Parse CSS at every nesting level. A brace count alone cannot detect malformed
 # at-rules or declarations, which allowed an incomplete media query to survive.
+duplicate_rules = {}
+
 def inspect_rules(rules, context):
     for rule in rules:
         if rule.type == "error":
@@ -36,7 +38,8 @@ def inspect_rules(rules, context):
                 nested = tinycss2.parse_rule_list(
                     rule.content, skip_whitespace=True, skip_comments=True
                 )
-                inspect_rules(nested, f"{context} -> @{name}")
+                prelude = tinycss2.serialize(rule.prelude).strip()
+                inspect_rules(nested, f"{context} -> @{name} {prelude}")
             else:
                 declarations = tinycss2.parse_declaration_list(
                     rule.content, skip_whitespace=True, skip_comments=True
@@ -49,6 +52,12 @@ def inspect_rules(rules, context):
             declarations = tinycss2.parse_declaration_list(
                 rule.content, skip_whitespace=True, skip_comments=True
             )
+            normalized = tuple(sorted(
+                (item.lower_name, tinycss2.serialize(item.value).strip(), item.important)
+                for item in declarations if item.type == "declaration"
+            ))
+            if normalized:
+                duplicate_rules.setdefault((context, selector, normalized), []).append(selector)
             for item in declarations:
                 if item.type == "error":
                     fail(f"CSS declaration error for {selector}: {item.message}")
@@ -64,6 +73,12 @@ def inspect_rules(rules, context):
 if CSS:
     rules = tinycss2.parse_stylesheet(CSS, skip_whitespace=True, skip_comments=True)
     inspect_rules(rules, "stylesheet")
+
+# Identical selector + declaration blocks in the same cascade scope are redundant.
+# Different media scopes and different declarations are preserved intentionally.
+for (context, selector, _), occurrences in duplicate_rules.items():
+    if len(occurrences) > 1:
+        fail(f"Duplicate identical CSS rule in {context}: {selector} ({len(occurrences)} copies)")
 
 # Regression guards for the exact handoff effects that previously escaped review.
 for forbidden in ("case-burst", "ruptureWave", "resultShockwave", "revealFlash"):
