@@ -4186,6 +4186,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     const easeOutCubic = t => 1 - Math.pow(1-t,3);
 
     async function playCaseOpeningSequence() {
+      traceDrawTiming("case opening start");
       cardStage.classList.add("case-opening-stage");
       drawingCard.classList.add("opening-cutin");
       void drawingCard.offsetWidth;
@@ -4206,8 +4207,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       ];
       const pulse = () => animateTransform(body, pulseFrames, 520, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeInOut);
       await pulse();
+      traceDrawTiming("first pressure pulse complete");
       deckCase.classList.add("overloaded");
       await pulse();
+      traceDrawTiming("second pressure pulse complete");
       deckCase.classList.add("critical");
       // Magnetic closure releases without a mechanical clasp animation.
       await animateTransform(body, [
@@ -4218,6 +4221,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         {at:1,values:[0,1,1]}
       ], 420, v => "translateY("+v[0]+"px) scaleX("+v[1]+") scaleY("+v[2]+")", easeOutCubic);
 
+      traceDrawTiming("case body recoil complete");
       deckCase.classList.remove("pressure", "overloaded", "critical");
       drawingCard.classList.add("case-impact", "case-blast");
       deckCase.classList.add("opening");
@@ -4236,11 +4240,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           {at:0,values:[0]},{at:.12,values:[12]},{at:.36,values:[48]},{at:.70,values:[105]},{at:.90,values:[130]},{at:1,values:[138]}
         ], 1180, v => "rotateX("+v[0]+"deg)", easeOutCubic)
       ]);
+      traceDrawTiming("lid opening complete");
 
       deckCase.classList.add("mouth-eruption");
       // 口元の光柱が最後まで伸びる時間だけ確保し、画面全体を覆うフラッシュは挟まない。
       // 抽選結果のAPI応答が遅れても、ケースを残したまま結果到着を待つ。
       await sleep(720);
+      traceDrawTiming("mouth light hold complete");
       drawingCard.classList.remove("case-blast", "case-impact");
       // カード射出からwinner確定までステージ寸法を維持する。
       // ここでcase-opening-stageを外すと、カードが重なったまま親の高さ・幅が再計算される。
