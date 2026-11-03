@@ -3997,7 +3997,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     function showDrawingCard() {
       // 前回の結果表示で使ったWeb Animationsを解除し、次回抽選へ持ち越さない。
       [keyCardImages, resultElement].forEach(element => element.getAnimations().forEach(animation => animation.cancel()));
-      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage", "result-pending", "result-visible");
+      cardStage.classList.remove("hidden", "winner", "absorption-burst", "opening-cleanup", "reveal-hold", "case-opening-stage", "result-pending", "result-visible",
+        "presentation-normal", "presentation-premium", "presentation-anomaly", "presentation-special", "presentation-ultimate");
+      resultElement.classList.remove("presentation-normal", "presentation-premium", "presentation-anomaly", "presentation-special", "presentation-ultimate");
+      cardStage.removeAttribute("data-presentation");
+      resultElement.removeAttribute("data-presentation");
       [cardStage, keyCardImages, resultElement].forEach(element => element.removeAttribute("style"));
       // 前回の当選タイトルを新しい抽選の開始時点で必ず消す。
       // has-result / result-reveal が残ると、前回のタイトル装飾が開封演出中に再表示される。
@@ -4363,6 +4367,38 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }
     }
 
+    // 演出抽選はデッキ抽選から独立させる。重みは合計10,000（0.01%単位）。
+    // 前回の演出結果は参照せず、毎回同じ確率で独立抽選する。
+    const PRESENTATION_TOTAL_WEIGHT = 10000;
+    const PRESENTATION_WEIGHTS = Object.freeze([
+      { id: "normal", className: "presentation-normal", weight: 7200 },
+      { id: "premium", className: "presentation-premium", weight: 1800 },
+      { id: "anomaly", className: "presentation-anomaly", weight: 700 },
+      { id: "special", className: "presentation-special", weight: 250 },
+      { id: "ultimate", className: "presentation-ultimate", weight: 50 }
+    ]);
+
+    function drawPresentation() {
+      const ticket = Math.floor(Math.random() * PRESENTATION_TOTAL_WEIGHT);
+      let boundary = 0;
+      for (const presentation of PRESENTATION_WEIGHTS) {
+        boundary += presentation.weight;
+        if (ticket < boundary) return presentation;
+      }
+      // 重みの合計が正しく保たれている限り到達しない保険。
+      return PRESENTATION_WEIGHTS[0];
+    }
+
+    function applyPresentation(presentation) {
+      const classes = PRESENTATION_WEIGHTS.map(item => item.className);
+      cardStage.classList.remove(...classes);
+      resultElement.classList.remove(...classes);
+      cardStage.classList.add(presentation.className);
+      resultElement.classList.add(presentation.className);
+      cardStage.dataset.presentation = presentation.id;
+      resultElement.dataset.presentation = presentation.id;
+    }
+
     async function requestDraw() {
       const excludeDeckIds = getExcludedDeckIds();
 
@@ -4424,32 +4460,28 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           throw new Error("直近3回の当選デッキを除外すると抽選できません。抽選対象のデッキを増やすか、重複除外を解除してください。");
         }
 
-        // API抽選と演出を並行させ、演出終了後に結果を公開する。
-        const drawResult = requestDraw().then(
-          deck => {
-            // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
-            const listedDeck = decks.find(item => String(item.id) === String(deck.id));
-            const completeDeck = listedDeck ? { ...listedDeck, ...deck } : deck;
-            // 抽選結果が届いた時点で文明色を適用し、吸収演出中から見えるようにする。
-            applyDeckCivilizationFrame(completeDeck);
-            traceDrawTiming("draw API response received");
-            return { deck: completeDeck };
-          },
-          error => ({ error })
-        );
+        // 先にデッキを確定し、その後に演出だけを独立抽選する。
+        // 演出の種類・連続回数・過去の結果がデッキ選択へ影響することはない。
+        const selectedDeck = await requestDraw();
+        // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
+        const listedDeck = decks.find(item => String(item.id) === String(selectedDeck.id));
+        const deck = listedDeck ? { ...listedDeck, ...selectedDeck } : selectedDeck;
+        traceDrawTiming("deck result fixed");
+
+        const presentation = drawPresentation();
+        applyPresentation(presentation);
+        traceDrawTiming(`presentation selected: ${presentation.id}`);
+
+        // デッキ結果確定後に文明色を適用してから演出を開始する。
+        applyDeckCivilizationFrame(deck);
         await playManaSequence();
         traceDrawTiming("mana sequence complete");
 
-        // 初期画面と同じ乳白色ケースを、そのままCSSアニメーションで開封する。
+        // 初期画面と同じ乳白色ケースを、そのまま開封する。
         await playCaseOpeningSequence();
         traceDrawTiming("case opening sequence complete");
 
-        const outcome = await drawResult;
-        traceDrawTiming("draw result awaited");
-        if (outcome.error) throw outcome.error;
-        const deck = outcome.deck;
         const deckName = getDeckName(deck);
-        applyDeckCivilizationFrame(deck);
 
         // 最新の当選デッキを先頭に追加し、直近3個を保持
         recentDrawnDeckIds = [
