@@ -2078,8 +2078,29 @@
 
     body.is-spinning #spinButton,
     body.is-spinning #settings,
-    body.is-spinning #status,
     body.is-spinning #deckListPanel{display:none!important}
+
+    body.is-spinning #status{
+      display:block!important;
+      min-height:24px;
+      margin-top:12px!important;
+      color:#647b70!important;
+      font-weight:600;
+      text-align:center;
+    }
+    body.is-spinning #status::before{
+      content:"";
+      display:inline-block;
+      width:10px;
+      height:10px;
+      margin-right:9px;
+      border:2px solid rgba(100,123,112,.24);
+      border-top-color:#647b70;
+      border-radius:50%;
+      vertical-align:-1px;
+      animation:drawStatusSpin .8s linear infinite;
+    }
+    @keyframes drawStatusSpin{to{transform:rotate(360deg)}}
 
     @media(max-width:480px){
       .roulette-panel{padding:16px 10px 18px!important}
@@ -4508,7 +4529,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       document.body.classList.add("is-spinning");
       spinButton.disabled = true;
       spinButton.classList.add("hidden");
-      statusElement.classList.add("hidden");
+      statusElement.classList.remove("hidden");
+      statusElement.textContent = "デッキを選定中です...";
       settingsElement.classList.add("hidden");
       avoidRepeatCheckbox.disabled = true;
       settingsElement.classList.add("is-spinning");
@@ -4533,6 +4555,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const listedDeck = decks.find(item => String(item.id) === String(selectedDeck.id));
         const deck = listedDeck ? { ...listedDeck, ...selectedDeck } : selectedDeck;
         traceDrawTiming("deck result fixed");
+        statusElement.textContent = "文明を吸収中です...";
 
         const presentation = drawPresentation();
         applyPresentation(presentation);
@@ -4544,6 +4567,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         traceDrawTiming("mana sequence complete");
 
         // 初期画面と同じ乳白色ケースを、そのまま開封する。
+        statusElement.textContent = "ケースを開封中です...";
         await playCaseOpeningSequence();
         traceDrawTiming("case opening sequence complete");
 
