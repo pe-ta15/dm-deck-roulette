@@ -135,6 +135,20 @@ if JS:
     if show_body.find('deckCase.style.opacity = "0"') > show_body.find("await sleep(160)") and "await sleep(160)" in show_body:
         fail("Case fade-out must begin before its synchronized wait")
 
+# The case lid must illuminate in lockstep with the body, without its former
+# independent pulse or an immediate full-color fill on the inner lid.
+if "lidChargeBeat" in CSS:
+    fail("Obsolete independent lid charge animation remains")
+lid_sync = (
+    ".deck-case .case-lid,\n"
+    ".deck-case .case-lid-inner,\n"
+    ".deck-case .case-lid-front" 
+)
+if lid_sync not in CSS or "transition:filter 1.2s ease,box-shadow 1.2s ease,border-color 1.2s ease!important;" not in CSS:
+    fail("Lid glow must use the synchronized 1.2s case-light transition")
+if re.search(r"\.deck-case\.civ-charging \.case-lid-inner\s*\{[^}]*\bbackground\s*:", CSS, re.S):
+    fail("Lid inner surface must not switch to full civilization color instantly")
+
 # Duplicate keyframe names can silently replace earlier animation definitions.
 keyframes = re.findall(r"@(?:-webkit-)?keyframes\s+([\w-]+)", CSS)
 duplicates = sorted({name for name in keyframes if keyframes.count(name) > 1})
