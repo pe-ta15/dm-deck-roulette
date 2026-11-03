@@ -96,7 +96,7 @@ if JS:
         "const selectedDeck = await requestDraw()",
         "const presentation = drawPresentation()",
         "applyPresentation(presentation);",
-        "await playManaSequence()",
+        "await playManaSequence(stopSelectionOrbit)",
         "await playCaseOpeningSequence()",
         "await showKeyCards(deck)",
     ]
@@ -120,6 +120,10 @@ if JS:
     presentation_fn = JS[JS.find("function drawPresentation()"):JS.find("function applyPresentation(")]
     if "recentDrawnDeckIds" in presentation_fn:
         fail("Presentation lottery must not depend on recent deck results")
+    if "selectionOrbit?.handoff?.()" not in JS:
+        fail("Selection orbit must hand off its current position to mana absorption")
+    if "stopSelectionOrbit.stop()" not in JS:
+        fail("Selection orbit controller must be stopped during final cleanup")
 
     if JS.count('deckCase.style.opacity = "0"') != 1:
         fail("Case fade-out must have one controlled entry point")
