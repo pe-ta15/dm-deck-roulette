@@ -57,7 +57,7 @@ def inspect_rules(rules, context):
                 for item in declarations if item.type == "declaration"
             ))
             if normalized:
-                duplicate_rules.setdefault((context, selector, normalized), []).append(selector)
+                duplicate_rules.setdefault((context, selector, normalized), []).append(rule.source_line)
             for item in declarations:
                 if item.type == "error":
                     fail(f"CSS declaration error for {selector}: {item.message}")
@@ -80,7 +80,7 @@ duplicate_count = 0
 for (context, selector, _), occurrences in duplicate_rules.items():
     if len(occurrences) > 1:
         duplicate_count += 1
-        print(f"CSS duplicate review: {context}: {selector} ({len(occurrences)} copies)")
+        print(f"CSS duplicate review: {context}: {selector} at lines {\", \".join(map(str, occurrences))} ({len(occurrences)} copies)")
 
 # Regression guards for the exact handoff effects that previously escaped review.
 for forbidden in ("case-burst", "ruptureWave", "resultShockwave", "revealFlash"):
