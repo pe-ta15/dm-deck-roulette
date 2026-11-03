@@ -4106,17 +4106,18 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     // デッキ確定後はアニメーションを解除し、既存の文明吸収演出へ引き継ぐ。
     function startSelectionOrbit() {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
-      if (icons.length === 0) return () => {};
+      if (icons.length === 0) return { handoff: () => [], stop: () => {} };
 
       const rect = drawingCard.getBoundingClientRect();
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
       const orbitRadius = Math.max(0, Math.min(rect.width, rect.height) / 2 - iconRadius - 12);
+      const startedAt = performance.now();
+      const initialAngles = icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
       const animations = icons.map((icon, index) => {
         const frames = [];
-        const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
-        const steps = 72;
+        const steps = 144;
         for (let step = 0; step <= steps; step++) {
-          const angle = startAngle + Math.PI * 2 * step / steps;
+          const angle = initialAngles[index] + Math.PI * 2 * step / steps;
           frames.push({
             transform: `translate(${Math.cos(angle) * orbitRadius}px, ${Math.sin(angle) * orbitRadius}px) scale(.96)`,
             opacity: 1,
@@ -4130,17 +4131,39 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         });
       });
 
-      return () => {
-        animations.forEach(animation => animation.cancel());
-        icons.forEach(icon => {
-          icon.style.opacity = "0";
-          icon.style.transform = "translate(0,0) scale(.7)";
-        });
+      let handedOff = false;
+      const anglesAt = now => initialAngles.map((angle, index) =>
+        angle + Math.PI * 2 * (((now - startedAt) / 1800) % 1)
+      );
+
+      return {
+        handoff() {
+          if (handedOff) return anglesAt(performance.now());
+          handedOff = true;
+          const angles = anglesAt(performance.now());
+          // 周回中の現在位置をインラインに固定してから、次の吸収アニメーションへ渡す。
+          icons.forEach((icon, index) => {
+            const angle = angles[index];
+            icon.style.transform = `translate(${Math.cos(angle) * orbitRadius}px, ${Math.sin(angle) * orbitRadius}px) scale(.96)`;
+            icon.style.opacity = "1";
+          });
+          animations.forEach(animation => animation.cancel());
+          return angles;
+        },
+        stop() {
+          animations.forEach(animation => animation.cancel());
+          if (!handedOff) {
+            icons.forEach(icon => {
+              icon.style.opacity = "0";
+              icon.style.transform = "translate(0,0) scale(.7)";
+            });
+          }
+        }
       };
     }
 
     // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
-    async function playManaSequence() {
+    async function playManaSequence(selectionOrbit) {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
       // 五文明は正円で周回。アイコン半径＋12pxの安全余白を四辺に確保する。
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
@@ -4160,9 +4183,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       canvas.height = Math.round(rect.height * dpr);
       ctx.scale(dpr, dpr);
 
+      const handoffAngles = selectionOrbit?.handoff?.() ?? icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
       const pointAt = (index, t) => {
-        const startAngle = -Math.PI / 2 + (Math.PI * 2 * index / icons.length);
-        const easedTurn = turns * (0.20 * t + 0.80 * t * t);
+        // 周回時の角度と速度を引き継ぎ、選定完了の瞬間に位置・速度をリセットしない。
+        const startAngle = handoffAngles[index];
+        const initialTurnRate = duration / (1800 * turns);
+        const easedTurn = turns * (initialTurnRate * t + (1 - initialTurnRate) * t * t);
         const angle = startAngle + Math.PI * 2 * easedTurn;
         // 未定義の radius を参照せず、画面サイズから算出した楕円軌道を使う。
         // 吸収が進むほどX/Yそれぞれの半径を縮め、アイコンを中央へ集める。
@@ -4180,8 +4206,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         for (let step = 0; step <= steps; step++) {
           const t = step / steps;
           const point = pointAt(index, t);
-          const scale = 0.88 + 0.18 * t;
-          const opacity = Math.min(1, t / 0.10) * Math.min(1, (1 - t) / 0.045);
+          const scale = 0.96 + 0.10 * t;
+          const opacity = Math.min(1, (1 - t) / 0.045);
           frames.push({
             transform: `translate(${point.x - rect.width / 2}px, ${point.y - rect.height / 2}px) scale(${scale})`,
             opacity: Math.max(0, opacity),
@@ -4567,8 +4593,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         // 先にデッキを確定し、その後に演出だけを独立抽選する。
         // 演出の種類・連続回数・過去の結果がデッキ選択へ影響することはない。
         const selectedDeck = await requestDraw();
-        stopSelectionOrbit();
-        stopSelectionOrbit = () => {};
+        // 周回はここで止めず、文明吸収アニメーションへ現在位置・速度を引き継ぐ。
         // /spinがID・名前・画像だけを返す場合に備え、/decksの完全なレコードと統合する。
         const listedDeck = decks.find(item => String(item.id) === String(selectedDeck.id));
         const deck = listedDeck ? { ...listedDeck, ...selectedDeck } : selectedDeck;
@@ -4580,7 +4605,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         // デッキ結果確定後に文明色を適用してから演出を開始する。
         applyDeckCivilizationFrame(deck);
-        await playManaSequence();
+        await playManaSequence(stopSelectionOrbit);
         traceDrawTiming("mana sequence complete");
 
         // 初期画面と同じ乳白色ケースを、そのまま開封する。
