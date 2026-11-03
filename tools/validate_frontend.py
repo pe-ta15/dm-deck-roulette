@@ -95,7 +95,7 @@ if JS:
     order = [
         "const selectedDeck = await requestDraw()",
         "const presentation = drawPresentation()",
-        "applyPresentation(presentation)",
+        "applyPresentation(presentation);",
         "await playManaSequence()",
         "await playCaseOpeningSequence()",
         "await showKeyCards(deck)",
