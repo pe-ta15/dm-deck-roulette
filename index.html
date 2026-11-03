@@ -3937,6 +3937,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     let recentDrawnDeckIds = [];
     let isSpinning = false;
     let isDeckLoading = true;
+    let isDeckLoadFailed = false;
 
     let activeDrawStartedAt = 0;
     function traceDrawTiming(stage) {
@@ -4026,6 +4027,11 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       if (isSpinning) return;
       if (isDeckLoading) {
         spinButton.textContent = "デッキを読み込み中…";
+        spinButton.disabled = true;
+        return;
+      }
+      if (isDeckLoadFailed) {
+        spinButton.textContent = "デッキを読み込めませんでした";
         spinButton.disabled = true;
         return;
       }
@@ -4489,6 +4495,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
     async function loadDecks() {
       isDeckLoading = true;
+      isDeckLoadFailed = false;
       updateSpinButtonState();
       statusElement.textContent = "デッキを読み込み中です。";
 
@@ -4511,6 +4518,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         statusElement.textContent = `抽選対象：${decks.length}デッキ`;
       } catch (error) {
         console.error(error);
+        isDeckLoadFailed = true;
         decks = [];
         renderDeckList();
         statusElement.textContent = "デッキを取得できませんでした。通信設定を確認してください。";
