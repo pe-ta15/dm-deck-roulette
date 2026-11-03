@@ -4023,6 +4023,14 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         : [];
     }
 
+    function updateDeckStatus() {
+      if (isDeckLoading || isDeckLoadFailed || decks.length === 0) return;
+      const availableCount = decks.filter(deck => !getExcludedDeckIds().includes(deck.id)).length;
+      statusElement.textContent = availableCount > 0
+        ? `抽選対象：${availableCount}デッキ`
+        : "";
+    }
+
     function updateSpinButtonState() {
       if (isSpinning) {
         spinButton.textContent = "待機中…";
@@ -4528,12 +4536,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       } finally {
         isDeckLoading = false;
         updateSpinButtonState();
-        if (!isDeckLoadFailed && decks.length > 0) {
-          const availableCount = decks.filter(deck => !getExcludedDeckIds().includes(deck.id)).length;
-          statusElement.textContent = availableCount > 0
-            ? `抽選対象：${availableCount}デッキ`
-            : "除外設定を確認してください。";
-        }
+        updateDeckStatus();
       }
     }
 
@@ -4611,7 +4614,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       activeDrawStartedAt = performance.now();
       traceDrawTiming("spin start");
       document.body.classList.add("is-spinning");
-      spinButton.disabled = true;
       spinButton.classList.add("hidden");
       settingsElement.classList.add("hidden");
       avoidRepeatCheckbox.disabled = true;
@@ -4750,6 +4752,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     avoidRepeatCheckbox.addEventListener("change", () => {
       renderDeckList();
       updateSpinButtonState();
+      updateDeckStatus();
     });
     spinButton.addEventListener("click", spin);
     loadDecks();
