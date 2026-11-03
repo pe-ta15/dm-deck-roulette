@@ -576,6 +576,29 @@
 .deck-case .case-glow{z-index:3!important;inset:46px 18px 12px!important;border-radius:3px!important;background:var(--case-civ-gradient,linear-gradient(90deg,#fff,#edf3ef))!important;mix-blend-mode:screen!important}
 .deck-case .case-lid{border:2px solid rgba(218,230,222,.98)!important;border-bottom:2px solid rgba(205,220,210,.94)!important;background:linear-gradient(145deg,#fff 0%,#edf4ef 52%,#fbfdfb 100%)!important;box-shadow:inset 0 2px 5px rgba(255,255,255,.98),0 1px 3px rgba(110,130,117,.06)!important;backface-visibility:visible!important}
 .deck-case .case-lid-inner{border:1px solid rgba(255,255,255,.98)!important;background:linear-gradient(145deg,#fff,#edf4ef)!important;box-shadow:inset 0 0 4px rgba(255,255,255,.98)!important;transform:translateZ(-1px)!important}
+     /* 蓋の内側にも本体と同じ文明色レイヤーを重ね、発光開始・立ち上がりを同期する。 */
+     .deck-case .case-lid-inner{position:absolute!important;overflow:hidden!important}
+     .deck-case .case-lid-inner:after{
+       content:"";
+       position:absolute;
+       z-index:2;
+       inset:0;
+       border-radius:4px;
+       background:var(--case-civ-gradient,linear-gradient(115deg,#fff,#edf3ef));
+       opacity:0;
+       mix-blend-mode:multiply;
+       box-shadow:inset 0 0 12px var(--case-civ-glow,rgba(255,255,255,.2)),inset 0 0 24px var(--case-civ-glow,rgba(255,255,255,.12));
+       filter:brightness(1.15) saturate(1.2);
+       transition:opacity 1.2s ease,filter 1.2s ease;
+       pointer-events:none
+     }
+     .deck-case.civ-charging .case-lid-inner:after{opacity:.34}
+     .deck-case.pressure .case-lid-inner:after,
+     .deck-case.opening .case-lid-inner:after{
+       opacity:.58;
+       filter:brightness(1.65) saturate(1.45);
+       animation:coreOverload .42s ease-in-out infinite alternate
+     }
 .deck-case .case-lid:before{border-color:rgba(255,255,255,.98)!important;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,236,228,.12) 55%,rgba(190,207,195,.06))!important;box-shadow:inset 0 0 4px rgba(255,255,255,.9)!important}
 .deck-case .case-lid:after{border:1px solid rgba(210,222,214,.98)!important;background:linear-gradient(90deg,#fff,#edf4ef 50%,#fff)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
 .deck-case .case-hinge{background:linear-gradient(180deg,#fff,#e9f1eb 55%,#d6e3da)!important;box-shadow:0 1px 2px rgba(100,118,107,.04)!important}
