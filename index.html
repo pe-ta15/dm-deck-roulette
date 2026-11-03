@@ -131,7 +131,7 @@
 
     .deck-case.opening .case-lock{animation:magnetRelease .16s ease-in both}
 
-    .deck-case.opening .case-lid{animation:caseLidOpen .82s cubic-bezier(.12,.78,.18,1) both}
+    .deck-case.opening .case-lid{}
 
     .deck-case.opening .case-body{animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both}
 
@@ -158,7 +158,7 @@
 
 
     /* 奥側の蝶番を固定軸に、蓋の板面が後方へ倒れる。位置移動ではなく回転 */
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}10%{transform:rotateX(-12deg) translateZ(2px);filter:brightness(1.35)}34%{transform:rotateX(-58deg) translateZ(7px);filter:brightness(1.65)}62%{transform:rotateX(-112deg) translateZ(12px);filter:brightness(2)}82%{transform:rotateX(-132deg) translateZ(15px);filter:brightness(1.8)}100%{transform:rotateX(-138deg) translateZ(16px);filter:brightness(1.45)}}
+    
 
 
     /* 決壊時の圧力波と文明色の破片 */
@@ -322,9 +322,9 @@
 
     .case-light{z-index:6;top:61%;width:128px;height:112px;filter:blur(15px)}
 
-    .deck-case.opening .case-lid{animation:caseLidOpen 1.12s cubic-bezier(.16,.78,.16,1) both}
+    .deck-case.opening .case-lid{}
 
-    @keyframes caseLidOpen{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}12%{transform:rotateX(-9deg) translateZ(2px);filter:brightness(1.12)}38%{transform:rotateX(-62deg) translateZ(8px);filter:brightness(1.45)}70%{transform:rotateX(-132deg) translateZ(15px);filter:brightness(1.9)}88%{transform:rotateX(-158deg) translateZ(18px);filter:brightness(1.65)}100%{transform:rotateX(-164deg) translateZ(19px);filter:brightness(1.5)}}
+    
 
     .deck-case.opening .case-body{animation:caseBodyRecoil .62s cubic-bezier(.16,.82,.22,1) both}
 
@@ -651,16 +651,10 @@
     }
 
     .deck-case.opening .case-lid {
-      animation:milkyLidSnap .72s cubic-bezier(.12,.82,.16,1) both!important;
+      
     }
 
-    @keyframes milkyLidSnap {
-      0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
-      12%{transform:rotateX(-10deg) translateZ(2px);filter:brightness(1.3)}
-      38%{transform:rotateX(-72deg) translateZ(10px);filter:brightness(1.8)}
-      68%{transform:rotateX(-132deg) translateZ(18px);filter:brightness(2.5)}
-      100%{transform:rotateX(-148deg) translateZ(22px);filter:brightness(1.75)}
-    }
+    
 
     .deck-case.opening .case-body {
       animation:milkyCaseKick .48s cubic-bezier(.16,.82,.2,1) both!important;
@@ -833,9 +827,9 @@
 
     #drawingCard.opening-cutin .deck-case{width:154px!important;height:210px!important;transform:translate(-50%,-50%) perspective(1050px) rotateX(5deg) rotateY(-5deg) scale(1.08)!important}
 
-    .deck-case.opening .case-lid{animation:realisticHingeSnap 1.02s cubic-bezier(.14,.82,.18,1) both!important}
+    .deck-case.opening .case-lid{}
 
-    @keyframes realisticHingeSnap{0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}13%{transform:rotateX(-7deg) translateZ(1px);filter:brightness(1.18)}31%{transform:rotateX(-24deg) translateZ(3px);filter:brightness(1.45)}66%{transform:rotateX(-104deg) translateZ(13px);filter:brightness(1.9)}84%{transform:rotateX(-119deg) translateZ(15px);filter:brightness(1.65)}100%{transform:rotateX(-124deg) translateZ(16px);filter:brightness(1.55)}}
+    
 
     .deck-case.opening .case-body{animation:verticalCaseKick .5s cubic-bezier(.16,.82,.2,1) both!important}
 
@@ -986,17 +980,10 @@
     .case-lock:after { display:none !important; }
 
     .deck-case.opening .case-lid {
-      animation: physicallyHingedLid 1.18s cubic-bezier(.16,.78,.18,1) both !important;
+      
     }
 
-    @keyframes physicallyHingedLid {
-      0% { transform:rotateX(68deg) translateZ(7px); filter:brightness(1); }
-      12% { transform:rotateX(61deg) translateZ(8px); filter:brightness(1.08); }
-      38% { transform:rotateX(32deg) translateZ(12px); filter:brightness(1.25); }
-      72% { transform:rotateX(-12deg) translateZ(17px); filter:brightness(1.55); }
-      88% { transform:rotateX(-22deg) translateZ(18px); filter:brightness(1.35); }
-      100% { transform:rotateX(-18deg) translateZ(18px); filter:brightness(1.3); }
-    }{ filter:brightness(1.35); }
+    { filter:brightness(1.35); }
 
     .deck-case.opening .case-body { animation:caseBodyRecoil .5s cubic-bezier(.16,.82,.22,1) both !important; }{ display:none !important; }
 
@@ -1173,17 +1160,10 @@
     }
 
     .deck-case.opening .case-lid {
-      animation: daisoLidFlip 1.18s cubic-bezier(.16,.78,.18,1) both!important;
+      
     }
 
-    @keyframes daisoLidFlip {
-      0%{transform:rotateX(84deg) translateZ(0);filter:brightness(1)}
-      13%{transform:rotateX(76deg) translateZ(2px);filter:brightness(1.12)}
-      42%{transform:rotateX(43deg) translateZ(7px);filter:brightness(1.3)}
-      76%{transform:rotateX(5deg) translateZ(13px);filter:brightness(1.7)}
-      90%{transform:rotateX(-3deg) translateZ(15px);filter:brightness(1.45)}
-      100%{transform:rotateX(0deg) translateZ(15px);filter:brightness(1.35)}
-    }{filter:brightness(1.7) drop-shadow(0 0 5px #fff0c2)}
+    {filter:brightness(1.7) drop-shadow(0 0 5px #fff0c2)}
 
     .deck-case.opening .case-mouth-beam{animation:mouthBeamBurst 1.18s cubic-bezier(.12,.8,.18,1) .38s both}
 
@@ -1306,7 +1286,7 @@
     }
 
     .deck-case.opening .case-lid {
-      animation:lidEjection .92s cubic-bezier(.12,.82,.16,1) both!important;
+      
       filter:drop-shadow(0 0 18px #fff) drop-shadow(0 0 34px var(--case-civ-glow,#fff2b8));
     }
 
@@ -1348,13 +1328,7 @@
 
     @keyframes coreOverloadPulse {from{transform:translate(-50%,-50%) scale(.8);opacity:.55}to{transform:translate(-50%,-50%) scale(1.55);opacity:1}}
 
-    @keyframes lidEjection {
-      0%{transform:rotateX(0deg) translateZ(0) translateY(0) rotateZ(0);opacity:1}
-      20%{transform:rotateX(-22deg) translateZ(8px) translateY(-5px) rotateZ(-2deg);opacity:1}
-      54%{transform:rotateX(-112deg) translateZ(30px) translateY(-34px) rotateZ(-9deg);opacity:1}
-      78%{transform:rotateX(-158deg) translateZ(54px) translateY(-62px) rotateZ(-14deg);opacity:1}
-      100%{transform:rotateX(-164deg) translateZ(62px) translateY(-72px) rotateZ(-15deg);opacity:1}
-    }
+    
 
     @keyframes caseRecoil {
       0%{transform:translateY(0) scale(1)}
@@ -1541,15 +1515,9 @@
       72%{transform:translate(-50%,-50%) perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(.985,.99)}
     }
 
-    .deck-case.opening .case-lid {animation:daisoCapKick .9s cubic-bezier(.12,.78,.16,1) both!important}
+    .deck-case.opening .case-lid {}
 
-    @keyframes daisoCapKick {
-      0%{transform:rotateX(0deg) translateY(0) translateZ(0);filter:brightness(1)}
-      16%{transform:rotateX(-22deg) translateY(-3px) translateZ(6px);filter:brightness(1.4)}
-      48%{transform:rotateX(-76deg) translateY(-28px) translateZ(18px);filter:brightness(1.8)}
-      78%{transform:rotateX(-112deg) translateY(-52px) translateZ(30px);filter:brightness(2.1)}
-      100%{transform:rotateX(-118deg) translateY(-58px) translateZ(34px);filter:brightness(1.8)}
-    }
+    
 
     .deck-case.opening .case-lock {animation:capLatchRelease .22s ease-out both!important}
 
@@ -1644,18 +1612,11 @@
     }
 
     .deck-case.opening .case-lid {
-      animation:visibleHingedLidOpen 1.22s cubic-bezier(.13,.78,.16,1) both!important;
+      
       filter:drop-shadow(0 9px 11px rgba(54,75,59,.28))!important;
     }
 
-    @keyframes visibleHingedLidOpen {
-      0%{transform:rotateX(0deg) translateY(0) translateZ(0)}
-      12%{transform:rotateX(-9deg) translateY(-1px) translateZ(2px)}
-      32%{transform:rotateX(-48deg) translateY(-8px) translateZ(8px)}
-      62%{transform:rotateX(-104deg) translateY(-24px) translateZ(17px)}
-      82%{transform:rotateX(-124deg) translateY(-33px) translateZ(23px)}
-      100%{transform:rotateX(-116deg) translateY(-29px) translateZ(21px)}
-    }
+    
 
     .deck-case.opening .case-lid:before,
     .deck-case.opening .case-lid:after,
@@ -2897,17 +2858,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{
 
 /* Single smooth opening motion on the rear hinge. No eject/float transform is applied. */
 .deck-case.opening .case-lid{
-  animation:rearHingeOpen 1.16s cubic-bezier(.18,.78,.18,1) both!important;
+  
 }
 
-@keyframes rearHingeOpen{
-  0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
-  12%{transform:rotateX(-8deg) translateZ(1px);filter:brightness(1.08)}
-  38%{transform:rotateX(-42deg) translateZ(4px);filter:brightness(1.2)}
-  72%{transform:rotateX(-88deg) translateZ(8px);filter:brightness(1.42)}
-  90%{transform:rotateX(-98deg) translateZ(9px);filter:brightness(1.28)}
-  100%{transform:rotateX(-94deg) translateZ(8px);filter:brightness(1.22)}
-}
+
 
 @media(max-width:480px){
   #result.has-result,#result.result-reveal{
@@ -3055,16 +3009,9 @@ roomy draw stage,
 
 .deck-case .case-body{top:72px!important}{display:none!important}
 
-.deck-case.opening .case-lid{animation:fabricFoldOpen 1.18s cubic-bezier(.18,.78,.18,1) both!important}
+.deck-case.opening .case-lid{}
 
-@keyframes fabricFoldOpen{
-  0%{transform:rotateX(0deg) translateZ(0);filter:brightness(1)}
-  14%{transform:rotateX(-9deg) translateZ(1px);filter:brightness(1.08)}
-  42%{transform:rotateX(-48deg) translateZ(4px);filter:brightness(1.2)}
-  76%{transform:rotateX(-88deg) translateZ(8px);filter:brightness(1.38)}
-  92%{transform:rotateX(-96deg) translateZ(9px);filter:brightness(1.28)}
-  100%{transform:rotateX(-94deg) translateZ(8px);filter:brightness(1.2)}
-}
+
 
 /* No enclosing display frame. Increase the roulette panel's actual inner padding. */
 body.is-spinning .roulette-panel{
