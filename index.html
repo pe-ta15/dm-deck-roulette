@@ -831,10 +831,12 @@
     /* ケース本体の内寸は高さ約100px。5:7比率を保ったまま内部に収める。 */
 .deck-case .case-cavity {
       left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
-      width:70px!important;height:auto!important;aspect-ratio:5 / 7!important;
+      width:70px!important;height:auto!important;aspect-ratio:20 / 27!important;
       transform:translate(-50%,-50%)!important;
       border:0!important;border-radius:3px!important;
-      background:linear-gradient(180deg,#fcfefc,#f1f6f2 58%,#e8f0ea)!important;
+      background-color:#f4f8f5!important;
+      background-image:url("https://raw.githubusercontent.com/pe-ta15/dm-deck-roulette/main/assets/card-back.webp")!important;
+      background-position:center!important;background-repeat:no-repeat!important;background-size:100% 100%!important;
       box-shadow:inset 0 1px 4px rgba(255,255,255,.98),inset 0 -1px 3px rgba(132,151,140,.04)!important
     }
     .deck-case .case-spectrum {
@@ -889,8 +891,8 @@
       background:radial-gradient(ellipse at 50% 65%,#fff 0%,var(--case-civ-glow,#e8f0ea) 23%,transparent 72%)!important
     }
     @media(max-width:480px) {
-      .deck-case .case-cavity {width:70px!important}
-      .deck-case .case-spectrum {width:66px!important}
+      .deck-case .case-cavity {width:100px!important}
+      .deck-case .case-spectrum {width:94px!important;aspect-ratio:20 / 27!important}
     }
 
   </style>
