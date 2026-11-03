@@ -182,7 +182,7 @@
 
     #manaTrailCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
 
-    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;filter:drop-shadow(0 0 7px var(--mana-color)) drop-shadow(0 0 18px var(--mana-color));will-change:transform,opacity;pointer-events:none}
+    .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;will-change:transform,opacity;pointer-events:none}
 
     .mana-orb.fire{--mana-color:#e53935}
 
@@ -207,8 +207,6 @@
     .mana-orb.darkness{filter:drop-shadow(0 0 5px #d49aff) drop-shadow(0 0 15px #743c9b) drop-shadow(0 0 26px rgb(116 60 155 / 60%))}
 
     .mana-absorption.charging .drawing-card{animation:cardCharge .72s ease-in-out infinite alternate}
-
-    .mana-absorption.charging .drawing-card:before{box-shadow:inset 0 0 18px rgb(255 255 255 / 55%),0 0 15px rgb(255 255 255 / 35%)}
 
     @keyframes cardCharge{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1) saturate(1)}to{transform:translate(-50%,-50%) scale(1.065);filter:brightness(1.38) saturate(1.25)}}
 
