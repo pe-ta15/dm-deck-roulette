@@ -269,9 +269,9 @@
       .mana-absorption:before,.mana-absorption:after{width:142px!important;height:142px!important}
     }
 
-    /* 開封カットインはCSSで描画。ケース本体を非表示にする動画レイヤーは使用しない。 */
+    /* 開封カットインはCSSで描画し、初期表示と同じケース要素を使用する。 */
 
-    /* 固定カットイン：カメラ番号・カメラ切替は使わず、開封映像だけを毎回同じ順序で再生 */
+    /* 固定カットイン：CSSで描画したケース開封演出を毎回同じ順序で再生 */
     #drawingCard.mana-absorption.opening-cutin{z-index:20;background:radial-gradient(ellipse at 50% 55%,#17202c 0%,#070b12 72%);border:1px solid rgba(255,255,255,.08);box-shadow:0 0 42px rgba(0,0,0,.48);overflow:visible!important}
     #drawingCard.opening-cutin:before,#drawingCard.opening-cutin:after{opacity:0!important}
     #drawingCard.opening-cutin .mana-orb,#drawingCard.opening-cutin .drawing-card{display:none!important}
