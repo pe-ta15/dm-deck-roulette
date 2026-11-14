@@ -4426,12 +4426,65 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         }
 
         if (stopped) return;
-        // 最後の文明が定着してから、紋様と粒子を静かに消して周回へつなぐ。
+        // 最後の文明が定着したら、静止から徐々に加速して円軌道へつなぐ。
+        // 加速中に召喚の紋様も薄くし、演出の切り替わりを同時に目立たせない。
+        icons.forEach(icon => {
+          icon.classList.add("is-revealed");
+          icon.style.visibility = "visible";
+          icon.style.opacity = "1";
+        });
+
+        const transitionStartedAt = performance.now();
+        const transitionDuration = reducedMotion ? 1 : 720;
+        const angularSpeed = Math.PI * 2 / orbitDuration;
+        const accelerationTime = 0.22;
+        const angleDeltaAt = elapsed => angularSpeed * (
+          elapsed - accelerationTime * (1 - Math.exp(-elapsed / accelerationTime))
+        );
+        const transitionAnimations = icons.map((icon, index) => {
+          const frames = [];
+          const steps = 36;
+          for (let step = 0; step <= steps; step++) {
+            const progress = step / steps;
+            const elapsed = transitionDuration * progress;
+            const angle = initialAngles[index] + angleDeltaAt(elapsed / 1000);
+            const point = positionAt(angle);
+            frames.push({
+              transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
+              opacity: 1,
+              offset: progress
+            });
+          }
+          return icon.animate(frames, {
+            duration: transitionDuration,
+            iterations: 1,
+            easing: "linear",
+            fill: "forwards"
+          });
+        });
+
         if (summonCanvas) {
           summonCanvas.style.transition = "opacity 320ms ease";
           summonCanvas.style.opacity = "0";
-          await sleep(reducedMotion ? 40 : 330);
         }
+        await Promise.all([
+          Promise.all(transitionAnimations.map(animation => animation.finished.catch(() => {}))),
+          sleep(reducedMotion ? 1 : 330)
+        ]);
+        if (stopped) return;
+
+        const transitionElapsed = performance.now() - transitionStartedAt;
+        const transitionAngle = angleDeltaAt(transitionElapsed / 1000);
+        const currentAngles = initialAngles.map(angle => angle + transitionAngle);
+        // 加速アニメーションの最終位置を固定してから、等速周回へ引き継ぐ。
+        icons.forEach((icon, index) => {
+          const point = positionAt(currentAngles[index]);
+          icon.style.transform = "translate(" + point.x + "px, " + point.y + "px) scale(.96)";
+          icon.style.opacity = "1";
+          icon.style.visibility = "visible";
+        });
+        transitionAnimations.forEach(animation => animation.cancel());
+
         if (summonFrame) cancelAnimationFrame(summonFrame);
         summonFrame = 0;
         summonCanvas?.remove();
@@ -4439,19 +4492,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         summonContext = null;
         particles.length = 0;
 
-        // 5文明の召喚が完了してから、全員同時に同じ円軌道で周回を開始する。
-        orbitStartedAt = performance.now();
-        // 5文明が揃った時点で表示状態を固定し、周回への切り替えで消えないようにする。
-        icons.forEach(icon => {
-          icon.classList.add("is-revealed");
-          icon.style.visibility = "visible";
-          icon.style.opacity = "1";
-        });
+        // 加速終了時の角度・速度を基準にし、位置も速度も飛ばさず等速周回へ。
+        orbitStartedAt = performance.now() - transitionAngle / angularSpeed * 1000;
         orbitAnimations = icons.map((icon, index) => {
           const frames = [];
           const steps = 144;
           for (let step = 0; step <= steps; step++) {
-            const angle = initialAngles[index] + Math.PI * 2 * step / steps;
+            const angle = currentAngles[index] + Math.PI * 2 * step / steps;
             const point = positionAt(angle);
             frames.push({
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
