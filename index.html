@@ -4268,40 +4268,195 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       const orbitRadius = Math.max(0, Math.min(rect.width, rect.height) / 2 - iconRadius - 12);
       const initialAngles = icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
       const orbitDuration = 1800;
-      const revealDuration = 320;
-      const revealStagger = 190;
+      const revealDuration = 460;
+      const revealStagger = 520;
       const revealAnimations = [];
       let orbitAnimations = [];
       let orbitStartedAt = 0;
       let handedOff = false;
       let stopped = false;
-
+      let summonFrame = 0;
+      let activeSummon = null;
+      let summonCanvas = null;
+      let summonContext = null;
+      const particles = [];
+      const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+      const summonColors = ["#e53935", "#f2c600", "#299b45", "#168bd2", "#743c9b"];
       const positionAt = angle => ({ x: Math.cos(angle) * orbitRadius, y: Math.sin(angle) * orbitRadius });
 
+      // アイコンより背面に専用キャンバスを置き、召喚粒子と淡い紋様だけを描く。
+      // 既存のケースDOM・吸収キャンバスとは分離し、演出終了時に必ず破棄する。
+      summonCanvas = document.createElement("canvas");
+      summonCanvas.className = "mana-summon-canvas";
+      summonCanvas.setAttribute("aria-hidden", "true");
+      Object.assign(summonCanvas.style, {
+        position: "absolute",
+        inset: "0",
+        width: "100%",
+        height: "100%",
+        zIndex: "3",
+        pointerEvents: "none",
+        opacity: "1"
+      });
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      summonCanvas.width = Math.max(1, Math.round(rect.width * dpr));
+      summonCanvas.height = Math.max(1, Math.round(rect.height * dpr));
+      summonContext = summonCanvas.getContext("2d");
+      if (summonContext) summonContext.scale(dpr, dpr);
+      drawingCard.appendChild(summonCanvas);
+
+      const rand = (min, max) => min + Math.random() * (max - min);
+      const drawSummonAtmosphere = now => {
+        if (stopped || !summonContext || !summonCanvas?.isConnected) return;
+        const ctx = summonContext;
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        const dt = Math.min(0.04, (now - (drawSummonAtmosphere.lastTime || now)) / 1000);
+        drawSummonAtmosphere.lastTime = now;
+
+        if (activeSummon) {
+          const elapsed = now - activeSummon.startedAt;
+          const progress = Math.min(1, elapsed / activeSummon.duration);
+          const x = rect.width / 2 + activeSummon.point.x;
+          const y = rect.height / 2 + activeSummon.point.y;
+          const color = activeSummon.color;
+
+          // 文明の位置に細い二重紋様が広がり、輪郭が集まるにつれて収束する。
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.globalCompositeOperation = "lighter";
+          ctx.globalAlpha = Math.sin(Math.PI * Math.min(1, progress * 1.08)) * 0.58;
+          ctx.strokeStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 13;
+          ctx.lineWidth = 1.15;
+          ctx.setLineDash([3, 5]);
+          ctx.beginPath();
+          ctx.arc(0, 0, 24 + 23 * (1 - progress), -Math.PI / 2 + progress * 1.8, Math.PI * 1.5 + progress * 1.8);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha *= 0.65;
+          ctx.beginPath();
+          ctx.arc(0, 0, 13 + 7 * (1 - progress), 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          // 光粒子は外周から中心へ緩やかに吸い寄せられる。
+          if (now - activeSummon.lastEmission > (reducedMotion ? 90 : 24)) {
+            activeSummon.lastEmission = now;
+            const count = reducedMotion ? 2 : 5;
+            for (let n = 0; n < count; n++) {
+              const angle = rand(0, Math.PI * 2);
+              const radius = rand(38, 72);
+              particles.push({
+                x: x + Math.cos(angle) * radius,
+                y: y + Math.sin(angle) * radius,
+                targetX: x,
+                targetY: y,
+                speed: rand(0.75, 1.55),
+                life: 0,
+                maxLife: rand(0.34, 0.62),
+                size: rand(1, 2.8),
+                color
+              });
+            }
+          }
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.life += dt;
+          const dx = p.targetX - p.x;
+          const dy = p.targetY - p.y;
+          p.x += dx * Math.min(1, p.speed * dt * 3.2);
+          p.y += dy * Math.min(1, p.speed * dt * 3.2);
+          const alpha = Math.max(0, 1 - p.life / p.maxLife);
+          if (alpha <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.globalCompositeOperation = "lighter";
+          ctx.globalAlpha = alpha * 0.9;
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        summonFrame = requestAnimationFrame(drawSummonAtmosphere);
+      };
+      if (summonContext) summonFrame = requestAnimationFrame(drawSummonAtmosphere);
+
       const ready = (async () => {
-        // DOM順（火・光・自然・水・闇）に1つずつ出現。先に出たアイコンは定位置に残る。
-        const revealPromises = icons.map((icon, index) => {
+        // DOM順（火・光・自然・水・闇）に一文明ずつ召喚。
+        // 粒子が集まってからアイコンを形成し、出現した文明はその場に残す。
+        for (let index = 0; index < icons.length; index++) {
+          if (stopped) return;
+          const icon = icons[index];
           const point = positionAt(initialAngles[index]);
+          const duration = reducedMotion ? 180 : revealDuration;
+          const color = summonColors[index] || "#ffffff";
+          activeSummon = {
+            point,
+            color,
+            startedAt: performance.now(),
+            duration: reducedMotion ? 180 : revealStagger,
+            lastEmission: 0
+          };
+
+          // 先に粒子の収束を見せ、続いて文明の紋章が光の中から形になる。
+          await sleep(reducedMotion ? 80 : 310);
+          if (stopped) return;
           const animation = icon.animate([
-            { transform: "translate(0px, 0px) scale(.48)", opacity: 0, offset: 0 },
-            { transform: "translate(" + point.x + "px, " + point.y + "px) scale(1.08)", opacity: 1, offset: .78 },
-            { transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)", opacity: 1, offset: 1 }
-          ], { duration: revealDuration, delay: index * revealStagger, easing: "cubic-bezier(.2,.78,.25,1)", fill: "both" });
+            {
+              transform: "translate(" + point.x + "px, " + point.y + "px) scale(.28)",
+              opacity: 0,
+              filter: "blur(9px) brightness(2.1)"
+            },
+            {
+              transform: "translate(" + point.x + "px, " + point.y + "px) scale(1.13)",
+              opacity: 1,
+              filter: "blur(1px) brightness(1.75)",
+              offset: .72
+            },
+            {
+              transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
+              opacity: 1,
+              filter: "blur(0px) brightness(1.15)"
+            }
+          ], {
+            duration,
+            easing: "cubic-bezier(.16,.78,.22,1)",
+            fill: "both"
+          });
           revealAnimations.push(animation);
-          return animation.finished.catch(() => {});
-        });
+          await animation.finished.catch(() => {});
+          if (stopped) return;
 
-        await Promise.all(revealPromises);
-        if (stopped) return;
-
-        // 出現アニメーションの最終位置を固定してから、全員同時に周回を開始する。
-        icons.forEach((icon, index) => {
-          const point = positionAt(initialAngles[index]);
           icon.style.transform = "translate(" + point.x + "px, " + point.y + "px) scale(.96)";
           icon.style.opacity = "1";
-        });
-        revealAnimations.forEach(animation => animation.cancel());
+          animation.cancel();
+          activeSummon = null;
+          await sleep(reducedMotion ? 20 : 90);
+        }
 
+        if (stopped) return;
+        // 最後の文明が定着してから、紋様と粒子を静かに消して周回へつなぐ。
+        if (summonCanvas) {
+          summonCanvas.style.transition = "opacity 320ms ease";
+          summonCanvas.style.opacity = "0";
+          await sleep(reducedMotion ? 40 : 330);
+        }
+        if (summonFrame) cancelAnimationFrame(summonFrame);
+        summonFrame = 0;
+        summonCanvas?.remove();
+        summonCanvas = null;
+        summonContext = null;
+        particles.length = 0;
+
+        // 5文明の召喚が完了してから、全員同時に同じ円軌道で周回を開始する。
         orbitStartedAt = performance.now();
         orbitAnimations = icons.map((icon, index) => {
           const frames = [];
@@ -4344,13 +4499,24 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         },
         stop() {
           stopped = true;
+          if (summonFrame) cancelAnimationFrame(summonFrame);
+          summonFrame = 0;
+          summonCanvas?.remove();
+          summonCanvas = null;
+          summonContext = null;
+          particles.length = 0;
+          activeSummon = null;
           revealAnimations.forEach(animation => animation.cancel());
           orbitAnimations.forEach(animation => animation.cancel());
-          if (!handedOff) icons.forEach(icon => { icon.style.opacity = "0"; icon.style.transform = "translate(0,0) scale(.7)"; });
+          if (!handedOff) icons.forEach(icon => {
+            icon.getAnimations().forEach(animation => animation.cancel());
+            icon.style.opacity = "0";
+            icon.style.transform = "translate(0,0) scale(.7)";
+            icon.style.removeProperty("filter");
+          });
         }
       };
     }
-
     // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
     async function playManaSequence(selectionOrbit) {
       // 5文明の逐次出現が完了し、周回を最低限見せてから吸収へ移る。
