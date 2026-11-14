@@ -4255,68 +4255,108 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       });
     }
 
-    // デッキ選定待ちの間も五文明アイコンを周回させ、画面が停止した印象をなくす。
-    // デッキ確定後はアニメーションを解除し、既存の文明吸収演出へ引き継ぐ。
+    // 五文明を1つずつ出現させ、全員が揃ってから同じ円軌道で周回させる。
+    // 周回開始後は抽選結果の到着まで回り続け、吸収処理へ現在位置・速度を引き継ぐ。
     function startSelectionOrbit() {
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
-      if (icons.length === 0) return { handoff: () => [], stop: () => {} };
+      if (icons.length === 0) {
+        return { ready: Promise.resolve(), waitForOrbit: () => Promise.resolve(), handoff: () => [], stop: () => {} };
+      }
 
       const rect = drawingCard.getBoundingClientRect();
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
       const orbitRadius = Math.max(0, Math.min(rect.width, rect.height) / 2 - iconRadius - 12);
-      const startedAt = performance.now();
       const initialAngles = icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
-      const animations = icons.map((icon, index) => {
-        const frames = [];
-        const steps = 144;
-        for (let step = 0; step <= steps; step++) {
-          const angle = initialAngles[index] + Math.PI * 2 * step / steps;
-          frames.push({
-            transform: `translate(${Math.cos(angle) * orbitRadius}px, ${Math.sin(angle) * orbitRadius}px) scale(.96)`,
-            opacity: 1,
-            offset: step / steps
-          });
-        }
-        return icon.animate(frames, {
-          duration: 1800,
-          iterations: Infinity,
-          easing: "linear"
-        });
-      });
-
+      const orbitDuration = 1800;
+      const revealDuration = 320;
+      const revealStagger = 190;
+      const revealAnimations = [];
+      let orbitAnimations = [];
+      let orbitStartedAt = 0;
       let handedOff = false;
-      const anglesAt = now => initialAngles.map((angle, index) =>
-        angle + Math.PI * 2 * (((now - startedAt) / 1800) % 1)
-      );
+      let stopped = false;
+
+      const positionAt = angle => ({ x: Math.cos(angle) * orbitRadius, y: Math.sin(angle) * orbitRadius });
+
+      const ready = (async () => {
+        // DOM順（火・光・自然・水・闇）に1つずつ出現。先に出たアイコンは定位置に残る。
+        const revealPromises = icons.map((icon, index) => {
+          const point = positionAt(initialAngles[index]);
+          const animation = icon.animate([
+            { transform: "translate(0px, 0px) scale(.48)", opacity: 0, offset: 0 },
+            { transform: "translate(" + point.x + "px, " + point.y + "px) scale(1.08)", opacity: 1, offset: .78 },
+            { transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)", opacity: 1, offset: 1 }
+          ], { duration: revealDuration, delay: index * revealStagger, easing: "cubic-bezier(.2,.78,.25,1)", fill: "both" });
+          revealAnimations.push(animation);
+          return animation.finished.catch(() => {});
+        });
+
+        await Promise.all(revealPromises);
+        if (stopped) return;
+
+        // 出現アニメーションの最終位置を固定してから、全員同時に周回を開始する。
+        icons.forEach((icon, index) => {
+          const point = positionAt(initialAngles[index]);
+          icon.style.transform = "translate(" + point.x + "px, " + point.y + "px) scale(.96)";
+          icon.style.opacity = "1";
+        });
+        revealAnimations.forEach(animation => animation.cancel());
+
+        orbitStartedAt = performance.now();
+        orbitAnimations = icons.map((icon, index) => {
+          const frames = [];
+          const steps = 144;
+          for (let step = 0; step <= steps; step++) {
+            const angle = initialAngles[index] + Math.PI * 2 * step / steps;
+            const point = positionAt(angle);
+            frames.push({
+              transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
+              opacity: 1,
+              offset: step / steps
+            });
+          }
+          return icon.animate(frames, { duration: orbitDuration, iterations: Infinity, easing: "linear" });
+        });
+      })();
+
+      const anglesAt = now => initialAngles.map(angle => angle + Math.PI * 2 * (((now - orbitStartedAt) / orbitDuration) % 1));
 
       return {
+        ready,
+        async waitForOrbit(minimumDuration = 900) {
+          await ready;
+          if (stopped || !orbitStartedAt) return;
+          const remaining = Math.max(0, minimumDuration - (performance.now() - orbitStartedAt));
+          if (remaining > 0) await sleep(remaining);
+        },
         handoff() {
-          if (handedOff) return anglesAt(performance.now());
-          handedOff = true;
+          if (stopped || !orbitStartedAt) return initialAngles.slice();
           const angles = anglesAt(performance.now());
-          // 周回中の現在位置をインラインに固定してから、次の吸収アニメーションへ渡す。
+          if (handedOff) return angles;
+          handedOff = true;
           icons.forEach((icon, index) => {
-            const angle = angles[index];
-            icon.style.transform = `translate(${Math.cos(angle) * orbitRadius}px, ${Math.sin(angle) * orbitRadius}px) scale(.96)`;
+            const point = positionAt(angles[index]);
+            icon.style.transform = "translate(" + point.x + "px, " + point.y + "px) scale(.96)";
             icon.style.opacity = "1";
           });
-          animations.forEach(animation => animation.cancel());
+          orbitAnimations.forEach(animation => animation.cancel());
           return angles;
         },
         stop() {
-          animations.forEach(animation => animation.cancel());
-          if (!handedOff) {
-            icons.forEach(icon => {
-              icon.style.opacity = "0";
-              icon.style.transform = "translate(0,0) scale(.7)";
-            });
-          }
+          stopped = true;
+          revealAnimations.forEach(animation => animation.cancel());
+          orbitAnimations.forEach(animation => animation.cancel());
+          if (!handedOff) icons.forEach(icon => { icon.style.opacity = "0"; icon.style.transform = "translate(0,0) scale(.7)"; });
         }
       };
     }
 
     // 五文明召喚→連続した渦巻き→一斉吸収の順に演出する。
     async function playManaSequence(selectionOrbit) {
+      // 5文明の逐次出現が完了し、周回を最低限見せてから吸収へ移る。
+      if (selectionOrbit?.ready) await selectionOrbit.ready;
+      if (selectionOrbit?.waitForOrbit) await selectionOrbit.waitForOrbit(900);
+
       const icons = [...drawingCard.querySelectorAll(".mana-orb")];
       // 五文明は正円で周回。アイコン半径＋12pxの安全余白を四辺に確保する。
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
