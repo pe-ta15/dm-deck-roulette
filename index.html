@@ -3971,6 +3971,32 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }
     }
 
+
+    /* ===== Case interior: consistent milky-white backing during pressure ===== */
+    /* カード外側に見える収納部は黒ではなく、乳白色の樹脂内壁として統一する。 */
+    .deck-case .case-body:before {
+      background:linear-gradient(180deg,
+        rgba(250,252,249,.98) 0%,
+        rgba(231,239,232,.96) 58%,
+        rgba(244,248,243,.98) 100%)!important;
+      box-shadow:inset 0 0 12px rgba(255,255,255,.82),
+        inset 0 3px 9px rgba(103,137,113,.08)!important;
+    }
+
+    /* カードを置く領域自体は透明にし、圧力演出で白い面を重ねない。 */
+    .deck-case .case-cavity,
+    .deck-case.pressure .case-cavity {
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+    .deck-case.pressure .case-cavity:after,
+    .deck-case.overloaded .case-cavity:after,
+    .deck-case.critical .case-cavity:after {
+      opacity:.18!important;
+      filter:blur(5px) saturate(1.35)!important;
+      mix-blend-mode:screen!important;
+    }
+
 </style>
 </head>
 <body>
