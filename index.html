@@ -4248,6 +4248,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       const revealStagger = 520;
       const revealAnimations = [];
       let orbitAnimations = [];
+      let transitionAnimations = [];
       let orbitStartedAt = 0;
       let handedOff = false;
       let stopped = false;
@@ -4441,7 +4442,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const angleDeltaAt = elapsed => angularSpeed * (
           elapsed - accelerationTime * (1 - Math.exp(-elapsed / accelerationTime))
         );
-        const transitionAnimations = icons.map((icon, index) => {
+        transitionAnimations = icons.map((icon, index) => {
           const frames = [];
           const steps = 36;
           for (let step = 0; step <= steps; step++) {
@@ -4484,6 +4485,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           icon.style.visibility = "visible";
         });
         transitionAnimations.forEach(animation => animation.cancel());
+        transitionAnimations = [];
 
         if (summonFrame) cancelAnimationFrame(summonFrame);
         summonFrame = 0;
@@ -4543,6 +4545,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           particles.length = 0;
           activeSummon = null;
           revealAnimations.forEach(animation => animation.cancel());
+          transitionAnimations.forEach(animation => animation.cancel());
           orbitAnimations.forEach(animation => animation.cancel());
           if (!handedOff) icons.forEach(icon => {
             icon.getAnimations().forEach(animation => animation.cancel());
