@@ -54,24 +54,6 @@
 
     .drawing-card{position:absolute;z-index:2;left:50%;top:50%;width:132px;max-width:42%;aspect-ratio:5/7;border:2px solid #aab4cf;border-radius:13px;background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%);box-shadow:0 0 24px rgb(109 143 255 / 28%);display:grid;place-items:center;overflow:hidden;transform:translate(-50%,-50%);animation:cardPulse 1.2s ease-in-out infinite alternate}
 
-    /* 当選デッキの文明色をカード外周に明確に表示。複数文明は連続したグラデーション */
-    .drawing-card.deck-civ-colored{
-      border:10px solid transparent;
-      background:radial-gradient(circle at center,#f7f8ff 0%,#d7def0 46%,#aab6d4 100%) padding-box,var(--deck-civ-gradient) border-box;
-      box-shadow:0 0 12px 2px var(--deck-civ-glow),0 0 30px 5px var(--deck-civ-glow),0 0 58px rgb(255 255 255 / 48%),inset 0 0 22px rgb(255 255 255 / 58%);
-      animation:civFramePulse 1.05s ease-in-out infinite alternate
-    }
-
-    .drawing-card.deck-civ-colored:before{inset:4px;border:2px solid rgb(255 255 255 / 96%);box-shadow:inset 0 0 16px var(--deck-civ-glow),0 0 12px var(--deck-civ-glow)}
-
-    .mana-absorption.charging .drawing-card.deck-civ-colored{border-width:10px;box-shadow:0 0 18px 3px var(--deck-civ-glow),0 0 42px 7px var(--deck-civ-glow),0 0 72px rgb(255 255 255 / 55%),inset 0 0 28px rgb(255 255 255 / 70%);animation:cardChargeCiv .72s ease-in-out infinite alternate}
-
-    .mana-absorption.charging .drawing-card.deck-civ-colored:before{box-shadow:inset 0 0 22px var(--deck-civ-glow),0 0 20px var(--deck-civ-glow)}
-
-    @keyframes cardChargeCiv{from{transform:translate(-50%,-50%) scale(1);filter:brightness(1.15) saturate(1.25)}to{transform:translate(-50%,-50%) scale(1.075);filter:brightness(1.7) saturate(1.8)}}
-
-    @keyframes civFramePulse{from{filter:brightness(1.08) saturate(1.2);box-shadow:0 0 16px var(--deck-civ-glow),0 0 34px var(--deck-civ-glow),inset 0 0 18px rgb(255 255 255 / 35%)}to{filter:brightness(1.6) saturate(1.7);box-shadow:0 0 28px var(--deck-civ-glow),0 0 62px var(--deck-civ-glow),0 0 90px rgb(255 255 255 / 40%),inset 0 0 30px rgb(255 255 255 / 68%)}}
-
     .drawing-card:before{content:"";position:absolute;inset:8px;border:1px solid rgb(255 255 255 / 75%);border-radius:8px}
 
     .drawing-card:after{content:"DM";position:absolute;font-size:2.8rem;font-weight:900;letter-spacing:.05em;color:rgb(255 255 255 / 42%)}
@@ -232,14 +214,6 @@
     .small-note{color:var(--muted);font-size:.85rem;line-height:1.6}
 
     @media(max-width:480px){body{padding:12px 10px 24px}.panel{padding:12px 10px}.roulette-panel{padding:8px 8px 10px;margin-bottom:12px}.card-stage{min-height:0;grid-template-rows:194px auto}.mana-absorption{height:194px}.deck-case{transform:translate(-50%,-50%) perspective(850px) rotateX(8deg) scale(.9)}.mana-orb{width:44px;height:44px;margin:-22px}#keyCardImages{padding:2px 0 0}#keyCardImages img{width:min(155px,42vw)}#result.has-result{min-height:38px;margin:2px auto 0}}
-
-    /* 埋め込み表示でも違和感のない、カード周辺だけの結果待ち演出 */
-    .drawing-card.reveal-pending{animation:revealPending .72s ease-in-out infinite alternate}
-
-    @keyframes revealPending{
-      from{transform:translate(-50%,-50%) scale(1.035);filter:brightness(1.22);box-shadow:0 0 24px rgb(255 255 255 / 55%),0 0 42px rgb(130 155 255 / 42%)}
-      to{transform:translate(-50%,-50%) scale(1.09);filter:brightness(1.62);box-shadow:0 0 34px rgb(255 255 255 / 82%),0 0 66px rgb(255 210 100 / 62%),0 0 90px rgb(130 155 255 / 35%)}
-    }
 
     /* 吸収時に短く画面を揺らす */
     .card-stage.absorption-burst{animation:stageImpact .48s ease-out both}
@@ -4134,8 +4108,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       deckCase.style.setProperty("--case-civ-gradient", gradient);
       deckCase.style.setProperty("--case-civ-glow", glow);
       keyCardImages.style.setProperty("--case-card-glow", glow);
-      // 次フレームでクラスを付け、色が瞬時に切り替わらずじわじわ立ち上がるようにする。
-      requestAnimationFrame(() => deckCase.classList.add("civ-charging"));
+      // ここでは色だけを準備する。発光開始は、文明アイコンの吸収完了後に
+      // playCaseOpeningSequence() が蓄圧を始めるタイミングへ一本化する。
     }
 
     function getKeyCardImageUrls(deck) {
@@ -4247,10 +4221,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       deckCase.querySelector(".case-lid-front").style.removeProperty("transform");
       deckCase.querySelector(".case-body").style.removeProperty("transform");
       deckCase.querySelector(".case-lock").style.removeProperty("transform");
-      const drawingFace = drawingCard.querySelector(".drawing-card");
-      drawingFace.classList.remove("deck-civ-colored", "reveal-pending");
-      drawingFace.style.removeProperty("--deck-civ-gradient");
-      drawingFace.style.removeProperty("--deck-civ-glow");
       drawingCard.querySelectorAll(".mana-orb").forEach(icon => {
         icon.getAnimations().forEach(animation => animation.cancel());
         icon.classList.remove("is-revealed");
