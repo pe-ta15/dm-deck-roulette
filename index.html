@@ -3813,33 +3813,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         inset 0 -18px 24px rgba(0,0,0,.65),0 9px 12px rgba(0,0,0,.48),
         0 0 20px rgba(255,196,76,.24);
     }
-    #cardStage.presentation-premium.result-visible {
-      border-color:rgba(204,157,65,.62)!important;
-      background:linear-gradient(145deg,#fffefa 0%,#fff9eb 48%,#fffdf8 100%)!important;
-      box-shadow:0 7px 24px rgba(151,108,30,.13),inset 0 0 0 2px rgba(231,190,104,.14)!important;
-    }
-    #cardStage.presentation-premium.result-visible #keyCardImages img {
-      border:1px solid rgba(204,157,65,.58)!important;
-      box-shadow:0 6px 17px rgba(151,108,30,.17),0 0 0 2px rgba(236,204,139,.16)!important;
-    }
-    #cardStage.presentation-premium.result-visible #result .result-eyebrow {
-      border-color:rgba(188,139,43,.55)!important;
-      background:linear-gradient(180deg,#fff7df,#f5e3b5)!important;
-      color:#80550e!important;
-      box-shadow:0 2px 8px rgba(171,124,37,.12)!important;
-    }
-    #cardStage.presentation-premium.result-visible #result .deck-name-title {
-      border-color:rgba(191,139,42,.72)!important;
-      background:linear-gradient(135deg,#fffdf5 0%,#fff0c7 52%,#fffaf0 100%)!important;
-      color:#62420c!important;
-      box-shadow:inset 0 1px 0 #fff,0 5px 16px rgba(151,108,30,.16)!important;
-    }
-    #cardStage.presentation-premium.result-visible #result .result-civilizations {
-      padding:5px 12px!important;
-      border:1px solid rgba(204,157,65,.28)!important;
-      border-radius:999px!important;
-      background:rgba(255,249,232,.82)!important;
-    }
     @media(prefers-reduced-motion:no-preference) {
       #cardStage.presentation-premium #drawingCard.mana-absorption .mana-orb {
         animation:premiumOrbPulse 1.25s ease-in-out infinite alternate;
@@ -3913,37 +3886,21 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
 
     
-    /* ===== 抽選結果画面は演出ランクに関係なく白基調で統一 ===== */
-    /* 豪華演出の差は開封中だけに適用し、結果パネルには持ち越さない。 */
-    #cardStage.presentation-premium.result-visible{
-      border-color:#e5e7eb!important;
-      background:#fff!important;
-      box-shadow:0 4px 16px rgba(25,35,45,.06)!important;
+    /* ===== 抽選結果の文明アイコン表示は全演出ランクで統一 ===== */
+    #cardStage.result-visible #result .result-civilizations{
+      display:flex!important;align-items:center!important;justify-content:center!important;
+      flex-wrap:nowrap!important;gap:clamp(4px,1.5vw,8px)!important;
+      width:max-content!important;max-width:100%!important;height:auto!important;
+      margin:2px auto 0!important;padding:0!important;overflow:visible!important;
+      border:0!important;border-radius:0!important;background:transparent!important;
+      box-shadow:none!important;outline:0!important;
     }
-    #cardStage.presentation-premium.result-visible #keyCardImages img{
-      border:1px solid rgba(112,94,61,.14)!important;
-      box-shadow:0 5px 13px rgba(52,43,28,.13)!important;
+    #cardStage.result-visible #result .result-civilizations:before,
+    #cardStage.result-visible #result .result-civilizations:after{
+      display:none!important;content:none!important;
     }
-    #cardStage.presentation-premium.result-visible #result .result-eyebrow{
-      border-color:rgba(185,137,48,.28)!important;
-      background:linear-gradient(180deg,#fff9e8,#f8edcf)!important;
-      color:#98702b!important;
-      box-shadow:none!important;
-    }
-    #cardStage.presentation-premium.result-visible #result .deck-name-title{
-      border:1px solid rgba(201,157,76,.42)!important;
-      border-radius:14px!important;
-      background:linear-gradient(135deg,#fffdf6,#fff3d5)!important;
-      color:#60400e!important;
-      -webkit-text-fill-color:#60400e!important;
-      box-shadow:0 5px 16px rgba(143,105,36,.12),inset 0 1px 0 #fff!important;
-    }
-    #cardStage.presentation-premium.result-visible #result .result-civilizations{
-      padding:6px 10px!important;
-      border:0!important;
-      border-radius:999px!important;
-      background:rgba(255,255,255,.76)!important;
-      box-shadow:inset 0 0 0 1px rgba(181,157,111,.2)!important;
+    #cardStage.result-visible #result .civilization-icon{
+      flex:0 0 auto!important;
     }
     /* 結果名はぼかさず、表示直後から読み取れる状態にする。 */
     #cardStage.result-visible #result .deck-name-title{
