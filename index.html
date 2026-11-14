@@ -161,15 +161,15 @@
 
     
 
-    .mana-orb.fire{filter:drop-shadow(0 0 5px #ff4b35) drop-shadow(0 0 15px #e53935) drop-shadow(0 0 26px rgb(229 57 53 / 55%))}
+    .mana-orb.fire{filter:drop-shadow(0 0 11px #e53935)}
 
-    .mana-orb.light{filter:drop-shadow(0 0 6px #fff2a0) drop-shadow(0 0 16px #f2c600) drop-shadow(0 0 28px rgb(242 198 0 / 60%))}
+    .mana-orb.light{filter:drop-shadow(0 0 11px #f2c600)}
 
-    .mana-orb.nature{filter:drop-shadow(0 0 5px #7dff8c) drop-shadow(0 0 15px #299b45) drop-shadow(0 0 26px rgb(41 155 69 / 55%))}
+    .mana-orb.nature{filter:drop-shadow(0 0 11px #299b45)}
 
-    .mana-orb.water{filter:drop-shadow(0 0 5px #8be4ff) drop-shadow(0 0 15px #168bd2) drop-shadow(0 0 26px rgb(22 139 210 / 55%))}
+    .mana-orb.water{filter:drop-shadow(0 0 11px #168bd2)}
 
-    .mana-orb.darkness{filter:drop-shadow(0 0 5px #d49aff) drop-shadow(0 0 15px #743c9b) drop-shadow(0 0 26px rgb(116 60 155 / 60%))}
+    .mana-orb.darkness{filter:drop-shadow(0 0 11px #743c9b)}
 
     .mana-absorption.charging .drawing-card{animation:cardCharge .72s ease-in-out infinite alternate}
 
@@ -4228,7 +4228,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         icon.style.visibility = "visible";
         icon.style.opacity = "0";
         icon.style.transform = "translate(0,0) scale(.7)";
-        icon.style.removeProperty("filter");
       });
     }
 
@@ -4379,7 +4378,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           icon.style.display = "block";
           icon.style.visibility = "visible";
           icon.style.opacity = "0";
-          icon.style.removeProperty("filter");
           const point = positionAt(initialAngles[index]);
           const duration = reducedMotion ? 180 : revealDuration;
           const color = summonColors[index] || "#ffffff";
@@ -4399,18 +4397,15 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(.28)",
               opacity: 0,
-              filter: "brightness(1.45)"
             },
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(1.13)",
               opacity: 1,
-              filter: "brightness(1.65)",
               offset: .72
             },
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
               opacity: 1,
-              filter: "brightness(1.15)"
             }
           ], {
             duration,
@@ -4506,7 +4501,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             icon.getAnimations().forEach(animation => animation.cancel());
             icon.style.opacity = "0";
             icon.style.transform = "translate(0,0) scale(.7)";
-            icon.style.removeProperty("filter");
           });
         }
       };
