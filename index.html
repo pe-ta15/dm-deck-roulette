@@ -4275,15 +4275,17 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         pointerEvents: "none",
         opacity: "1"
       });
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // スマートフォンの描画負荷を抑えるため、内部解像度を1.5倍までに制限。
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       summonCanvas.width = Math.max(1, Math.round(rect.width * dpr));
       summonCanvas.height = Math.max(1, Math.round(rect.height * dpr));
-      summonContext = summonCanvas.getContext("2d");
+      summonContext = summonCanvas.getContext("2d", { alpha: true });
       if (summonContext) summonContext.scale(dpr, dpr);
       drawingCard.appendChild(summonCanvas);
 
       const rand = (min, max) => min + Math.random() * (max - min);
       const drawSummonAtmosphere = now => {
+        summonFrame = 0;
         if (stopped || !summonContext || !summonCanvas?.isConnected) return;
         const ctx = summonContext;
         ctx.clearRect(0, 0, rect.width, rect.height);
@@ -4297,42 +4299,37 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           const y = rect.height / 2 + activeSummon.point.y;
           const color = activeSummon.color;
 
-          // 文明の位置に細い二重紋様が広がり、輪郭が集まるにつれて収束する。
+          // 発光ぼかし・破線を使わず、軽い二重リングで召喚位置を示す。
           ctx.save();
           ctx.translate(x, y);
-          ctx.globalCompositeOperation = "lighter";
-          ctx.globalAlpha = Math.sin(Math.PI * Math.min(1, progress * 1.08)) * 0.58;
+          ctx.globalAlpha = Math.sin(Math.PI * Math.min(1, progress * 1.08)) * 0.52;
           ctx.strokeStyle = color;
-          ctx.shadowColor = color;
-          ctx.shadowBlur = 13;
-          ctx.lineWidth = 1.15;
-          ctx.setLineDash([3, 5]);
+          ctx.lineWidth = 1.25;
           ctx.beginPath();
-          ctx.arc(0, 0, 24 + 23 * (1 - progress), -Math.PI / 2 + progress * 1.8, Math.PI * 1.5 + progress * 1.8);
+          ctx.arc(0, 0, 25 + 20 * (1 - progress), -Math.PI / 2 + progress * 1.8, Math.PI * 1.5 + progress * 1.8);
           ctx.stroke();
-          ctx.setLineDash([]);
           ctx.globalAlpha *= 0.65;
           ctx.beginPath();
-          ctx.arc(0, 0, 13 + 7 * (1 - progress), 0, Math.PI * 2);
+          ctx.arc(0, 0, 13 + 6 * (1 - progress), 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
 
-          // 光粒子は外周から中心へ緩やかに吸い寄せられる。
-          if (now - activeSummon.lastEmission > (reducedMotion ? 90 : 24)) {
+          // 粒子数と発生頻度を抑え、スマートフォンでの描画負荷を軽減。
+          if (now - activeSummon.lastEmission > (reducedMotion ? 110 : 68)) {
             activeSummon.lastEmission = now;
-            const count = reducedMotion ? 2 : 5;
+            const count = reducedMotion ? 1 : 2;
             for (let n = 0; n < count; n++) {
               const angle = rand(0, Math.PI * 2);
-              const radius = rand(38, 72);
+              const radius = rand(38, 66);
               particles.push({
                 x: x + Math.cos(angle) * radius,
                 y: y + Math.sin(angle) * radius,
                 targetX: x,
                 targetY: y,
-                speed: rand(0.75, 1.55),
+                speed: rand(0.75, 1.35),
                 life: 0,
-                maxLife: rand(0.34, 0.62),
-                size: rand(1, 2.8),
+                maxLife: rand(0.30, 0.48),
+                size: rand(1.1, 2.3),
                 color
               });
             }
@@ -4351,21 +4348,25 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             particles.splice(i, 1);
             continue;
           }
-          ctx.save();
-          ctx.globalCompositeOperation = "lighter";
-          ctx.globalAlpha = alpha * 0.9;
+          // shadowBlurと合成モードを避け、単純な円描画にする。
+          ctx.globalAlpha = alpha * 0.86;
           ctx.fillStyle = p.color;
-          ctx.shadowColor = p.color;
-          ctx.shadowBlur = 10;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);
           ctx.fill();
-          ctx.restore();
         }
-        summonFrame = requestAnimationFrame(drawSummonAtmosphere);
-      };
-      if (summonContext) summonFrame = requestAnimationFrame(drawSummonAtmosphere);
+        ctx.globalAlpha = 1;
 
+        // 召喚中・粒子が残っている間だけ描画し、待機中の空回りをなくす。
+        if (activeSummon || particles.length > 0) {
+          summonFrame = requestAnimationFrame(drawSummonAtmosphere);
+        }
+      };
+      const ensureSummonFrame = () => {
+        if (!summonFrame && summonContext && !stopped) {
+          summonFrame = requestAnimationFrame(drawSummonAtmosphere);
+        }
+      };
       const ready = (async () => {
         // DOM順（火・光・自然・水・闇）に一文明ずつ召喚。
         // 粒子が集まってからアイコンを形成し、出現した文明はその場に残す。
@@ -4389,6 +4390,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             duration: reducedMotion ? 180 : revealStagger,
             lastEmission: 0
           };
+          ensureSummonFrame();
 
           // 先に粒子の収束を見せ、続いて文明の紋章が光の中から形になる。
           await sleep(reducedMotion ? 80 : 310);
@@ -4397,18 +4399,18 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(.28)",
               opacity: 0,
-              filter: "blur(9px) brightness(2.1)"
+              filter: "brightness(1.45)"
             },
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(1.13)",
               opacity: 1,
-              filter: "blur(1px) brightness(1.75)",
+              filter: "brightness(1.65)",
               offset: .72
             },
             {
               transform: "translate(" + point.x + "px, " + point.y + "px) scale(.96)",
               opacity: 1,
-              filter: "blur(0px) brightness(1.15)"
+              filter: "brightness(1.15)"
             }
           ], {
             duration,
