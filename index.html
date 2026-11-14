@@ -4438,7 +4438,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const transitionStartedAt = performance.now();
         const transitionDuration = reducedMotion ? 1 : 720;
         const angularSpeed = Math.PI * 2 / orbitDuration;
-        const accelerationTime = 0.22;
+        const accelerationTime = 0.16;
         const angleDeltaAt = elapsed => angularSpeed * (
           elapsed - accelerationTime * (1 - Math.exp(-elapsed / accelerationTime))
         );
