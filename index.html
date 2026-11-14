@@ -164,6 +164,9 @@
 
     .mana-orb{position:absolute;z-index:4;left:50%;top:50%;width:54px;height:54px;margin:-27px;display:block;object-fit:contain;opacity:0;will-change:transform,opacity;pointer-events:none;transform-origin:center;backface-visibility:hidden}
 
+    /* 召喚完了後は、次の演出が明示的に解除するまで表示状態を維持する。 */
+    .mana-orb.is-revealed{display:block!important;visibility:visible!important;opacity:1!important}
+
     .mana-orb.fire{--mana-color:#e53935}
 
     .mana-orb.light{--mana-color:#f2c600}
@@ -4250,8 +4253,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       drawingFace.style.removeProperty("--deck-civ-glow");
       drawingCard.querySelectorAll(".mana-orb").forEach(icon => {
         icon.getAnimations().forEach(animation => animation.cancel());
+        icon.classList.remove("is-revealed");
+        icon.style.display = "block";
+        icon.style.visibility = "visible";
         icon.style.opacity = "0";
         icon.style.transform = "translate(0,0) scale(.7)";
+        icon.style.removeProperty("filter");
       });
     }
 
@@ -4395,6 +4402,13 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         for (let index = 0; index < icons.length; index++) {
           if (stopped) return;
           const icon = icons[index];
+          // 前回の周回・吸収で残った状態を、このアイコン単位で解除してから召喚する。
+          icon.getAnimations().forEach(animation => animation.cancel());
+          icon.classList.remove("is-revealed");
+          icon.style.display = "block";
+          icon.style.visibility = "visible";
+          icon.style.opacity = "0";
+          icon.style.removeProperty("filter");
           const point = positionAt(initialAngles[index]);
           const duration = reducedMotion ? 180 : revealDuration;
           const color = summonColors[index] || "#ffffff";
@@ -4437,6 +4451,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
           icon.style.transform = "translate(" + point.x + "px, " + point.y + "px) scale(.96)";
           icon.style.opacity = "1";
+          icon.style.visibility = "visible";
+          icon.classList.add("is-revealed");
           animation.cancel();
           activeSummon = null;
           await sleep(reducedMotion ? 20 : 90);
@@ -4458,6 +4474,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         // 5文明の召喚が完了してから、全員同時に同じ円軌道で周回を開始する。
         orbitStartedAt = performance.now();
+        // 5文明が揃った時点で表示状態を固定し、周回への切り替えで消えないようにする。
+        icons.forEach(icon => {
+          icon.classList.add("is-revealed");
+          icon.style.visibility = "visible";
+          icon.style.opacity = "1";
+        });
         orbitAnimations = icons.map((icon, index) => {
           const frames = [];
           const steps = 144;
@@ -4541,6 +4563,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       ctx.scale(dpr, dpr);
 
       const handoffAngles = selectionOrbit?.handoff?.() ?? icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
+      // 吸収中はWeb Animations側がopacityを制御するため、召喚完了用の固定表示を解除する。
+      icons.forEach(icon => icon.classList.remove("is-revealed"));
       const pointAt = (index, t) => {
         // 周回時の角度と速度を引き継ぎ、選定完了の瞬間に位置・速度をリセットしない。
         const startAngle = handoffAngles[index];
@@ -4639,8 +4663,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       drawingCard.classList.remove("charging", "absorbing");
       cardStage.classList.remove("absorption-burst");
       icons.forEach(icon => {
+        icon.classList.remove("is-revealed");
         icon.style.opacity = "0";
+        icon.style.visibility = "visible";
         icon.style.transform = "translate(0,0) scale(.7)";
+        // 完了済みのWeb Animationsを残さず、次回抽選へ影響させない。
+        icon.getAnimations().forEach(animation => animation.cancel());
       });
       // 抽選結果が確定するまではケースを閉じたままにし、開いたまま待つ時間を作らない。
     }
