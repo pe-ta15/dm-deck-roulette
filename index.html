@@ -4502,7 +4502,6 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         // 加速終了時の角度を周回の基準にし、時計は実際の開始時刻から進める。
         orbitBaseAngles = currentAngles.slice();
-        orbitStartedAt = performance.now();
         orbitAnimations = icons.map((icon, index) => {
           const frames = [];
           const steps = 144;
@@ -4517,6 +4516,8 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
           }
           return icon.animate(frames, { duration: orbitDuration, iterations: Infinity, easing: "linear" });
         });
+        // 全アイコンの周回アニメーションを登録した直後を、時刻計算の起点にする。
+        orbitStartedAt = performance.now();
       })();
 
       // 通常周回の実開始時刻と、開始時点の角度を同じ基準で管理する。
