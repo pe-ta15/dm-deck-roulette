@@ -4243,6 +4243,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       const iconRadius = Math.max(...icons.map(icon => icon.getBoundingClientRect().width || 54)) / 2;
       const orbitRadius = Math.max(0, Math.min(rect.width, rect.height) / 2 - iconRadius - 12);
       const initialAngles = icons.map((_, index) => -Math.PI / 2 + (Math.PI * 2 * index / icons.length));
+      let orbitBaseAngles = initialAngles.slice();
       const orbitDuration = 1800;
       const revealDuration = 460;
       const revealStagger = 520;
@@ -4438,9 +4439,14 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const transitionStartedAt = performance.now();
         const transitionDuration = reducedMotion ? 1 : 720;
         const angularSpeed = Math.PI * 2 / orbitDuration;
-        const accelerationTime = 0.16;
+        const initialSpeedRatio = 0.22;
+        const accelerationTime = 0.18;
+        // 初速を少し残して動き始めを見せ、指数的に通常速度へ近づける。
         const angleDeltaAt = elapsed => angularSpeed * (
-          elapsed - accelerationTime * (1 - Math.exp(-elapsed / accelerationTime))
+          initialSpeedRatio * elapsed +
+          (1 - initialSpeedRatio) * (
+            elapsed - accelerationTime * (1 - Math.exp(-elapsed / accelerationTime))
+          )
         );
         transitionAnimations = icons.map((icon, index) => {
           const frames = [];
@@ -4494,8 +4500,9 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         summonContext = null;
         particles.length = 0;
 
-        // 加速終了時の角度・速度を基準にし、位置も速度も飛ばさず等速周回へ。
-        orbitStartedAt = performance.now() - transitionAngle / angularSpeed * 1000;
+        // 加速終了時の角度を周回の基準にし、時計は実際の開始時刻から進める。
+        orbitBaseAngles = currentAngles.slice();
+        orbitStartedAt = performance.now();
         orbitAnimations = icons.map((icon, index) => {
           const frames = [];
           const steps = 144;
@@ -4512,7 +4519,10 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         });
       })();
 
-      const anglesAt = now => initialAngles.map(angle => angle + Math.PI * 2 * (((now - orbitStartedAt) / orbitDuration) % 1));
+      // 通常周回の実開始時刻と、開始時点の角度を同じ基準で管理する。
+      const anglesAt = now => orbitBaseAngles.map(angle =>
+        angle + Math.PI * 2 * (((now - orbitStartedAt) / orbitDuration) % 1)
+      );
 
       return {
         ready,
