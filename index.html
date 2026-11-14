@@ -3870,6 +3870,16 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
   filter:brightness(1.06) saturate(1.035)!important;
 }
 
+
+    /* 開いた蓋はカードより奥へ退く。閉じた状態の重なり順は変更しない。 */
+    .deck-case.opening .case-body{
+      position:absolute!important;
+      z-index:16!important;
+    }
+    .deck-case.opening .case-lid{
+      z-index:14!important;
+    }
+
 </style>
 </head>
 <body>
