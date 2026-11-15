@@ -4013,7 +4013,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       <div id="settings" class="settings">
         <label class="checkbox-label">
           <input type="checkbox" id="avoidRepeat">
-          <span>直近当選したデッキを抽選から除外する</span>
+          <span id="excludeCountLabel">直近当選したデッキを抽選から除外する</span>
         </label>
       </div>
     </section>
@@ -4035,6 +4035,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     const cardStage = document.getElementById("cardStage");
     const keyCardImages = document.getElementById("keyCardImages");
     const avoidRepeatCheckbox = document.getElementById("avoidRepeat");
+    const excludeCountLabel = document.getElementById("excludeCountLabel");
     const settingsElement = document.getElementById("settings");
 
     let decks = [];
@@ -4172,6 +4173,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
     }
 
     function renderDeckList() {
+      excludeCountLabel.textContent = `直近当選したデッキを抽選から除外する（現在 ${getExclusionCount()} デッキ）`;
       deckListElement.replaceChildren();
 
       if (decks.length === 0) {
