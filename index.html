@@ -4121,9 +4121,14 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
       }).filter(url => typeof url === "string" && /^https?:\/\//i.test(url));
     }
 
+    // 抽選対象デッキ数の1/3を除外する（端数は切り捨て）。
+    function getExclusionCount() {
+      return Math.floor(decks.length / 3);
+    }
+
     function getExcludedDeckIds() {
       return avoidRepeatCheckbox.checked
-        ? recentDrawnDeckIds.slice(0, 5)
+        ? recentDrawnDeckIds.slice(0, getExclusionCount())
         : [];
     }
 
@@ -4184,7 +4189,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         if (excludedIds.has(deck.id)) {
           item.classList.add("excluded");
-          item.title = "直近5回の当選デッキのため、次の抽選から除外されます";
+          item.title = `直近の当選デッキのため、次の抽選から除外されます（除外数：${getExclusionCount()}デッキ）`;
         }
 
         deckListElement.appendChild(item);
@@ -5017,7 +5022,7 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
         const candidates = decks.filter(deck => !excludedIds.has(deck.id));
 
         if (candidates.length === 0) {
-          throw new Error("直近5回の当選デッキを除外すると抽選できません。抽選対象のデッキを増やすか、重複除外を解除してください。");
+          throw new Error("除外対象を除くと抽選できません。抽選対象デッキ数と除外履歴を確認してください。");
         }
 
         // 先にデッキを確定し、その後に演出だけを独立抽選する。
@@ -5044,11 +5049,12 @@ body.is-spinning #drawingCard.opening-cutin .deck-case{filter:drop-shadow(0 16px
 
         const deckName = getDeckName(deck);
 
-        // 最新の当選デッキを先頭に追加し、直近5個を保持
+        // 最新の当選デッキを先頭に追加する。
+        // 保持数は固定せず、現在の抽選対象デッキ数から除外数を算出する。
         recentDrawnDeckIds = [
           deck.id,
           ...recentDrawnDeckIds.filter(id => id !== deck.id)
-        ].slice(0, 5);
+        ];
 
         renderDeckList();
 
